@@ -1,7 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 
-from src import logger
+from src.utils import logger
 
 global connection
 global cursor

@@ -1,6 +1,10 @@
 from pythorhead import Lemmy
 
-from src import constants, db_client
+from src.utils import db_client
+
+DICT_KEY_POST_VIEW = 'post_view'
+DICT_KEY_POST = 'post'
+DICT_KEY_ID = 'id'
 
 
 class LemmyClient:
@@ -15,9 +19,8 @@ class LemmyClient:
         self.community_id = self.lemmy.discover_community(self.community_name)
 
     def create_post(self, title, body, game_id):
-        post_id = self.lemmy.post.create(self.community_id, name=title, body=body)['post_view']['post']['id']
+        post_id = self.lemmy.post.create(self.community_id, name=title, body=body)[DICT_KEY_POST_VIEW][DICT_KEY_POST][DICT_KEY_ID]
         db_client.insert_row(post_id, game_id)
 
-    def update_post(self, title, body, game_id):
-        post_id = db_client.get_post_id(game_id)
+    def update_post(self, title, body, post_id):
         self.lemmy.post.edit(post_id=post_id, name=title, body=body)

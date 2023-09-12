@@ -2,7 +2,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 
-from src import constants
+from src.utils import constants
 
 if not os.path.exists(constants.OUT_PATH):
     os.makedirs(constants.OUT_PATH)

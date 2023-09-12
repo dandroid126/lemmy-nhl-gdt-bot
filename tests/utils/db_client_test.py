@@ -1,10 +1,10 @@
 import os
 import unittest
 
-from src import constants, db_client
+from src.utils import constants, db_client
 
 
-class TestStats(unittest.TestCase):
+class TestDbClient(unittest.TestCase):
     def setUp(self):
         test_db_path = f"{constants.OUT_PATH}/test.db"
         os.remove(test_db_path)

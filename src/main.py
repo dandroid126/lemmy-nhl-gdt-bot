@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 import os
 
-from src import nhl_api_client, constants, db_client, post_utils
-from src.lemmy_client import LemmyClient
+from src.utils import nhl_api_client, constants, post_utils, db_client, datetime_utils
+from src.utils.lemmy_client import LemmyClient
 
 global bot_name
 global password
@@ -29,10 +29,14 @@ db_client.initialize(constants.DB_PATH)
 # TODO:
 #  change this to current day
 #  loop all games in day
-#  check if time is less than an hour from now
-games = nhl_api_client.get_games('2022-10-31')
+#  With the current implementation games will be updated for two days before they are no longer updated.
+#   This will cover if a game goes past midnight, but it might be excessive. REVISIT THIS LATER.
+games = nhl_api_client.get_games('2022-10-31', '2022-11-1')
+print(games)
 lemmy_client = LemmyClient(lemmy_instance, bot_name, password, community_name)
-if db_client.get_post_id(games[0].id) is not None:
-    lemmy_client.update_post(post_utils.get_title(games[0]), post_utils.get_body(games[0]), games[0].id)
-else:
-    lemmy_client.create_post(post_utils.get_title(games[0]), post_utils.get_body(games[0]), games[0].id)
+post_id = db_client.get_post_id(games[0].id)
+if datetime_utils.is_time_to_make_post(datetime_utils.get_current_time_as_utc(), games[0].start_time):
+    if post_id is not None:
+        lemmy_client.update_post(post_utils.get_title(games[0]), post_utils.get_body(games[0]), post_id)
+    else:
+        lemmy_client.create_post(post_utils.get_title(games[0]), post_utils.get_body(games[0]), games[0].id)
