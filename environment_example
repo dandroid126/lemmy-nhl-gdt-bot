@@ -1,0 +1,4 @@
+BOT_NAME=bot_name
+PASSWORD=bot_password
+LEMMY_INSTANCE=lemmy.ml
+COMMUNITY_NAME=some_community_name@lemmy.world
