@@ -1,0 +1,17 @@
+[Unit]
+Description=Lemmy NHL Game Day Thread Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User={{user}}
+WorkingDirectory={{ path to git repo }}/lemmy-nhl-gdt-bot
+ExecStartPre=podman image prune -f
+ExecStartPre=podman build --tag lemmy-nhl-gdt-bot .
+ExecStart=podman run --rm --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out docker.io/dandroid126/lemmy-nhl-gdt-bot:main
+ExecStop=podman stop lemmy-nhl-gdt-bot
+ExecStopPost=podman container rm --force lemmy-nhl-gdt-bot
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
