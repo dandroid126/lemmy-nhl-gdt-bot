@@ -6,3 +6,4 @@ class Period:
     goals: int
     shots: int
     period_number: int
+    ordinal_number: str

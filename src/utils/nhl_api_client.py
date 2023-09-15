@@ -4,6 +4,7 @@ from src.datatypes.Exceptions.IllegalArgumentException import IllegalArgumentExc
 
 from src.datatypes.game import Game
 from src.datatypes.period import Period
+from src.datatypes.shootout import Shootout
 from src.datatypes.team_stats import TeamStats
 from src.utils import logger, datetime_utils
 
@@ -38,6 +39,11 @@ DICT_KEY_PERIODS = 'periods'
 DICT_KEY_TEAM_STATS = 'teamStats'
 DICT_KEY_TEAM_SKATER_STATS = 'teamSkaterStats'
 DICT_KEY_NUM = 'num'
+DICT_KEY_ORDINAL_NUM = 'ordinalNum'
+DICT_KEY_SHOOTOUT_INFO = 'shootoutInfo'
+DICT_KEY_SCORES = 'scores'
+DICT_KEY_ATTEMPTS = 'attempts'
+DICT_KEY_HAS_SHOOTOUT = 'hasShootout'
 
 # Team Stats
 DICT_KEY_GOALS = 'goals'
@@ -102,29 +108,46 @@ def parse_periods(feed_live: dict):
     for period in feed_live[DICT_KEY_LIVE_DATA][DICT_KEY_LINE_SCORE][DICT_KEY_PERIODS]:
         out[DICT_KEY_HOME].append(
             Period(goals=period[DICT_KEY_HOME][DICT_KEY_GOALS], shots=period[DICT_KEY_HOME][DICT_KEY_SHOTS_ON_GOAL],
-                   period_number=period[DICT_KEY_NUM]))
+                   period_number=period[DICT_KEY_NUM], ordinal_number=period[DICT_KEY_ORDINAL_NUM]))
         out[DICT_KEY_AWAY].append(
             Period(goals=period[DICT_KEY_AWAY][DICT_KEY_GOALS], shots=period[DICT_KEY_AWAY][DICT_KEY_SHOTS_ON_GOAL],
-                   period_number=period[DICT_KEY_NUM]))
+                   period_number=period[DICT_KEY_NUM], ordinal_number=period[DICT_KEY_ORDINAL_NUM]))
     return out
+
+
+def parse_shootouts(feed_live: dict):
+    shootout_info = feed_live[DICT_KEY_LIVE_DATA][DICT_KEY_LINE_SCORE][DICT_KEY_SHOOTOUT_INFO]
+    return {
+        DICT_KEY_HOME: Shootout(scores=shootout_info[DICT_KEY_HOME][DICT_KEY_SCORES],
+                                attempts=shootout_info[DICT_KEY_HOME][DICT_KEY_ATTEMPTS],
+                                has_been_played=feed_live[DICT_KEY_LIVE_DATA][DICT_KEY_LINE_SCORE][
+                                    DICT_KEY_HAS_SHOOTOUT]),
+        DICT_KEY_AWAY: Shootout(scores=shootout_info[DICT_KEY_AWAY][DICT_KEY_SCORES],
+                                attempts=shootout_info[DICT_KEY_AWAY][DICT_KEY_ATTEMPTS],
+                                has_been_played=feed_live[DICT_KEY_LIVE_DATA][DICT_KEY_LINE_SCORE][
+                                    DICT_KEY_HAS_SHOOTOUT])
+    }
 
 
 def parse_team_stats(feed_live: dict):
     periods = parse_periods(feed_live)
+    shootouts = parse_shootouts(feed_live)
     out = {}
     for key, team in feed_live[DICT_KEY_LIVE_DATA][DICT_KEY_BOX_SCORE][DICT_KEY_TEAMS].items():
         team_skater_stats = team[DICT_KEY_TEAM_STATS][DICT_KEY_TEAM_SKATER_STATS]
-        out[key] = TeamStats(goals=team_skater_stats[DICT_KEY_GOALS],
-                             shots=team_skater_stats[DICT_KEY_SHOTS],
-                             blocked=team_skater_stats[DICT_KEY_BLOCKED],
-                             hits=team_skater_stats[DICT_KEY_HITS],
-                             fo_wins=team_skater_stats[DICT_KEY_FO_WIN_PERCENTAGE],
-                             giveaways=team_skater_stats[DICT_KEY_GIVEAWAYS],
-                             takeaways=team_skater_stats[DICT_KEY_TAKEAWAYS],
-                             pp_opportunities=int(team_skater_stats[DICT_KEY_PP_OPPORTUNITIES]),
-                             pp_goals=int(team_skater_stats[DICT_KEY_PP_GOALS]),
-                             pp_percentage=team_skater_stats[DICT_KEY_PP_PERCENTAGE],
-                             periods=periods[key])
+        out[key] = TeamStats(
+            goals=feed_live[DICT_KEY_LIVE_DATA][DICT_KEY_LINE_SCORE][DICT_KEY_TEAMS][key][DICT_KEY_GOALS],
+            shots=team_skater_stats[DICT_KEY_SHOTS],
+            blocked=team_skater_stats[DICT_KEY_BLOCKED],
+            hits=team_skater_stats[DICT_KEY_HITS],
+            fo_wins=team_skater_stats[DICT_KEY_FO_WIN_PERCENTAGE],
+            giveaways=team_skater_stats[DICT_KEY_GIVEAWAYS],
+            takeaways=team_skater_stats[DICT_KEY_TAKEAWAYS],
+            pp_opportunities=int(team_skater_stats[DICT_KEY_PP_OPPORTUNITIES]),
+            pp_goals=int(team_skater_stats[DICT_KEY_PP_GOALS]),
+            pp_percentage=team_skater_stats[DICT_KEY_PP_PERCENTAGE],
+            periods=periods[key],
+            shootout=shootouts[key])
     return out
 
 
