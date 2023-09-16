@@ -1,6 +1,7 @@
 import requests
 import json
 from src.datatypes.Exceptions.IllegalArgumentException import IllegalArgumentException
+from src.datatypes.teams import Teams
 
 from src.datatypes.game import Game
 from src.datatypes.period import Period
@@ -44,6 +45,9 @@ DICT_KEY_SHOOTOUT_INFO = 'shootoutInfo'
 DICT_KEY_SCORES = 'scores'
 DICT_KEY_ATTEMPTS = 'attempts'
 DICT_KEY_HAS_SHOOTOUT = 'hasShootout'
+DICT_KEY_GAME_DATA = 'gameData'
+DICT_KEY_ABBREVIATION = 'abbreviation'
+
 
 # Team Stats
 DICT_KEY_GOALS = 'goals'
@@ -154,8 +158,8 @@ def parse_team_stats(feed_live: dict):
 def parse_game(game: dict, feed_live: dict):  # TODO: only use feed_live
     team_stats = parse_team_stats(feed_live)
     return Game(id=game[DICT_KEY_GAME_PK],
-                away_team=game[DICT_KEY_TEAMS][DICT_KEY_AWAY][DICT_KEY_TEAM][DICT_KEY_NAME],
-                home_team=game[DICT_KEY_TEAMS][DICT_KEY_HOME][DICT_KEY_TEAM][DICT_KEY_NAME],
+                away_team=Teams[feed_live[DICT_KEY_GAME_DATA][DICT_KEY_TEAMS][DICT_KEY_AWAY][DICT_KEY_ABBREVIATION]].value,
+                home_team=Teams[feed_live[DICT_KEY_GAME_DATA][DICT_KEY_TEAMS][DICT_KEY_HOME][DICT_KEY_ABBREVIATION]].value,
                 start_time=datetime_utils.parse_datetime(game[DICT_KEY_GAME_DATE]),
                 game_clock=game[DICT_KEY_STATUS][DICT_KEY_DETAILED_STATE],
                 home_team_stats=team_stats[DICT_KEY_HOME],

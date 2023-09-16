@@ -3,7 +3,7 @@ from src.datatypes.game import Game
 
 
 def get_title(game: Game):
-    return f"[GDT] {game.away_team} at {game.home_team} - {game.start_time.astimezone(datetime_utils.EST).strftime(datetime_utils.START_TIME_FORMAT)}"
+    return f"[GDT] {game.away_team.city} {game.away_team.name} at {game.home_team.city} {game.home_team.name} - {game.start_time.astimezone(datetime_utils.EST).strftime(datetime_utils.START_TIME_FORMAT)}"
 
 
 # TODO: dynamically create period goals table based on number of periods
@@ -30,8 +30,8 @@ def get_body(game: Game):
     # Periods
     periods = Table()
     periods.set(0, 0, TEAM)
-    periods.set(0, 1, game.away_team)
-    periods.set(0, 2, game.home_team)
+    periods.set(0, 1, game.away_team.get_team_table_entry())
+    periods.set(0, 2, game.home_team.get_team_table_entry())
     for period in game.away_team_stats.periods:
         periods.set(period.period_number, 0, period.ordinal_number)
         periods.set(period.period_number, 1, period.goals)
@@ -51,8 +51,8 @@ def get_body(game: Game):
     team_stats = Table()
     for i, value in enumerate(TEAM_STATS_HEADER_ROW):
         team_stats.set(i, 0, value)
-    team_stats.set(0, 1, game.away_team)
-    team_stats.set(0, 2, game.home_team)
+    team_stats.set(0, 1, game.away_team.get_team_table_entry())
+    team_stats.set(0, 2, game.home_team.get_team_table_entry())
     for i, value in enumerate([game.away_team_stats, game.home_team_stats]):
         team_stats.set(1, i + 1, value.shots)
         team_stats.set(2, i + 1, value.hits)
@@ -62,7 +62,6 @@ def get_body(game: Game):
         team_stats.set(6, i + 1, value.takeaways)
         team_stats.set(7, i + 1, f'{value.pp_goals}/{value.pp_opportunities}')
 
-    # TEAM_STATS_HEADER_ROW = [TEAM, SHOTS, HITS, BLOCKED, FO_WINS, GIVEAWAYS, TAKEAWAYS, POWER_PLAYS]
     # Render everything
     return f"""{time_clock.render()}
 

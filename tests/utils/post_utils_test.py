@@ -3,6 +3,7 @@ import unittest
 
 from dateutil.tz import tzlocal
 
+from src.datatypes.teams import Teams
 from src.datatypes.game import Game
 from src.datatypes.period import Period
 from src.datatypes.shootout import Shootout
@@ -43,7 +44,7 @@ class TestPostUtils(unittest.TestCase):
         self.assertEqual(expected, table.render())
 
     def test_get_body_in_progress(self):
-        game = Game(id=2022020158, away_team='Anaheim Ducks', home_team='San Jose Sharks',
+        game = Game(id=2022020158, away_team=Teams.ANA.value, home_team=Teams.SJS.value,
                     start_time=datetime.datetime(2022, 11, 2, 2, 30, tzinfo=tzlocal()), game_clock='Final',
                     away_team_stats=TeamStats(goals=6, shots=44, blocked=9, hits=19, fo_wins='55.4', giveaways=10,
                                               takeaways=10, pp_opportunities=4, pp_goals=0, pp_percentage='0.0',
@@ -65,22 +66,22 @@ class TestPostUtils(unittest.TestCase):
 
 | Team | 1st | 2nd | Total |
 |:-:|:-:|:-:|:-:|
-| Anaheim Ducks | 3 | 1 | 6 |
-| San Jose Sharks | 2 | 2 | 5 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 3 | 1 | 6 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 2 | 2 | 5 |
 
 &nbsp;
 
 | Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Anaheim Ducks | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
-| San Jose Sharks | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
 """
         body = post_utils.get_body(game)
         print(body)
         self.assertEqual(expected, post_utils.get_body(game))
 
     def test_get_body_regulation(self):
-        game = Game(id=2022020158, away_team='Anaheim Ducks', home_team='San Jose Sharks',
+        game = Game(id=2022020158, away_team=Teams.ANA.value, home_team=Teams.SJS.value,
                     start_time=datetime.datetime(2022, 11, 2, 2, 30, tzinfo=tzlocal()), game_clock='Final',
                     away_team_stats=TeamStats(goals=6, shots=44, blocked=9, hits=19, fo_wins='55.4', giveaways=10,
                                               takeaways=10, pp_opportunities=4, pp_goals=0, pp_percentage='0.0',
@@ -104,22 +105,22 @@ class TestPostUtils(unittest.TestCase):
 
 | Team | 1st | 2nd | 3rd | Total |
 |:-:|:-:|:-:|:-:|:-:|
-| Anaheim Ducks | 3 | 1 | 1 | 6 |
-| San Jose Sharks | 2 | 2 | 1 | 5 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 3 | 1 | 1 | 6 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 2 | 2 | 1 | 5 |
 
 &nbsp;
 
 | Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Anaheim Ducks | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
-| San Jose Sharks | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
 """
         body = post_utils.get_body(game)
         print(body)
         self.assertEqual(expected, post_utils.get_body(game))
 
     def test_get_body_ot(self):
-        game = Game(id=2022020158, away_team='Anaheim Ducks', home_team='San Jose Sharks',
+        game = Game(id=2022020158, away_team=Teams.ANA.value, home_team=Teams.SJS.value,
                     start_time=datetime.datetime(2022, 11, 2, 2, 30, tzinfo=tzlocal()), game_clock='Final',
                     away_team_stats=TeamStats(goals=6, shots=44, blocked=9, hits=19, fo_wins='55.4', giveaways=10,
                                               takeaways=10, pp_opportunities=4, pp_goals=0, pp_percentage='0.0',
@@ -145,22 +146,22 @@ class TestPostUtils(unittest.TestCase):
 
 | Team | 1st | 2nd | 3rd | OT | Total |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| Anaheim Ducks | 3 | 1 | 1 | 0 | 6 |
-| San Jose Sharks | 2 | 2 | 1 | 0 | 5 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 3 | 1 | 1 | 0 | 6 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 2 | 2 | 1 | 0 | 5 |
 
 &nbsp;
 
 | Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Anaheim Ducks | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
-| San Jose Sharks | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
 """
         body = post_utils.get_body(game)
         print(body)
         self.assertEqual(expected, post_utils.get_body(game))
 
     def test_get_body_shootout(self):
-        game = Game(id=2022020158, away_team='Anaheim Ducks', home_team='San Jose Sharks',
+        game = Game(id=2022020158, away_team=Teams.ANA.value, home_team=Teams.SJS.value,
                     start_time=datetime.datetime(2022, 11, 2, 2, 30, tzinfo=tzlocal()), game_clock='Final',
                     away_team_stats=TeamStats(goals=6, shots=44, blocked=9, hits=19, fo_wins='55.4', giveaways=10,
                                               takeaways=10, pp_opportunities=4, pp_goals=0, pp_percentage='0.0',
@@ -184,15 +185,15 @@ class TestPostUtils(unittest.TestCase):
 
 | Team | 1st | 2nd | 3rd | OT | SO | Total |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Anaheim Ducks | 3 | 1 | 1 | 0 | 2/2 | 6 |
-| San Jose Sharks | 2 | 2 | 1 | 0 | 1/3 | 5 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 3 | 1 | 1 | 0 | 2/2 | 6 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 2 | 2 | 1 | 0 | 1/3 | 5 |
 
 &nbsp;
 
 | Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Anaheim Ducks | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
-| San Jose Sharks | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
 """
         body = post_utils.get_body(game)
         print(body)

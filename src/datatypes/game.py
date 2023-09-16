@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+from src.datatypes.teams import Team
 from src.datatypes.team_stats import TeamStats
 
 
@@ -8,8 +9,8 @@ from src.datatypes.team_stats import TeamStats
 @dataclass
 class Game:
     id: int
-    away_team: str
-    home_team: str
+    away_team: Team
+    home_team: Team
     start_time: datetime
     game_clock: str
     away_team_stats: TeamStats
