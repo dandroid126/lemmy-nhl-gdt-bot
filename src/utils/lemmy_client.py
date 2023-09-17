@@ -1,3 +1,4 @@
+import pydash
 from pythorhead import Lemmy
 
 from src.utils import db_client
@@ -25,8 +26,11 @@ class LemmyClient:
             raise ValueError(f"Community {community_name} not found")
 
     def create_post(self, title, body, game_id):
-        post_id = self.lemmy.post.create(self.community_id, name=title, body=body)[DICT_KEY_POST_VIEW][DICT_KEY_POST][DICT_KEY_ID]
-        db_client.insert_row(post_id, game_id, db_client.POST_TYPE_GDT)
+        post_id = pydash.get(self.lemmy.post.create(self.community_id, name=title, body=body), f"{DICT_KEY_POST_VIEW}.{DICT_KEY_POST}.{DICT_KEY_ID}", -1)
+        if post_id == -1:
+            logger.e(TAG, f"Failed to create post for game {game_id}")
+            return False
+        return db_client.insert_row(post_id, game_id, db_client.POST_TYPE_GDT)
 
     def update_post(self, title, body, post_id):
         self.lemmy.post.edit(post_id=post_id, name=title, body=body)

@@ -49,6 +49,7 @@ def insert_row(post_id: int, game_id: int, post_type: int):
     logger.d(TAG, s)
     cursor.execute(f"INSERT INTO {TABLE_POSTS} ({COLUMN_POST_ID}, {COLUMN_GAME_ID}, {COLUMN_POST_TYPE}) VALUES({post_id}, {game_id}, {post_type})")
     connection.commit()
+    return True
 
 
 def initialize(db_path):

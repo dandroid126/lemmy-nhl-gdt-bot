@@ -41,13 +41,18 @@ is_interrupted = False
 while not is_interrupted:
     games = nhl_api_client.get_games('2022-10-31', '2022-11-1')
     for game in games:
-        post_id = db_client.get_post_id(game.id)
-        current_time = datetime_utils.get_current_time_as_utc()
-        if datetime_utils.is_time_to_make_post(current_time, game.start_time, None):
-            if post_id is not None:
-                lemmy_client.update_post(post_utils.get_title(game), post_utils.get_body(game), post_id)
+        try:
+            if game is None:
+                continue
+            post_id = db_client.get_post_id(game.id)
+            current_time = datetime_utils.get_current_time_as_utc()
+            if datetime_utils.is_time_to_make_post(current_time, game.start_time, None): # TODO: change this back to game.end_time
+                if post_id is not None:
+                    lemmy_client.update_post(post_utils.get_title(game), post_utils.get_body(game), post_id)
+                else:
+                    lemmy_client.create_post(post_utils.get_title(game), post_utils.get_body(game), game.id)
             else:
-                lemmy_client.create_post(post_utils.get_title(game), post_utils.get_body(game), game.id)
-        else:
-            logger.d(TAG, f"The post was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
+                logger.d(TAG, f"The post was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
+        except Exception as e:
+            logger.e(TAG, "Some exception occurred while processing a game.", e)
     time.sleep(DELAY_BETWEEN_UPDATING_POSTS)

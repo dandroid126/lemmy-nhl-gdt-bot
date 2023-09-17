@@ -16,7 +16,7 @@ class TestDbClient(unittest.TestCase):
         db_client.initialize(TEST_DB_PATH)
 
     def test_insert_and_get(self):
-        db_client.insert_row(1234, 4321, db_client.POST_TYPE_GDT)
+        self.assertTrue(db_client.insert_row(1234, 4321, db_client.POST_TYPE_GDT))
         self.assertEqual(db_client.get_post_id(4321), 1234)
 
 

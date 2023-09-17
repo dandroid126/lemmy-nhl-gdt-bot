@@ -50,3 +50,4 @@ class Teams(Enum):
     ARI = Team(53, 'ARI', 'Arizona', 'Coyotes', 'https://lemmy.ca/pictrs/image/c700df7c-41d6-405b-81c2-7b7610aa400b.png')
     VGK = Team(54, 'VGK', 'Vegas', 'Golden Knights', 'https://lemmy.ca/pictrs/image/20aaabff-312a-437f-8247-825fc137d33e.png')
     SEA = Team(55, 'SEA', 'Seattle', 'Kraken', 'https://lemmy.ca/pictrs/image/e8edb628-f3a4-40df-b6a0-7752152ad7b3.png')
+    ERR = Team(0, 'ERR', 'Error', 'Error', '')
