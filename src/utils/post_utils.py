@@ -44,7 +44,7 @@ def get_body(game: Game):
 
 {team_stats.render()}
 
-&nbsp;
+{"&nbsp;" if goal_details.render() else ""}
 
 {goal_details.render()}
 """
@@ -98,6 +98,8 @@ def get_team_stats(game):
 
 def get_goal_details(game):
     goal_details = Table()
+    if not game.goals:
+        return goal_details
     for i, value in enumerate(GOALS_DETAILS_HEADER_ROW):
         goal_details.set(i, 0, value)
     for i, goal in enumerate(reversed(game.goals)):
@@ -108,7 +110,6 @@ def get_goal_details(game):
         goal_details.set(4, i + 1, goal.goalie)
         goal_details.set(5, i + 1, goal.description)
     return goal_details
-
 
 
 class Table:
@@ -126,6 +127,8 @@ class Table:
 
     def render(self):
         out = ''
+        if self.max_x == 0 and self.max_y == 0:
+            return out
         for i in range(0, self.max_x + 1):
             out = out + f'| {self.data[i][0]} '
         out += '|\n'

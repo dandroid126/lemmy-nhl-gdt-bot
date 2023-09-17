@@ -3,3 +3,4 @@ pytz==2023.3.post1
 pythorhead==0.15.6
 requests==2.31.0
 python-dateutil==2.8.2
+pydash==7.0.6

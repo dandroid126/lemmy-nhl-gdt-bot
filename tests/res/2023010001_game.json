@@ -1,0 +1,49 @@
+{
+    "gamePk": 2023010001,
+    "link": "/api/v1/game/2023010001/feed/live",
+    "gameType": "PR",
+    "season": "20232024",
+    "gameDate": "2023-09-23T04:05:00Z",
+    "status": {
+        "abstractGameState": "Preview",
+        "codedGameState": "1",
+        "detailedState": "Scheduled",
+        "statusCode": "1",
+        "startTimeTBD": false
+    },
+    "teams": {
+        "away": {
+            "leagueRecord": {
+                "wins": 0,
+                "losses": 0,
+                "type": "league"
+            },
+            "score": 0,
+            "team": {
+                "id": 26,
+                "name": "Los Angeles Kings",
+                "link": "/api/v1/teams/26"
+            }
+        },
+        "home": {
+            "leagueRecord": {
+                "wins": 0,
+                "losses": 0,
+                "type": "league"
+            },
+            "score": 0,
+            "team": {
+                "id": 53,
+                "name": "Arizona Coyotes",
+                "link": "/api/v1/teams/53"
+            }
+        }
+    },
+    "venue": {
+        "name": "Rod Laver Arena",
+        "link": "/api/v1/venues/null"
+    },
+    "content": {
+        "link": "/api/v1/game/2023010001/content"
+    }
+}

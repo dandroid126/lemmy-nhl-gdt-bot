@@ -1,3 +1,4 @@
+import pydash
 import requests
 import json
 from src.datatypes.Exceptions.IllegalArgumentException import IllegalArgumentException
@@ -63,6 +64,9 @@ DICT_KEY_PLAYER = 'player'
 DICT_KEY_PLAYER_TYPE = 'playerType'
 DICT_KEY_FULL_NAME = 'fullName'
 DICT_VALUE_GOALIE = 'Goalie'
+DICT_VALUE_DATETIME = 'datetime'
+DICT_VALUE_DATE_TIME = 'dateTime'  # WTF NHL??????? Why are these different?????
+DICT_VALUE_END_DATE_TIME = 'endDateTime'
 
 
 # Team Stats
@@ -196,11 +200,17 @@ def parse_team_stats(feed_live: dict):
 
 def parse_game(game: dict, feed_live: dict):  # TODO: only use feed_live
     team_stats = parse_team_stats(feed_live)
+
+    end_time = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_VALUE_DATETIME}.{DICT_VALUE_END_DATE_TIME}", None)
+    if end_time is not None:
+        end_time = datetime_utils.parse_datetime(end_time)
+
     return Game(id=game[DICT_KEY_GAME_PK],
                 away_team=Teams[feed_live[DICT_KEY_GAME_DATA][DICT_KEY_TEAMS][DICT_KEY_AWAY][DICT_KEY_ABBREVIATION]].value,
                 home_team=Teams[feed_live[DICT_KEY_GAME_DATA][DICT_KEY_TEAMS][DICT_KEY_HOME][DICT_KEY_ABBREVIATION]].value,
-                start_time=datetime_utils.parse_datetime(game[DICT_KEY_GAME_DATE]),
-                game_clock=game[DICT_KEY_STATUS][DICT_KEY_DETAILED_STATE],
+                start_time=datetime_utils.parse_datetime(feed_live[DICT_KEY_GAME_DATA][DICT_VALUE_DATETIME][DICT_VALUE_DATE_TIME]),
+                end_time=end_time,
+                game_clock=game[DICT_KEY_STATUS][DICT_KEY_DETAILED_STATE],  # TODO: not sure if this will work, but there is no way to know until a game starts.
                 home_team_stats=team_stats[DICT_KEY_HOME],
                 away_team_stats=team_stats[DICT_KEY_AWAY],
                 goals=parse_goals(feed_live))

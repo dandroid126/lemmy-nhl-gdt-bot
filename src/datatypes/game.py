@@ -13,6 +13,7 @@ class Game:
     away_team: Team
     home_team: Team
     start_time: datetime
+    end_time: datetime
     game_clock: str
     away_team_stats: TeamStats
     home_team_stats: TeamStats
