@@ -6,7 +6,6 @@ def get_title(game: Game):
     return f"[GDT] {game.away_team.city} {game.away_team.name} at {game.home_team.city} {game.home_team.name} - {game.start_time.astimezone(datetime_utils.EST).strftime(datetime_utils.START_TIME_FORMAT)}"
 
 
-# TODO: dynamically create period goals table based on number of periods
 TIME_CLOCK = 'Time Clock'
 TEAM = 'Team'
 TOTAL = 'Total'
@@ -18,16 +17,47 @@ FO_WINS = 'FO Wins'
 GIVEAWAYS = 'Giveaways'
 TAKEAWAYS = 'Takeaways'
 POWER_PLAYS = 'Power Plays'
+PERIOD = 'Period'
+TIME = 'Time'
+STRENGTH = 'Strength'
+GOALIE = 'Goalie'
+DESCRIPTION = 'Description'
+
 TEAM_STATS_HEADER_ROW = [TEAM, SHOTS, HITS, BLOCKED, FO_WINS, GIVEAWAYS, TAKEAWAYS, POWER_PLAYS]
+GOALS_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, STRENGTH, GOALIE, DESCRIPTION]
 
 
 def get_body(game: Game):
-    # Time Clock
+    time_clock = get_time_clock(game)
+    periods = get_periods(game)
+    team_stats = get_team_stats(game)
+    goal_details = get_goal_details(game)
+
+    # Render everything
+    return f"""{time_clock.render()}
+
+&nbsp;
+
+{periods.render()}
+
+&nbsp;
+
+{team_stats.render()}
+
+&nbsp;
+
+{goal_details.render()}
+"""
+
+
+def get_time_clock(game):
     time_clock = Table()
     time_clock.set(0, 0, TIME_CLOCK)
     time_clock.set(0, 1, game.game_clock)
+    return time_clock
 
-    # Periods
+
+def get_periods(game):
     periods = Table()
     periods.set(0, 0, TEAM)
     periods.set(0, 1, game.away_team.get_team_table_entry())
@@ -46,8 +76,10 @@ def get_body(game: Game):
     periods.set(final_column, 0, TOTAL)
     periods.set(final_column, 1, game.away_team_stats.goals)
     periods.set(final_column, 2, game.home_team_stats.goals)
+    return periods
 
-    # Team Stats
+
+def get_team_stats(game):
     team_stats = Table()
     for i, value in enumerate(TEAM_STATS_HEADER_ROW):
         team_stats.set(i, 0, value)
@@ -61,18 +93,22 @@ def get_body(game: Game):
         team_stats.set(5, i + 1, value.giveaways)
         team_stats.set(6, i + 1, value.takeaways)
         team_stats.set(7, i + 1, f'{value.pp_goals}/{value.pp_opportunities}')
+    return team_stats
 
-    # Render everything
-    return f"""{time_clock.render()}
 
-&nbsp;
+def get_goal_details(game):
+    goal_details = Table()
+    for i, value in enumerate(GOALS_DETAILS_HEADER_ROW):
+        goal_details.set(i, 0, value)
+    for i, goal in enumerate(reversed(game.goals)):
+        goal_details.set(0, i + 1, goal.period)
+        goal_details.set(1, i + 1, goal.time)
+        goal_details.set(2, i + 1, goal.team.get_team_table_entry())
+        goal_details.set(3, i + 1, goal.strength)
+        goal_details.set(4, i + 1, goal.goalie)
+        goal_details.set(5, i + 1, goal.description)
+    return goal_details
 
-{periods.render()}
-
-&nbsp;
-
-{team_stats.render()}
-"""
 
 
 class Table:

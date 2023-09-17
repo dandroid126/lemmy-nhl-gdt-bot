@@ -1,6 +1,7 @@
 import requests
 import json
 from src.datatypes.Exceptions.IllegalArgumentException import IllegalArgumentException
+from src.datatypes.goal import Goal
 from src.datatypes.teams import Teams
 
 from src.datatypes.game import Game
@@ -47,6 +48,21 @@ DICT_KEY_ATTEMPTS = 'attempts'
 DICT_KEY_HAS_SHOOTOUT = 'hasShootout'
 DICT_KEY_GAME_DATA = 'gameData'
 DICT_KEY_ABBREVIATION = 'abbreviation'
+DICT_KEY_PLAYS = 'plays'
+DICT_KEY_ALL_PLAYS = 'allPlays'
+DICT_KEY_SCORING_PLAYS = 'scoringPlays'
+DICT_KEY_RESULT = 'result'
+DICT_KEY_ABOUT = 'about'
+DICT_KEY_PERIOD_TIME = 'periodTime'
+DICT_KEY_TRI_CODE = 'triCode'
+DICT_KEY_STRENGTH = 'strength'
+DICT_KEY_DESCRIPTION = 'description'
+DICT_KEY_EMPTY_NET = 'emptyNet'
+DICT_KEY_PLAYERS = 'players'
+DICT_KEY_PLAYER = 'player'
+DICT_KEY_PLAYER_TYPE = 'playerType'
+DICT_KEY_FULL_NAME = 'fullName'
+DICT_VALUE_GOALIE = 'Goalie'
 
 
 # Team Stats
@@ -60,6 +76,8 @@ DICT_KEY_TAKEAWAYS = 'takeaways'
 DICT_KEY_PP_OPPORTUNITIES = 'powerPlayOpportunities'
 DICT_KEY_PP_GOALS = 'powerPlayGoals'
 DICT_KEY_PP_PERCENTAGE = 'powerPlayPercentage'
+
+EMPTY_NET = "Empty Net"
 
 
 def get_schedule_url(start_date: str, end_date: str):
@@ -133,6 +151,27 @@ def parse_shootouts(feed_live: dict):
     }
 
 
+def parse_goals(feed_live: dict):
+    scoring_plays = feed_live[DICT_KEY_LIVE_DATA][DICT_KEY_PLAYS][DICT_KEY_SCORING_PLAYS]
+    goals = []
+    for play in scoring_plays:
+        scoring_play_details = feed_live[DICT_KEY_LIVE_DATA][DICT_KEY_PLAYS][DICT_KEY_ALL_PLAYS][play]
+        goalie = EMPTY_NET
+        for player in scoring_play_details[DICT_KEY_PLAYERS]:
+            if player[DICT_KEY_PLAYER_TYPE] == DICT_VALUE_GOALIE:
+                # NOTE: if the player's last name has a space in it, this won't work.
+                #  If that ever happens, do it the long way.
+                #  Map the player's ID to the "players" list in JSON[gameData][players][ID...]
+                goalie = player[DICT_KEY_PLAYER][DICT_KEY_FULL_NAME].split(" ")[-1]
+        goals.append(Goal(period=scoring_play_details[DICT_KEY_ABOUT][DICT_KEY_ORDINAL_NUM],
+                          time=scoring_play_details[DICT_KEY_ABOUT][DICT_KEY_PERIOD_TIME],
+                          team=Teams[scoring_play_details[DICT_KEY_TEAM][DICT_KEY_TRI_CODE]].value,
+                          strength=scoring_play_details[DICT_KEY_RESULT][DICT_KEY_STRENGTH][DICT_KEY_NAME],
+                          goalie=goalie,
+                          description=scoring_play_details[DICT_KEY_RESULT][DICT_KEY_DESCRIPTION]))
+    return goals
+
+
 def parse_team_stats(feed_live: dict):
     periods = parse_periods(feed_live)
     shootouts = parse_shootouts(feed_live)
@@ -163,4 +202,5 @@ def parse_game(game: dict, feed_live: dict):  # TODO: only use feed_live
                 start_time=datetime_utils.parse_datetime(game[DICT_KEY_GAME_DATE]),
                 game_clock=game[DICT_KEY_STATUS][DICT_KEY_DETAILED_STATE],
                 home_team_stats=team_stats[DICT_KEY_HOME],
-                away_team_stats=team_stats[DICT_KEY_AWAY])
+                away_team_stats=team_stats[DICT_KEY_AWAY],
+                goals=parse_goals(feed_live))

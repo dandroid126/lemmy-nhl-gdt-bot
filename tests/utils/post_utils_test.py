@@ -1,9 +1,10 @@
 import datetime
 import unittest
 
-from dateutil.tz import tzlocal
+from dateutil.tz import tzlocal, tzutc
 
-from src.datatypes.teams import Teams
+from src.datatypes.goal import Goal
+from src.datatypes.teams import Teams, Team
 from src.datatypes.game import Game
 from src.datatypes.period import Period
 from src.datatypes.shootout import Shootout
@@ -12,6 +13,7 @@ from src.utils import post_utils
 from src.utils.post_utils import Table
 
 
+# TODO: add tests for each table function
 class TestPostUtils(unittest.TestCase):
 
     def test_basic_table(self):
@@ -43,140 +45,8 @@ class TestPostUtils(unittest.TestCase):
         print(table.render())
         self.assertEqual(expected, table.render())
 
-    def test_get_body_in_progress(self):
-        game = Game(id=2022020158, away_team=Teams.ANA.value, home_team=Teams.SJS.value,
-                    start_time=datetime.datetime(2022, 11, 2, 2, 30, tzinfo=tzlocal()), game_clock='Final',
-                    away_team_stats=TeamStats(goals=6, shots=44, blocked=9, hits=19, fo_wins='55.4', giveaways=10,
-                                              takeaways=10, pp_opportunities=4, pp_goals=0, pp_percentage='0.0',
-                                              periods=[
-                                                  Period(goals=3, shots=17, period_number=1, ordinal_number='1st'),
-                                                  Period(goals=1, shots=15, period_number=2, ordinal_number='2nd')],
-                                              shootout=Shootout(scores=2, attempts=2, has_been_played=False)),
-                    home_team_stats=TeamStats(goals=5, shots=44, blocked=17, hits=16, fo_wins='44.6', giveaways=10,
-                                              takeaways=10, pp_opportunities=3, pp_goals=1, pp_percentage='33.3',
-                                              periods=[
-                                                  Period(goals=2, shots=10, period_number=1, ordinal_number='1st'),
-                                                  Period(goals=2, shots=18, period_number=2, ordinal_number='2nd')],
-                                              shootout=Shootout(scores=1, attempts=3, has_been_played=False)))
-        expected = """| Time Clock |
-|:-:|
-| Final |
-
-&nbsp;
-
-| Team | 1st | 2nd | Total |
-|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 3 | 1 | 6 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 2 | 2 | 5 |
-
-&nbsp;
-
-| Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
-"""
-        body = post_utils.get_body(game)
-        print(body)
-        self.assertEqual(expected, post_utils.get_body(game))
-
-    def test_get_body_regulation(self):
-        game = Game(id=2022020158, away_team=Teams.ANA.value, home_team=Teams.SJS.value,
-                    start_time=datetime.datetime(2022, 11, 2, 2, 30, tzinfo=tzlocal()), game_clock='Final',
-                    away_team_stats=TeamStats(goals=6, shots=44, blocked=9, hits=19, fo_wins='55.4', giveaways=10,
-                                              takeaways=10, pp_opportunities=4, pp_goals=0, pp_percentage='0.0',
-                                              periods=[
-                                                  Period(goals=3, shots=17, period_number=1, ordinal_number='1st'),
-                                                  Period(goals=1, shots=15, period_number=2, ordinal_number='2nd'),
-                                                  Period(goals=1, shots=9, period_number=3, ordinal_number='3rd')],
-                                              shootout=Shootout(scores=2, attempts=2, has_been_played=False)),
-                    home_team_stats=TeamStats(goals=5, shots=44, blocked=17, hits=16, fo_wins='44.6', giveaways=10,
-                                              takeaways=10, pp_opportunities=3, pp_goals=1, pp_percentage='33.3',
-                                              periods=[
-                                                  Period(goals=2, shots=10, period_number=1, ordinal_number='1st'),
-                                                  Period(goals=2, shots=18, period_number=2, ordinal_number='2nd'),
-                                                  Period(goals=1, shots=14, period_number=3, ordinal_number='3rd')],
-                                              shootout=Shootout(scores=1, attempts=3, has_been_played=False)))
-        expected = """| Time Clock |
-|:-:|
-| Final |
-
-&nbsp;
-
-| Team | 1st | 2nd | 3rd | Total |
-|:-:|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 3 | 1 | 1 | 6 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 2 | 2 | 1 | 5 |
-
-&nbsp;
-
-| Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
-"""
-        body = post_utils.get_body(game)
-        print(body)
-        self.assertEqual(expected, post_utils.get_body(game))
-
-    def test_get_body_ot(self):
-        game = Game(id=2022020158, away_team=Teams.ANA.value, home_team=Teams.SJS.value,
-                    start_time=datetime.datetime(2022, 11, 2, 2, 30, tzinfo=tzlocal()), game_clock='Final',
-                    away_team_stats=TeamStats(goals=6, shots=44, blocked=9, hits=19, fo_wins='55.4', giveaways=10,
-                                              takeaways=10, pp_opportunities=4, pp_goals=0, pp_percentage='0.0',
-                                              periods=[
-                                                  Period(goals=3, shots=17, period_number=1, ordinal_number='1st'),
-                                                  Period(goals=1, shots=15, period_number=2, ordinal_number='2nd'),
-                                                  Period(goals=1, shots=9, period_number=3, ordinal_number='3rd'),
-                                                  Period(goals=0, shots=3, period_number=4, ordinal_number='OT')],
-                                              shootout=Shootout(scores=2, attempts=2, has_been_played=False)),
-                    home_team_stats=TeamStats(goals=5, shots=44, blocked=17, hits=16, fo_wins='44.6', giveaways=10,
-                                              takeaways=10, pp_opportunities=3, pp_goals=1, pp_percentage='33.3',
-                                              periods=[
-                                                  Period(goals=2, shots=10, period_number=1, ordinal_number='1st'),
-                                                  Period(goals=2, shots=18, period_number=2, ordinal_number='2nd'),
-                                                  Period(goals=1, shots=14, period_number=3, ordinal_number='3rd'),
-                                                  Period(goals=0, shots=2, period_number=4, ordinal_number='OT')],
-                                              shootout=Shootout(scores=1, attempts=3, has_been_played=False)))
-        expected = """| Time Clock |
-|:-:|
-| Final |
-
-&nbsp;
-
-| Team | 1st | 2nd | 3rd | OT | Total |
-|:-:|:-:|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 3 | 1 | 1 | 0 | 6 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 2 | 2 | 1 | 0 | 5 |
-
-&nbsp;
-
-| Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
-"""
-        body = post_utils.get_body(game)
-        print(body)
-        self.assertEqual(expected, post_utils.get_body(game))
-
-    def test_get_body_shootout(self):
-        game = Game(id=2022020158, away_team=Teams.ANA.value, home_team=Teams.SJS.value,
-                    start_time=datetime.datetime(2022, 11, 2, 2, 30, tzinfo=tzlocal()), game_clock='Final',
-                    away_team_stats=TeamStats(goals=6, shots=44, blocked=9, hits=19, fo_wins='55.4', giveaways=10,
-                                              takeaways=10, pp_opportunities=4, pp_goals=0, pp_percentage='0.0',
-                                              periods=[Period(goals=3, shots=17, period_number=1, ordinal_number='1st'),
-                                                       Period(goals=1, shots=15, period_number=2, ordinal_number='2nd'),
-                                                       Period(goals=1, shots=9, period_number=3, ordinal_number='3rd'),
-                                                       Period(goals=0, shots=3, period_number=4, ordinal_number='OT')],
-                                              shootout=Shootout(scores=2, attempts=2, has_been_played=True)),
-                    home_team_stats=TeamStats(goals=5, shots=44, blocked=17, hits=16, fo_wins='44.6', giveaways=10,
-                                              takeaways=10, pp_opportunities=3, pp_goals=1, pp_percentage='33.3',
-                                              periods=[Period(goals=2, shots=10, period_number=1, ordinal_number='1st'),
-                                                       Period(goals=2, shots=18, period_number=2, ordinal_number='2nd'),
-                                                       Period(goals=1, shots=14, period_number=3, ordinal_number='3rd'),
-                                                       Period(goals=0, shots=2, period_number=4, ordinal_number='OT')],
-                                              shootout=Shootout(scores=1, attempts=3, has_been_played=True)))
+    def test_get_body(self):
+        game = Game(id=2022020158, away_team=Team(id=24, abbreviation='ANA', city='Anaheim', name='Ducks', logo_url='https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png'), home_team=Team(id=28, abbreviation='SJS', city='San Jose', name='Sharks', logo_url='https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png'), start_time=datetime.datetime(2022, 11, 2, 2, 30, tzinfo=tzutc()), game_clock='Final', away_team_stats=TeamStats(goals=6, shots=44, blocked=9, hits=19, fo_wins='55.4', giveaways=10, takeaways=10, pp_opportunities=4, pp_goals=0, pp_percentage='0.0', periods=[Period(goals=3, shots=17, period_number=1, ordinal_number='1st'), Period(goals=1, shots=15, period_number=2, ordinal_number='2nd'), Period(goals=1, shots=9, period_number=3, ordinal_number='3rd'), Period(goals=0, shots=3, period_number=4, ordinal_number='OT')], shootout=Shootout(scores=2, attempts=2, has_been_played=True)), home_team_stats=TeamStats(goals=5, shots=44, blocked=17, hits=16, fo_wins='44.6', giveaways=10, takeaways=10, pp_opportunities=3, pp_goals=1, pp_percentage='33.3', periods=[Period(goals=2, shots=10, period_number=1, ordinal_number='1st'), Period(goals=2, shots=18, period_number=2, ordinal_number='2nd'), Period(goals=1, shots=14, period_number=3, ordinal_number='3rd'), Period(goals=0, shots=2, period_number=4, ordinal_number='OT')], shootout=Shootout(scores=1, attempts=3, has_been_played=True)), goals=[Goal(period='1st', time='05:16', team=Team(id=24, abbreviation='ANA', city='Anaheim', name='Ducks', logo_url='https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png'), strength='Even', goalie='Kahkonen', description='Adam Henrique (1) Wrist Shot, assists: Kevin Shattenkirk (3)'), Goal(period='1st', time='06:18', team=Team(id=28, abbreviation='SJS', city='San Jose', name='Sharks', logo_url='https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png'), strength='Even', goalie='Stolarz', description='Erik Karlsson (7) Wrist Shot, assists: Evgeny Svechnikov (3), Tomas Hertl (6)'), Goal(period='1st', time='06:41', team=Team(id=28, abbreviation='SJS', city='San Jose', name='Sharks', logo_url='https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png'), strength='Even', goalie='Stolarz', description='Erik Karlsson (8) Slap Shot, assists: Jaycob Megna (4), Nico Sturm (1)'), Goal(period='1st', time='10:52', team=Team(id=24, abbreviation='ANA', city='Anaheim', name='Ducks', logo_url='https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png'), strength='Even', goalie='Kahkonen', description='Frank Vatrano (4) Wrist Shot, assists: Isac Lundestrom (4), Jakob Silfverberg (1)'), Goal(period='1st', time='19:45', team=Team(id=24, abbreviation='ANA', city='Anaheim', name='Ducks', logo_url='https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png'), strength='Even', goalie='Kahkonen', description='Adam Henrique (2) Backhand, assists: Trevor Zegras (2), Kevin Shattenkirk (4)'), Goal(period='2nd', time='03:28', team=Team(id=28, abbreviation='SJS', city='San Jose', name='Sharks', logo_url='https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png'), strength='Power Play', goalie='Stolarz', description='Timo Meier (2) Backhand, assists: Alexander Barabanov (4), Erik Karlsson (6)'), Goal(period='2nd', time='15:10', team=Team(id=24, abbreviation='ANA', city='Anaheim', name='Ducks', logo_url='https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png'), strength='Even', goalie='Kahkonen', description='Ryan Strome (2) Deflected, assists: John Klingberg (3), Troy Terry (7)'), Goal(period='2nd', time='15:31', team=Team(id=28, abbreviation='SJS', city='San Jose', name='Sharks', logo_url='https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png'), strength='Even', goalie='Stolarz', description='Timo Meier (3) , assists: none'), Goal(period='3rd', time='11:31', team=Team(id=24, abbreviation='ANA', city='Anaheim', name='Ducks', logo_url='https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png'), strength='Even', goalie='Kahkonen', description='Max Comtois (2) Wrist Shot, assists: Troy Terry (8), Nathan Beaulieu (1)'), Goal(period='3rd', time='17:48', team=Team(id=28, abbreviation='SJS', city='San Jose', name='Sharks', logo_url='https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png'), strength='Even', goalie='Stolarz', description='Erik Karlsson (9) Wrist Shot, assists: Alexander Barabanov (5), Tomas Hertl (7)'), Goal(period='SO', time='00:00', team=Team(id=28, abbreviation='SJS', city='San Jose', name='Sharks', logo_url='https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png'), strength='Even', goalie='Stolarz', description='Logan Couture - Wrist Shot'), Goal(period='SO', time='00:00', team=Team(id=24, abbreviation='ANA', city='Anaheim', name='Ducks', logo_url='https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png'), strength='Even', goalie='Kahkonen', description='Trevor Zegras - Backhand'), Goal(period='SO', time='00:00', team=Team(id=24, abbreviation='ANA', city='Anaheim', name='Ducks', logo_url='https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png'), strength='Even', goalie='Kahkonen', description='Troy Terry - Backhand')])
         expected = """| Time Clock |
 |:-:|
 | Final |
@@ -185,15 +55,33 @@ class TestPostUtils(unittest.TestCase):
 
 | Team | 1st | 2nd | 3rd | OT | SO | Total |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 3 | 1 | 1 | 0 | 2/2 | 6 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 2 | 2 | 1 | 0 | 1/3 | 5 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | 3 | 1 | 1 | 0 | 2/2 | 6 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | 2 | 2 | 1 | 0 | 1/3 | 5 |
 
 &nbsp;
 
 | Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_ana") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_sjs") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
+| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
+| ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
+
+&nbsp;
+
+| Period | Time | Team | Strength | Goalie | Description |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+| SO | 00:00 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | Even | Kahkonen | Troy Terry - Backhand |
+| SO | 00:00 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | Even | Kahkonen | Trevor Zegras - Backhand |
+| SO | 00:00 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | Even | Stolarz | Logan Couture - Wrist Shot |
+| 3rd | 17:48 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | Even | Stolarz | Erik Karlsson (9) Wrist Shot, assists: Alexander Barabanov (5), Tomas Hertl (7) |
+| 3rd | 11:31 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | Even | Kahkonen | Max Comtois (2) Wrist Shot, assists: Troy Terry (8), Nathan Beaulieu (1) |
+| 2nd | 15:31 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | Even | Stolarz | Timo Meier (3) , assists: none |
+| 2nd | 15:10 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | Even | Kahkonen | Ryan Strome (2) Deflected, assists: John Klingberg (3), Troy Terry (7) |
+| 2nd | 03:28 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | Power Play | Stolarz | Timo Meier (2) Backhand, assists: Alexander Barabanov (4), Erik Karlsson (6) |
+| 1st | 19:45 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | Even | Kahkonen | Adam Henrique (2) Backhand, assists: Trevor Zegras (2), Kevin Shattenkirk (4) |
+| 1st | 10:52 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | Even | Kahkonen | Frank Vatrano (4) Wrist Shot, assists: Isac Lundestrom (4), Jakob Silfverberg (1) |
+| 1st | 06:41 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | Even | Stolarz | Erik Karlsson (8) Slap Shot, assists: Jaycob Megna (4), Nico Sturm (1) |
+| 1st | 06:18 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | Even | Stolarz | Erik Karlsson (7) Wrist Shot, assists: Evgeny Svechnikov (3), Tomas Hertl (6) |
+| 1st | 05:16 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | Even | Kahkonen | Adam Henrique (1) Wrist Shot, assists: Kevin Shattenkirk (3) |
 """
         body = post_utils.get_body(game)
         print(body)

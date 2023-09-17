@@ -1,0 +1,51 @@
+{
+    "gamePk": 2022020158,
+    "link": "/api/v1/game/2022020158/feed/live",
+    "gameType": "R",
+    "season": "20222023",
+    "gameDate": "2022-11-02T02:30:00Z",
+    "status": {
+        "abstractGameState": "Final",
+        "codedGameState": "7",
+        "detailedState": "Final",
+        "statusCode": "7",
+        "startTimeTBD": false
+    },
+    "teams": {
+        "away": {
+            "leagueRecord": {
+                "wins": 3,
+                "losses": 6,
+                "ot": 1,
+                "type": "league"
+            },
+            "score": 6,
+            "team": {
+                "id": 24,
+                "name": "Anaheim Ducks",
+                "link": "/api/v1/teams/24"
+            }
+        },
+        "home": {
+            "leagueRecord": {
+                "wins": 3,
+                "losses": 8,
+                "ot": 1,
+                "type": "league"
+            },
+            "score": 5,
+            "team": {
+                "id": 28,
+                "name": "San Jose Sharks",
+                "link": "/api/v1/teams/28"
+            }
+        }
+    },
+    "venue": {
+        "name": "SAP Center at San Jose",
+        "link": "/api/v1/venues/null"
+    },
+    "content": {
+        "link": "/api/v1/game/2022020158/content"
+    }
+}
