@@ -1,4 +1,5 @@
 import sqlite3
+from enum import Enum
 from sqlite3 import Error
 
 from src.utils import logger
@@ -11,6 +12,10 @@ TAG = 'db_client.py'
 TABLE_POSTS = 'posts'
 COLUMN_POST_ID = 'post_id'
 COLUMN_GAME_ID = 'game_id'
+COLUMN_POST_TYPE = 'post_type'
+
+POST_TYPE_GDT = 1
+POST_TYPE_DDT = 2
 
 
 def create_connection(path_to_db):
@@ -27,7 +32,7 @@ def create_connection(path_to_db):
 def create_tables():
     global cursor
     cursor.execute(
-        f"CREATE TABLE IF NOT EXISTS posts({COLUMN_POST_ID} INTEGER PRIMARY KEY NOT NULL, {COLUMN_GAME_ID} INTEGER NOT NULL)")
+        f"CREATE TABLE IF NOT EXISTS posts({COLUMN_POST_ID} INTEGER PRIMARY KEY NOT NULL, {COLUMN_GAME_ID} INTEGER NOT NULL, {COLUMN_POST_TYPE} INTEGER NOT NULL)")
 
 
 def get_post_id(game_id: int):
@@ -38,11 +43,11 @@ def get_post_id(game_id: int):
     return None
 
 
-def insert_row(post_id: int, game_id: int):
+def insert_row(post_id: int, game_id: int, post_type: int):
     global cursor
-    s = f"INSERT INTO {TABLE_POSTS} ({COLUMN_POST_ID}, {COLUMN_GAME_ID}) VALUES({post_id}, {game_id})"
+    s = f"INSERT INTO {TABLE_POSTS} ({COLUMN_POST_ID}, {COLUMN_GAME_ID}, {COLUMN_POST_TYPE}) VALUES({post_id}, {game_id}, {post_type})"
     logger.d(TAG, s)
-    cursor.execute(f"INSERT INTO {TABLE_POSTS} ({COLUMN_POST_ID}, {COLUMN_GAME_ID}) VALUES({post_id}, {game_id})")
+    cursor.execute(f"INSERT INTO {TABLE_POSTS} ({COLUMN_POST_ID}, {COLUMN_GAME_ID}, {COLUMN_POST_TYPE}) VALUES({post_id}, {game_id}, {post_type})")
     connection.commit()
 
 

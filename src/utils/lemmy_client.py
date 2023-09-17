@@ -26,7 +26,7 @@ class LemmyClient:
 
     def create_post(self, title, body, game_id):
         post_id = self.lemmy.post.create(self.community_id, name=title, body=body)[DICT_KEY_POST_VIEW][DICT_KEY_POST][DICT_KEY_ID]
-        db_client.insert_row(post_id, game_id)
+        db_client.insert_row(post_id, game_id, db_client.POST_TYPE_GDT)
 
     def update_post(self, title, body, post_id):
         self.lemmy.post.edit(post_id=post_id, name=title, body=body)
