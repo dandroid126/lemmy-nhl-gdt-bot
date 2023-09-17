@@ -26,6 +26,8 @@ DESCRIPTION = 'Description'
 TEAM_STATS_HEADER_ROW = [TEAM, SHOTS, HITS, BLOCKED, FO_WINS, GIVEAWAYS, TAKEAWAYS, POWER_PLAYS]
 GOALS_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, STRENGTH, GOALIE, DESCRIPTION]
 
+FOOTER_TEXT = "I am an open source bot! Report issues and contribute [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!"
+
 
 def get_body(game: Game):
     time_clock = get_time_clock(game)
@@ -47,6 +49,10 @@ def get_body(game: Game):
 {"&nbsp;" if goal_details.render() else ""}
 
 {goal_details.render()}
+
+&nbsp;
+
+{FOOTER_TEXT}
 """
 
 

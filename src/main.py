@@ -43,7 +43,7 @@ while not is_interrupted:
     for game in games:
         post_id = db_client.get_post_id(game.id)
         current_time = datetime_utils.get_current_time_as_utc()
-        if datetime_utils.is_time_to_make_post(current_time, game.start_time, game.end_time):
+        if datetime_utils.is_time_to_make_post(current_time, game.start_time, None):
             if post_id is not None:
                 lemmy_client.update_post(post_utils.get_title(game), post_utils.get_body(game), post_id)
             else:

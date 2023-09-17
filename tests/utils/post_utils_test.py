@@ -82,6 +82,10 @@ class TestPostUtils(unittest.TestCase):
 | 1st | 06:41 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | Even | Stolarz | Erik Karlsson (8) Slap Shot, assists: Jaycob Megna (4), Nico Sturm (1) |
 | 1st | 06:18 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs") SJS | Even | Stolarz | Erik Karlsson (7) Wrist Shot, assists: Evgeny Svechnikov (3), Tomas Hertl (6) |
 | 1st | 05:16 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana") ANA | Even | Kahkonen | Adam Henrique (1) Wrist Shot, assists: Kevin Shattenkirk (3) |
+
+&nbsp;
+
+I am an open source bot! Report issues and contribute [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!
 """
         body = post_utils.get_body(game)
         print(body)
@@ -110,6 +114,10 @@ class TestPostUtils(unittest.TestCase):
 
 
 
+
+&nbsp;
+
+I am an open source bot! Report issues and contribute [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!
 """
         body = post_utils.get_body(game)
         print(body)
