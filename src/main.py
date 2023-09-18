@@ -39,7 +39,7 @@ lemmy_client = LemmyClient(lemmy_instance, bot_name, password, community_name)
 
 is_interrupted = False
 while not is_interrupted:
-    games = nhl_api_client.get_games(datetime_utils.today(), datetime_utils.tomorrow())
+    games = nhl_api_client.get_games(str(datetime_utils.today()), str(datetime_utils.tomorrow()))
     for game in games:
         try:
             if game is None:
