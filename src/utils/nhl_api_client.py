@@ -19,7 +19,6 @@ URL_REPL_START_DATE = "{{START_DATE}}"
 URL_REPL_END_DATE = "{{END_DATE}}"
 
 BASE_URL = "https://statsapi.web.nhl.com/api/v1"
-# SCHEDULE_URL = f"{BASE_URL}/schedule?date={URL_REPL_DATE}&expand=schedule.broadcasts"
 SCHEDULE_URL = f"{BASE_URL}/schedule?startDate={URL_REPL_START_DATE}&endDate={URL_REPL_END_DATE}&expand=schedule.broadcasts"
 FEED_LIVE_URL = f"{BASE_URL}/game/{URL_REPL_GAME_ID}/feed/live"
 
@@ -75,7 +74,6 @@ DICT_KEY_PENALTY_MINUTES = 'penaltyMinutes'
 DICT_KEY_PENALTY_SEVERITY = 'penaltySeverity'
 
 DICT_VALUE_GOALIE = 'Goalie'
-
 
 # Team Stats
 DICT_KEY_GOALS = 'goals'
@@ -198,7 +196,7 @@ def parse_penalties(feed_live: dict):
         penalty_play_details = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_PLAYS}.{DICT_KEY_ALL_PLAYS}.{play}", {})
         penalties.append(Penalty(period=pydash.get(penalty_play_details, f"{DICT_KEY_ABOUT}.{DICT_KEY_ORDINAL_NUM}", ""),
                                  time=pydash.get(penalty_play_details, f"{DICT_KEY_ABOUT}.{DICT_KEY_PERIOD_TIME}", ""),
-                                 team=pydash.get(penalty_play_details, f"{DICT_KEY_TEAM}.{DICT_KEY_TRI_CODE}", ""),
+                                 team=Teams[pydash.get(penalty_play_details, f"{DICT_KEY_TEAM}.{DICT_KEY_TRI_CODE}", "ERR")].value,
                                  type=pydash.get(penalty_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_PENALTY_SEVERITY}", ""),
                                  min=pydash.get(penalty_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_PENALTY_MINUTES}", -1),
                                  description=pydash.get(penalty_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_DESCRIPTION}", "")))
@@ -227,7 +225,7 @@ def parse_team_stats(feed_live: dict):
     return out
 
 
-def parse_game(feed_live: dict):  # TODO: only use feed_live
+def parse_game(feed_live: dict):
     team_stats = parse_team_stats(feed_live)
 
     game_id = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_GAME}.{DICT_KEY_PK}", None)

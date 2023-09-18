@@ -7,7 +7,6 @@ from src.datatypes.teams import Team
 from src.datatypes.team_stats import TeamStats
 
 
-# TODO: replace team names with team objects
 @dataclass
 class Game:
     id: int

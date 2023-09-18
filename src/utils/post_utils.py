@@ -150,7 +150,7 @@ def get_penalty_details(game):
     for i, penalty in enumerate(reversed(game.penalties)):
         penalty_details.set(0, i + 1, penalty.period)
         penalty_details.set(1, i + 1, penalty.time)
-        penalty_details.set(2, i + 1, penalty.team)
+        penalty_details.set(2, i + 1, penalty.team.get_team_table_entry())
         penalty_details.set(3, i + 1, penalty.type)
         penalty_details.set(4, i + 1, penalty.min)
         penalty_details.set(5, i + 1, penalty.description)
