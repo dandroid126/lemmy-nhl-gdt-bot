@@ -3,7 +3,7 @@ from src.datatypes.game import Game
 
 
 def get_title(game: Game):
-    return f"[GDT] {game.away_team.city} {game.away_team.name} at {game.home_team.city} {game.home_team.name} - {game.start_time.astimezone(datetime_utils.EST).strftime(datetime_utils.START_TIME_FORMAT)}"
+    return f"[GDT] {game.away_team.city} {game.away_team.name} at {game.home_team.city} {game.home_team.name} - {game.start_time.astimezone(datetime_utils.ET).strftime(datetime_utils.START_TIME_FORMAT)}"
 
 
 TIME_CLOCK = 'Time Clock'
@@ -22,9 +22,15 @@ TIME = 'Time'
 STRENGTH = 'Strength'
 GOALIE = 'Goalie'
 DESCRIPTION = 'Description'
+PT = "PT"
+MT = "MT"
+CT = "CT"
+ET = "ET"
+AT = "AT"
 
 TEAM_STATS_HEADER_ROW = [TEAM, SHOTS, HITS, BLOCKED, FO_WINS, GIVEAWAYS, TAKEAWAYS, POWER_PLAYS]
 GOALS_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, STRENGTH, GOALIE, DESCRIPTION]
+START_TIME_HEADER_ROW = [PT, MT, CT, ET, AT]
 
 FOOTER_TEXT = "I am an open source bot! Report issues and contribute [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!"
 
@@ -34,6 +40,7 @@ def get_body(game: Game):
     periods = get_periods(game)
     team_stats = get_team_stats(game)
     goal_details = get_goal_details(game)
+    start_time_table = get_start_time_table(game)
 
     # Render everything
     return f"""{time_clock.render()}
@@ -49,6 +56,12 @@ def get_body(game: Game):
 {"&nbsp;" if goal_details.render() else ""}
 
 {goal_details.render()}
+
+&nbsp;
+
+#### Start Times
+
+{start_time_table.render()}
 
 &nbsp;
 
@@ -116,6 +129,18 @@ def get_goal_details(game):
         goal_details.set(4, i + 1, goal.goalie)
         goal_details.set(5, i + 1, goal.description)
     return goal_details
+
+
+def get_start_time_table(game):
+    start_time = Table()
+    for i, value in enumerate(START_TIME_HEADER_ROW):
+        start_time.set(i, 0, value)
+    start_time.set(0,1, game.start_time.astimezone(datetime_utils.PT).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
+    start_time.set(1,1, game.start_time.astimezone(datetime_utils.MT).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
+    start_time.set(2,1, game.start_time.astimezone(datetime_utils.CT).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
+    start_time.set(3,1, game.start_time.astimezone(datetime_utils.ET).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
+    start_time.set(4,1, game.start_time.astimezone(datetime_utils.AT).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
+    return start_time
 
 
 class Table:

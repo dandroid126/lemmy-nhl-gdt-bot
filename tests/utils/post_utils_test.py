@@ -85,6 +85,14 @@ class TestPostUtils(unittest.TestCase):
 
 &nbsp;
 
+#### Start Times
+
+| PT | MT | CT | ET | AT |
+|:-:|:-:|:-:|:-:|:-:|
+| 07:30PM | 08:30PM | 09:30PM | 10:30PM | 11:30PM |
+
+&nbsp;
+
 I am an open source bot! Report issues and contribute [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!
 """
         body = post_utils.get_body(game)
@@ -114,6 +122,14 @@ I am an open source bot! Report issues and contribute [on my GitHub page](https:
 
 
 
+
+&nbsp;
+
+#### Start Times
+
+| PT | MT | CT | ET | AT |
+|:-:|:-:|:-:|:-:|:-:|
+| 09:05PM | 10:05PM | 11:05PM | 12:05AM | 01:05AM |
 
 &nbsp;
 

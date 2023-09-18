@@ -2,8 +2,13 @@ from datetime import datetime, timedelta, date
 from dateutil import parser
 import pytz
 
-EST = pytz.timezone('US/Eastern')
+PT = pytz.timezone('US/Pacific')
+MT = pytz.timezone('US/Mountain')
+CT = pytz.timezone('US/Central')
+ET = pytz.timezone('US/Eastern')
+AT = pytz.timezone('Canada/Atlantic')
 START_TIME_FORMAT = "%I:%M%p %Z"
+START_TIME_FORMAT_NO_TZ = "%I:%M%p"
 MINUTES_BEFORE_GAME_START_TO_CREATE_POST = 60
 MINUTES_AFTER_GAME_END_TO_UPDATE_POST = 60
 
