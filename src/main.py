@@ -39,14 +39,14 @@ lemmy_client = LemmyClient(lemmy_instance, bot_name, password, community_name)
 
 is_interrupted = False
 while not is_interrupted:
-    games = nhl_api_client.get_games('2022-10-31', '2022-11-1')
+    games = nhl_api_client.get_games(datetime_utils.today(), datetime_utils.tomorrow())
     for game in games:
         try:
             if game is None:
                 continue
             post_id = db_client.get_post_id(game.id)
             current_time = datetime_utils.get_current_time_as_utc()
-            if datetime_utils.is_time_to_make_post(current_time, game.start_time, None): # TODO: change this back to game.end_time
+            if datetime_utils.is_time_to_make_post(current_time, game.start_time, game.end_time):
                 if post_id is not None:
                     lemmy_client.update_post(post_utils.get_title(game), post_utils.get_body(game), post_id)
                 else:

@@ -40,5 +40,9 @@ def today():
     return date.today()
 
 
+def tomorrow():
+    return date.today() + timedelta(days=1)
+
+
 def yesterday():
     return date.today() - timedelta(days=1)
