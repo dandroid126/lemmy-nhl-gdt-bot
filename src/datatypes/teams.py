@@ -11,7 +11,7 @@ class Team:
     logo_url: str
 
     def get_logo_markdown(self):
-        return f'![{self.city} {self.name}]({self.logo_url} "nhl_{self.abbreviation.lower()}")'
+        return f'![{self.city} {self.name}]({self.logo_url} "nhl_{self.abbreviation.lower()}_workaround")'
 
     def get_team_table_entry(self):
         return f"{self.get_logo_markdown()} {self.abbreviation}"
