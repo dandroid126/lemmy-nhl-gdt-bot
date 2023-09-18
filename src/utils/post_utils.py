@@ -32,7 +32,7 @@ TEAM_STATS_HEADER_ROW = [TEAM, SHOTS, HITS, BLOCKED, FO_WINS, GIVEAWAYS, TAKEAWA
 GOALS_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, STRENGTH, GOALIE, DESCRIPTION]
 START_TIME_HEADER_ROW = [PT, MT, CT, ET, AT]
 
-FOOTER_TEXT = "I am an open source bot! Report issues and contribute [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!"
+FOOTER_TEXT = "I am open source! Report issues, contribute, and fund me [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!"
 
 
 def get_body(game: Game):

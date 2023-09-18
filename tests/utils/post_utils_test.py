@@ -93,7 +93,7 @@ class TestPostUtils(unittest.TestCase):
 
 &nbsp;
 
-I am an open source bot! Report issues and contribute [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!
+I am open source! Report issues, contribute, and fund me [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!
 """
         body = post_utils.get_body(game)
         print(body)
@@ -133,7 +133,7 @@ I am an open source bot! Report issues and contribute [on my GitHub page](https:
 
 &nbsp;
 
-I am an open source bot! Report issues and contribute [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!
+I am open source! Report issues, contribute, and fund me [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!
 """
         body = post_utils.get_body(game)
         print(body)
