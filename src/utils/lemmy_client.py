@@ -30,7 +30,7 @@ class LemmyClient:
         if post_id == -1:
             logger.e(TAG, f"Failed to create post for game {game_id}")
             return False
-        return db_client.insert_row(post_id, game_id, db_client.POST_TYPE_GDT)
+        return db_client.insert_post(post_id, game_id, db_client.POST_TYPE_GDT)
 
     def update_post(self, title, body, post_id):
         self.lemmy.post.edit(post_id=post_id, name=title, body=body)

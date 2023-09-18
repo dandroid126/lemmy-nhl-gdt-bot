@@ -1,5 +1,4 @@
 import sqlite3
-from enum import Enum
 from sqlite3 import Error
 
 from src.utils import logger
@@ -9,13 +8,20 @@ global cursor
 
 TAG = 'db_client.py'
 
-TABLE_POSTS = 'posts'
-COLUMN_POST_ID = 'post_id'
-COLUMN_GAME_ID = 'game_id'
-COLUMN_POST_TYPE = 'post_type'
+# Keeping these here for reference, but don't use them because formatted strings in queries are bad.
+# TABLE_POSTS = 'posts'
+# COLUMN_POST_ID = 'post_id'
+# COLUMN_GAME_ID = 'game_id'
+# COLUMN_POST_TYPE = 'post_type'
+#
+# TABLE_DB_SCHEMA = 'db_schema'
+# COLUMN_ROWID = 'rowid'
+# COLUMN_VERSION = 'version'
 
 POST_TYPE_GDT = 1
 POST_TYPE_DDT = 2
+
+DB_SCHEMA_VERSION = 1
 
 
 def create_connection(path_to_db):
@@ -31,27 +37,71 @@ def create_connection(path_to_db):
 
 def create_tables():
     global cursor
+    logger.d(TAG, "create_tables: creating tables")
     cursor.execute(
-        f"CREATE TABLE IF NOT EXISTS posts({COLUMN_POST_ID} INTEGER PRIMARY KEY NOT NULL, {COLUMN_GAME_ID} INTEGER NOT NULL, {COLUMN_POST_TYPE} INTEGER NOT NULL)")
+        "CREATE TABLE IF NOT EXISTS posts(post_id INTEGER PRIMARY KEY NOT NULL, game_id INTEGER NOT NULL, post_type INTEGER NOT NULL)")
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS db_schema(rowid INTEGER PRIMARY KEY NOT NULL, version INTEGER NOT NULL)")
 
 
 def get_post_id(game_id: int):
     global cursor
-    val = cursor.execute("SELECT post_id FROM posts WHERE game_id=?", (game_id,)).fetchone()
+    query = "SELECT post_id FROM posts WHERE game_id=?"
+    params = (game_id,)
+    logger.d(TAG, f"get_post_id: executing {query} with params {params}")
+    val = cursor.execute(query, params).fetchone()
     if val is not None:
         return val[0]
     return None
 
 
-def insert_row(post_id: int, game_id: int, post_type: int):
+def insert_post(post_id: int, game_id: int, post_type: int):
     global cursor
-    s = f"INSERT INTO {TABLE_POSTS} ({COLUMN_POST_ID}, {COLUMN_GAME_ID}, {COLUMN_POST_TYPE}) VALUES({post_id}, {game_id}, {post_type})"
-    logger.d(TAG, s)
-    cursor.execute(f"INSERT INTO {TABLE_POSTS} ({COLUMN_POST_ID}, {COLUMN_GAME_ID}, {COLUMN_POST_TYPE}) VALUES({post_id}, {game_id}, {post_type})")
+    query = "INSERT INTO posts VALUES(?, ?, ?)"
+    params = (post_id, game_id, post_type)
+    logger.d(TAG, f"insert_post: executing {query} with params {params}")
+    cursor.execute(query, params)
     connection.commit()
     return True
 
 
+def set_db_schema_version(version: int):
+    global cursor
+    query = "INSERT OR REPLACE INTO db_schema VALUES(0, ?)"
+    params = (version,)
+    logger.d(TAG, f"set_db_schema_version: executing '{query}' with params '{params}")
+    cursor.execute(query, params)
+    connection.commit()
+    return True
+
+
+def get_db_schema_version():
+    global cursor
+    query = "SELECT version FROM db_schema WHERE rowid = '0'"
+    logger.d(TAG, f"get_db_schema_version executing: {query}")
+    try:
+        val = cursor.execute(query).fetchone()
+        if val is not None:
+            return val[0]
+    except sqlite3.OperationalError:
+        logger.d(TAG, "get_db_schema_version: db_schema table not found. Assuming db_schema version is 0")
+        return 0
+    return 0
+
+
+def upgrade_db_schema():
+    from_version = get_db_schema_version()
+    while from_version < DB_SCHEMA_VERSION:
+        upgrade = {
+            # When upgrading the db schema version, increase DB_SCHEMA_VERSION, then add a function here with what to do to upgrade to that version.
+            # The key is the db schema version being upgraded to. The value is the name of the upgrade function. Do not add parentheses, or it will get executed every time.
+            1: create_tables,
+        }
+        upgrade.get(from_version + 1, lambda: None)()
+        from_version = from_version + 1
+    set_db_schema_version(DB_SCHEMA_VERSION)
+
+
 def initialize(db_path):
     create_connection(db_path)
-    create_tables()
+    upgrade_db_schema()
