@@ -3,6 +3,7 @@ import requests
 import json
 from src.datatypes.Exceptions.IllegalArgumentException import IllegalArgumentException
 from src.datatypes.goal import Goal
+from src.datatypes.penalty import Penalty
 from src.datatypes.teams import Teams
 
 from src.datatypes.game import Game
@@ -64,12 +65,16 @@ DICT_KEY_PLAYERS = 'players'
 DICT_KEY_PLAYER = 'player'
 DICT_KEY_PLAYER_TYPE = 'playerType'
 DICT_KEY_FULL_NAME = 'fullName'
+DICT_KEY_DATETIME = 'datetime'
+DICT_KEY_DATE_TIME = 'dateTime'  # WTF NHL??????? Why are these different?????
+DICT_KEY_END_DATE_TIME = 'endDateTime'
+DICT_KEY_CURRENT_PERIOD_TIME_REMAINING = 'currentPeriodTimeRemaining'
+DICT_KEY_PK = 'pk'
+DICT_KEY_PENALTY_PLAYS = 'penaltyPlays'
+DICT_KEY_PENALTY_MINUTES = 'penaltyMinutes'
+DICT_KEY_PENALTY_SEVERITY = 'penaltySeverity'
+
 DICT_VALUE_GOALIE = 'Goalie'
-DICT_VALUE_DATETIME = 'datetime'
-DICT_VALUE_DATE_TIME = 'dateTime'  # WTF NHL??????? Why are these different?????
-DICT_VALUE_END_DATE_TIME = 'endDateTime'
-DICT_VALUE_CURRENT_PERIOD_TIME_REMAINING = 'currentPeriodTimeRemaining'
-DICT_VALUE_PK = 'pk'
 
 
 # Team Stats
@@ -186,6 +191,20 @@ def parse_goals(feed_live: dict):
     return goals
 
 
+def parse_penalties(feed_live: dict):
+    penalty_plays = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_PLAYS}.{DICT_KEY_PENALTY_PLAYS}", [])
+    penalties = []
+    for play in penalty_plays:
+        penalty_play_details = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_PLAYS}.{DICT_KEY_ALL_PLAYS}.{play}", {})
+        penalties.append(Penalty(period=pydash.get(penalty_play_details, f"{DICT_KEY_ABOUT}.{DICT_KEY_ORDINAL_NUM}", ""),
+                                 time=pydash.get(penalty_play_details, f"{DICT_KEY_ABOUT}.{DICT_KEY_PERIOD_TIME}", ""),
+                                 team=pydash.get(penalty_play_details, f"{DICT_KEY_TEAM}.{DICT_KEY_TRI_CODE}", ""),
+                                 type=pydash.get(penalty_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_PENALTY_SEVERITY}", ""),
+                                 min=pydash.get(penalty_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_PENALTY_MINUTES}", -1),
+                                 description=pydash.get(penalty_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_DESCRIPTION}", "")))
+    return penalties
+
+
 def parse_team_stats(feed_live: dict):
     periods = parse_periods(feed_live)
     shootouts = parse_shootouts(feed_live)
@@ -211,14 +230,14 @@ def parse_team_stats(feed_live: dict):
 def parse_game(feed_live: dict):  # TODO: only use feed_live
     team_stats = parse_team_stats(feed_live)
 
-    game_id = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_GAME}.{DICT_VALUE_PK}", None)
+    game_id = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_GAME}.{DICT_KEY_PK}", None)
     away_team_abbr = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_TEAMS}.{DICT_KEY_AWAY}.{DICT_KEY_ABBREVIATION}", None)
     home_team_abbr = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_TEAMS}.{DICT_KEY_HOME}.{DICT_KEY_ABBREVIATION}", None)
-    start_time = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_VALUE_DATETIME}.{DICT_VALUE_DATE_TIME}", None)
-    end_time = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_VALUE_DATETIME}.{DICT_VALUE_END_DATE_TIME}", None)
+    start_time = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_DATETIME}.{DICT_KEY_DATE_TIME}", None)
+    end_time = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_DATETIME}.{DICT_KEY_END_DATE_TIME}", None)
     if end_time is not None:
         end_time = datetime_utils.parse_datetime(end_time)
-    game_clock = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_VALUE_CURRENT_PERIOD_TIME_REMAINING}", "--")
+    game_clock = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_CURRENT_PERIOD_TIME_REMAINING}", "--")
     home_team_stats = pydash.get(team_stats, f"{DICT_KEY_HOME}", None)
     away_team_stats = pydash.get(team_stats, f"{DICT_KEY_AWAY}", None)
 
@@ -233,4 +252,5 @@ def parse_game(feed_live: dict):  # TODO: only use feed_live
                 game_clock=game_clock,
                 home_team_stats=home_team_stats,
                 away_team_stats=away_team_stats,
-                goals=parse_goals(feed_live))
+                goals=parse_goals(feed_live),
+                penalties=parse_penalties(feed_live))

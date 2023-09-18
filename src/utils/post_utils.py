@@ -22,6 +22,8 @@ TIME = 'Time'
 STRENGTH = 'Strength'
 GOALIE = 'Goalie'
 DESCRIPTION = 'Description'
+TYPE = 'Type'
+MIN = 'Min'
 PT = "PT"
 MT = "MT"
 CT = "CT"
@@ -30,16 +32,20 @@ AT = "AT"
 
 TEAM_STATS_HEADER_ROW = [TEAM, SHOTS, HITS, BLOCKED, FO_WINS, GIVEAWAYS, TAKEAWAYS, POWER_PLAYS]
 GOALS_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, STRENGTH, GOALIE, DESCRIPTION]
+PENALTY_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, TYPE, MIN, DESCRIPTION]
 START_TIME_HEADER_ROW = [PT, MT, CT, ET, AT]
 
 FOOTER_TEXT = "I am open source! Report issues, contribute, and fund me [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!"
 
 
 def get_body(game: Game):
+    if game is None:
+        return ""
     time_clock = get_time_clock(game)
     periods = get_periods(game)
     team_stats = get_team_stats(game)
     goal_details = get_goal_details(game)
+    penalty_details = get_penalty_details(game)
     start_time_table = get_start_time_table(game)
 
     # Render everything
@@ -56,6 +62,10 @@ def get_body(game: Game):
 {"&nbsp;" if goal_details.render() else ""}
 
 {goal_details.render()}
+
+{"&nbsp;" if penalty_details.render() else ""}
+
+{penalty_details.render()}
 
 &nbsp;
 
@@ -129,6 +139,22 @@ def get_goal_details(game):
         goal_details.set(4, i + 1, goal.goalie)
         goal_details.set(5, i + 1, goal.description)
     return goal_details
+
+
+def get_penalty_details(game):
+    penalty_details = Table()
+    if not game.penalties:
+        return penalty_details
+    for i, value in enumerate(PENALTY_DETAILS_HEADER_ROW):
+        penalty_details.set(i, 0, value)
+    for i, penalty in enumerate(reversed(game.penalties)):
+        penalty_details.set(0, i + 1, penalty.period)
+        penalty_details.set(1, i + 1, penalty.time)
+        penalty_details.set(2, i + 1, penalty.team)
+        penalty_details.set(3, i + 1, penalty.type)
+        penalty_details.set(4, i + 1, penalty.min)
+        penalty_details.set(5, i + 1, penalty.description)
+    return penalty_details
 
 
 def get_start_time_table(game):

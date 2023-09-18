@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from src.datatypes.goal import Goal
+from src.datatypes.penalty import Penalty
 from src.datatypes.teams import Team
 from src.datatypes.team_stats import TeamStats
 
@@ -18,3 +19,4 @@ class Game:
     away_team_stats: TeamStats
     home_team_stats: TeamStats
     goals: [Goal]
+    penalties: [Penalty]
