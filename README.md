@@ -22,7 +22,7 @@ There's a shell script `run.sh` included in the repo to do this. This is what th
 ## Just host it
 1. Create the out directory. ([See section](#create-the-out-directory)) 
 ```bash
-docker run --rm --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out docker.io/dandroid126/lemmy-nhl-gdt-bot:main
+docker run --rm --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out ghcr.io/dandroid126/lemmy-nhl-gdt-bot:main
 ```
 
 ## Create the out directory
@@ -36,7 +36,7 @@ docker run --rm --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out d
     mkdir -p lemmy-nhl-gdt-bot/out
     cd lemmy-nhl-gdt-bot
     sudo chmod 777 out
-    podman run --rm -d --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out docker.io/dandroid126/lemmy-nhl-gdt-bot:main
+    podman run --rm -d --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out ghcr.io/dandroid126/lemmy-nhl-gdt-bot:main
     sleep 5 # Only needed if running this in a script
     podman kill lemmy-nhl-gdt-bot
     userId=$(ls -al out/log.txt | cut -d " " -f 3)
