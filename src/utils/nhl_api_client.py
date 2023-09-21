@@ -110,7 +110,7 @@ def get_games(start_date: str = None, end_date: str = None) -> list[Game]:
     if end_date is None:
         end_date = datetime_utils.today()
     url = get_schedule_url(start_date, end_date)
-    logger.d(TAG, f"get_games(): url: {url}")
+    logger.i(TAG, f"get_games(): url: {url}")
     games = []
     dates = pydash.get(json.loads(requests.get(url).text), DICT_KEY_DATES, [])
     for date in dates:
@@ -131,7 +131,7 @@ def get_feed_live(game_id: int):
     if game_id is None:
         raise IllegalArgumentException(TAG, "game_id must not be None")
     url = get_feed_live_url(game_id)
-    logger.d(TAG, f"get_box_score: url: {url}")
+    logger.i(TAG, f"get_box_score: url: {url}")
     box_score = json.loads(requests.get(url).text)
     return box_score
 

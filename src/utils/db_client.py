@@ -30,14 +30,14 @@ def create_connection(path_to_db):
     try:
         connection = sqlite3.connect(path_to_db)
         cursor = connection.cursor()
-        logger.d(TAG, "Connection to SQLite DB successful")
+        logger.i(TAG, "Connection to SQLite DB successful")
     except Error as e:
         logger.e(TAG, "Error occurred", e)
 
 
 def create_tables():
     global cursor
-    logger.d(TAG, "create_tables: creating tables")
+    logger.i(TAG, "create_tables: creating tables")
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS posts(post_id INTEGER PRIMARY KEY NOT NULL, game_id INTEGER NOT NULL, post_type INTEGER NOT NULL)")
     cursor.execute(
@@ -48,7 +48,7 @@ def get_post_id(game_id: int):
     global cursor
     query = "SELECT post_id FROM posts WHERE game_id=?"
     params = (game_id,)
-    logger.d(TAG, f"get_post_id: executing {query} with params {params}")
+    logger.i(TAG, f"get_post_id: executing {query} with params {params}")
     val = cursor.execute(query, params).fetchone()
     if val is not None:
         return val[0]
@@ -59,7 +59,7 @@ def insert_post(post_id: int, game_id: int, post_type: int):
     global cursor
     query = "INSERT INTO posts VALUES(?, ?, ?)"
     params = (post_id, game_id, post_type)
-    logger.d(TAG, f"insert_post: executing {query} with params {params}")
+    logger.i(TAG, f"insert_post: executing {query} with params {params}")
     cursor.execute(query, params)
     connection.commit()
     return True
@@ -69,7 +69,7 @@ def set_db_schema_version(version: int):
     global cursor
     query = "INSERT OR REPLACE INTO db_schema VALUES(0, ?)"
     params = (version,)
-    logger.d(TAG, f"set_db_schema_version: executing '{query}' with params '{params}")
+    logger.i(TAG, f"set_db_schema_version: executing '{query}' with params '{params}")
     cursor.execute(query, params)
     connection.commit()
     return True
@@ -78,13 +78,13 @@ def set_db_schema_version(version: int):
 def get_db_schema_version():
     global cursor
     query = "SELECT version FROM db_schema WHERE rowid = '0'"
-    logger.d(TAG, f"get_db_schema_version executing: {query}")
+    logger.i(TAG, f"get_db_schema_version executing: {query}")
     try:
         val = cursor.execute(query).fetchone()
         if val is not None:
             return val[0]
     except sqlite3.OperationalError:
-        logger.d(TAG, "get_db_schema_version: db_schema table not found. Assuming db_schema version is 0")
+        logger.i(TAG, "get_db_schema_version: db_schema table not found. Assuming db_schema version is 0")
         return 0
     return 0
 
