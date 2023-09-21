@@ -2,6 +2,7 @@ import json
 import unittest
 import datetime
 
+import requests
 from dateutil.tz import tzutc
 
 from src.datatypes.game import Game
@@ -49,6 +50,13 @@ class TestNhlApiClient(unittest.TestCase):
         expected = ""
         name = "".split(" ")[-1]
         self.assertEqual(expected, name)
+
+    def test_requests_get_stats_url(self):
+        # Just test that this URL either works or this exception catches it without crashing the whole program
+        try:
+            requests.get("https://statsapi.web.nhl.com/api/v1/schedule?startDate=2023-09-20&endDate=2023-09-22&expand=schedule.broadcasts")
+        except requests.exceptions.ConnectionError:
+            print("connection error")
 
 
 if __name__ == '__main__':

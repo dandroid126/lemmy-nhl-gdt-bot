@@ -112,14 +112,18 @@ def get_games(start_date: str = None, end_date: str = None) -> list[Game]:
     url = get_schedule_url(start_date, end_date)
     logger.i(TAG, f"get_games(): url: {url}")
     games = []
-    dates = pydash.get(json.loads(requests.get(url).text), DICT_KEY_DATES, [])
+    try:
+        dates = pydash.get(json.loads(requests.get(url).text), DICT_KEY_DATES, [])
+    except requests.exceptions.ConnectionError as e:
+        logger.e(TAG, "get_games(): A connection error occurred", e)
+        dates = []
     for date in dates:
         games.extend(pydash.get(date, DICT_KEY_GAMES, []))
     out = []
     for game in games:
         game_id = pydash.get(game, DICT_KEY_GAME_PK, None)
         if not game_id:
-            logger.e(TAG, f"Failed to get game ID! game: {game}")
+            logger.e(TAG, f"get_games(): Failed to get game ID! game: {game}")
             continue
         feed_live = get_feed_live(game_id)
         parse_team_stats(feed_live)
@@ -131,8 +135,12 @@ def get_feed_live(game_id: int):
     if game_id is None:
         raise IllegalArgumentException(TAG, "game_id must not be None")
     url = get_feed_live_url(game_id)
-    logger.i(TAG, f"get_box_score: url: {url}")
-    box_score = json.loads(requests.get(url).text)
+    logger.i(TAG, f"get_feed_live(): url: {url}")
+    try:
+        box_score = json.loads(requests.get(url).text)
+    except requests.exceptions.ConnectionError as e:
+        logger.e(TAG, "get_feed_live(): A connection error occurred", e)
+        box_score = {}
     return box_score
 
 

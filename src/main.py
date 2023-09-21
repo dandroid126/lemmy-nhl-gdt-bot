@@ -50,19 +50,19 @@ while not signal_util.is_interrupted:
                     else:
                         lemmy_client.create_post(post_utils.get_title(game), post_utils.get_body(game), game.id)
                 else:
-                    logger.i(TAG, f"The post was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
+                    logger.i(TAG, f"main: The post was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
             except InterruptedError as e:
                 # If an InterruptedError is raised while processing games,
                 #  we need to break out before the catch-all below catches it and does nothing.
-                logger.e(TAG, "An InterruptedError was raised while processing games.", e)
+                logger.e(TAG, "main: An InterruptedError was raised while processing games.", e)
                 break
             except Exception as e:
-                logger.e(TAG, "Some exception occurred while processing a game.", e)
+                logger.e(TAG, "main: Some exception occurred while processing a game.", e)
         if not signal_util.is_interrupted:
             # If interrupted, don't sleep. Just exit.
             # time.sleep(DELAY_BETWEEN_UPDATING_POSTS)
             signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
     except InterruptedError as e:
-        logger.e(TAG, "An InterruptedError was raised while sleeping.", e)
+        logger.e(TAG, "main: An InterruptedError was raised while sleeping.", e)
 
-logger.i(TAG, f"Reached the end. Shutting down. is_interrupted: {signal_util.is_interrupted}")
+logger.i(TAG, f"main: Reached the end. Shutting down. is_interrupted: {signal_util.is_interrupted}")

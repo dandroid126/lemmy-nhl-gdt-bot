@@ -15,7 +15,7 @@ class SignalUtil:
     def interrupt(self, *args):
         self.is_interrupted = True
         from src.utils import logger
-        logger.i(TAG, f"interrupted. args: {args}")
+        logger.i(TAG, f"interrupt(): interrupted. args: {args}")
         self.condition.acquire()
         self.condition.notify()
         self.condition.release()
