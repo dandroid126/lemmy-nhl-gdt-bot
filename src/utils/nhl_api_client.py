@@ -88,7 +88,7 @@ DICT_KEY_PP_GOALS = 'powerPlayGoals'
 DICT_KEY_PP_PERCENTAGE = 'powerPlayPercentage'
 
 EMPTY_NET = "Empty Net"
-
+REQUEST_TIMEOUT = 10
 
 def get_schedule_url(start_date: str, end_date: str):
     if start_date is None:
@@ -113,7 +113,10 @@ def get_games(start_date: str = None, end_date: str = None) -> list[Game]:
     logger.i(TAG, f"get_games(): url: {url}")
     games = []
     try:
-        dates = pydash.get(json.loads(requests.get(url).text), DICT_KEY_DATES, [])
+        dates = pydash.get(json.loads(requests.get(url).text, timeout=REQUEST_TIMEOUT), DICT_KEY_DATES, [])
+    except requests.exceptions.Timeout as e:
+        logger.e(TAG, "get_games(): a timeout occured", e)
+        dates = []
     except requests.exceptions.ConnectionError as e:
         logger.e(TAG, "get_games(): A connection error occurred", e)
         dates = []
@@ -137,7 +140,10 @@ def get_feed_live(game_id: int):
     url = get_feed_live_url(game_id)
     logger.i(TAG, f"get_feed_live(): url: {url}")
     try:
-        box_score = json.loads(requests.get(url).text)
+        box_score = json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text)
+    except requests.exceptions.Timeout as e:
+        logger.e(TAG, "get_games(): a timeout occured", e)
+        box_score = {}
     except requests.exceptions.ConnectionError as e:
         logger.e(TAG, "get_feed_live(): A connection error occurred", e)
         box_score = {}
