@@ -36,7 +36,7 @@ lemmy_client = LemmyClient(lemmy_instance, bot_name, password, community_name)
 
 while not signal_util.is_interrupted:
     try:
-        games = nhl_api_client.get_games(str(datetime_utils.yesterday()), str(datetime_utils.tomorrow()))
+        games = nhl_api_client.get_games(datetime_utils.yesterday(), datetime_utils.tomorrow())
         # games = nhl_api_client.get_games('2022-10-31', '2022-11-01')
         for game in games:
             try:
