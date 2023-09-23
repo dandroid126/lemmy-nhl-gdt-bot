@@ -12,7 +12,7 @@ global community_name
 
 TAG = "main"
 
-DELAY_BETWEEN_UPDATING_POSTS = 60
+DELAY_BETWEEN_UPDATING_POSTS = 30
 
 
 def get_env_variables():
