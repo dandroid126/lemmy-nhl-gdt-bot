@@ -113,7 +113,7 @@ def get_games(start_date: str = None, end_date: str = None) -> list[Game]:
     logger.i(TAG, f"get_games(): url: {url}")
     games = []
     try:
-        dates = pydash.get(json.loads(requests.get(url).text, timeout=REQUEST_TIMEOUT), DICT_KEY_DATES, [])
+        dates = pydash.get(json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text), DICT_KEY_DATES, [])
     except requests.exceptions.Timeout as e:
         logger.e(TAG, "get_games(): a timeout occured", e)
         dates = []
