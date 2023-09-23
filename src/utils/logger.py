@@ -43,7 +43,7 @@ file_handler.setFormatter(formatter)
 # stdout Handler
 stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setLevel(logging.DEBUG)
-stdout_handler.addFilter(lambda record: record.levelno <= logging.INFO)
+stdout_handler.addFilter(lambda record: record.levelno <= logging.WARN)
 stdout_handler.setFormatter(formatter)
 
 # stderr Handler
@@ -64,6 +64,10 @@ def d(tag, text):
 
 def i(tag, text):
     logger.info(f"[{tag}]\t{text}")
+
+
+def w(tag, text):
+    logger.warning(f"[{tag}]\t{text}")
 
 
 def e(tag, text, error=None):

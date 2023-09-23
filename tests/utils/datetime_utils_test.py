@@ -31,6 +31,11 @@ class TestDatetimeUtils(unittest.TestCase):
         end_time = current_time - timedelta(minutes=datetime_utils.MINUTES_AFTER_GAME_END_TO_UPDATE_POST + 1)
         self.assertFalse(datetime_utils.is_time_to_make_post(current_time, start_time, end_time))
 
+    def test_bad_api_data_no_end_time(self):
+        current_time = datetime.now()
+        start_time = current_time - timedelta(hours=6, minutes=1)
+        self.assertFalse(datetime_utils.is_time_to_make_post(current_time, start_time))
+
     def test_is_time_to_make_post_equal_end(self):
         current_time = datetime.now()
         start_time = current_time + timedelta(hours=3)
