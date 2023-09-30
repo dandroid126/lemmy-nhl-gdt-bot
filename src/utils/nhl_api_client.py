@@ -2,6 +2,7 @@ import pydash
 import requests
 import json
 from src.datatypes.Exceptions.IllegalArgumentException import IllegalArgumentException
+from src.datatypes.game_info import GameInfo
 from src.datatypes.goal import Goal
 from src.datatypes.penalty import Penalty
 from src.datatypes.teams import Teams
@@ -10,7 +11,7 @@ from src.datatypes.game import Game
 from src.datatypes.period import Period
 from src.datatypes.shootout import Shootout
 from src.datatypes.team_stats import TeamStats
-from src.utils import logger, datetime_utils
+from src.utils import logger, datetime_util
 
 TAG = "nhl_api_client.py"
 
@@ -68,6 +69,7 @@ DICT_KEY_DATETIME = 'datetime'
 DICT_KEY_DATE_TIME = 'dateTime'  # WTF NHL??????? Why are these different?????
 DICT_KEY_END_DATE_TIME = 'endDateTime'
 DICT_KEY_CURRENT_PERIOD_TIME_REMAINING = 'currentPeriodTimeRemaining'
+DICT_KEY_CURRENT_PERIOD_ORDINAL = 'currentPeriodOrdinal'
 DICT_KEY_PK = 'pk'
 DICT_KEY_PENALTY_PLAYS = 'penaltyPlays'
 DICT_KEY_PENALTY_MINUTES = 'penaltyMinutes'
@@ -88,6 +90,7 @@ DICT_KEY_PP_GOALS = 'powerPlayGoals'
 DICT_KEY_PP_PERCENTAGE = 'powerPlayPercentage'
 
 EMPTY_NET = "Empty Net"
+TIME_CLOCK_DEFAULT = "--"
 REQUEST_TIMEOUT = 10
 
 def get_schedule_url(start_date: str, end_date: str):
@@ -106,16 +109,16 @@ def get_feed_live_url(game_id: int):
 
 def get_games(start_date: str = None, end_date: str = None) -> list[Game]:
     if start_date is None:
-        start_date = datetime_utils.yesterday()
+        start_date = datetime_util.yesterday()
     if end_date is None:
-        end_date = datetime_utils.today()
+        end_date = datetime_util.today()
     url = get_schedule_url(start_date, end_date)
     logger.i(TAG, f"get_games(): url: {url}")
     games = []
     try:
         dates = pydash.get(json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text), DICT_KEY_DATES, [])
     except requests.exceptions.Timeout as e:
-        logger.e(TAG, "get_games(): a timeout occured", e)
+        logger.e(TAG, "get_games(): a timeout occurred", e)
         dates = []
     except requests.exceptions.ConnectionError as e:
         logger.e(TAG, "get_games(): A connection error occurred", e)
@@ -180,6 +183,13 @@ def parse_shootouts(feed_live: dict):
                                 attempts=pydash.get(shootout_info, f"{DICT_KEY_AWAY}.{DICT_KEY_ATTEMPTS}", -1),
                                 has_been_played=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_HAS_SHOOTOUT}", False)),
     }
+
+
+def parse_game_info(feed_live: dict):
+    return GameInfo(
+        current_period=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_CURRENT_PERIOD_ORDINAL}", ""),
+        game_clock=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_CURRENT_PERIOD_TIME_REMAINING}", TIME_CLOCK_DEFAULT),
+    )
 
 
 def parse_goals(feed_live: dict):
@@ -248,8 +258,7 @@ def parse_game(feed_live: dict):
     start_time = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_DATETIME}.{DICT_KEY_DATE_TIME}", None)
     end_time = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_DATETIME}.{DICT_KEY_END_DATE_TIME}", None)
     if end_time is not None:
-        end_time = datetime_utils.parse_datetime(end_time)
-    game_clock = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_CURRENT_PERIOD_TIME_REMAINING}", "--")
+        end_time = datetime_util.parse_datetime(end_time)
     home_team_stats = pydash.get(team_stats, f"{DICT_KEY_HOME}", None)
     away_team_stats = pydash.get(team_stats, f"{DICT_KEY_AWAY}", None)
 
@@ -259,9 +268,9 @@ def parse_game(feed_live: dict):
     return Game(id=game_id,
                 away_team=Teams[away_team_abbr].value,
                 home_team=Teams[home_team_abbr].value,
-                start_time=datetime_utils.parse_datetime(start_time),
+                start_time=datetime_util.parse_datetime(start_time),
                 end_time=end_time,
-                game_clock=game_clock,
+                game_info=parse_game_info(feed_live),
                 home_team_stats=home_team_stats,
                 away_team_stats=away_team_stats,
                 goals=parse_goals(feed_live),

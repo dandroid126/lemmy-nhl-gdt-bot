@@ -4,7 +4,7 @@ import pytz
 
 from src.utils import logger
 
-TAG = "datetime_utils"
+TAG = "datetime_util"
 
 PT = pytz.timezone('US/Pacific')
 MT = pytz.timezone('US/Mountain')

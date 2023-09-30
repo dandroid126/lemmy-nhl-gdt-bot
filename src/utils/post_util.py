@@ -1,11 +1,13 @@
-from src.utils import datetime_utils
+from src.utils import datetime_util, nhl_api_client
+from src.datatypes.game_info import GameInfo
 from src.datatypes.game import Game
 
 
 def get_title(game: Game):
-    return f"[GDT] {game.away_team.city} {game.away_team.name} at {game.home_team.city} {game.home_team.name} - {game.start_time.astimezone(datetime_utils.ET).strftime(datetime_utils.START_TIME_FORMAT)}"
+    return f"[GDT] {game.away_team.city} {game.away_team.name} at {game.home_team.city} {game.home_team.name} - {game.start_time.astimezone(datetime_util.ET).strftime(datetime_util.START_TIME_FORMAT)}"
 
 
+FINAL = 'Final'
 TIME_CLOCK = 'Time Clock'
 TEAM = 'Team'
 TOTAL = 'Total'
@@ -41,7 +43,7 @@ FOOTER_TEXT = "I am open source! Report issues, contribute, and fund me [on my G
 def get_body(game: Game):
     if game is None:
         return ""
-    time_clock = get_time_clock(game)
+    time_clock = get_time_clock(game.game_info)
     periods = get_periods(game)
     team_stats = get_team_stats(game)
     goal_details = get_goal_details(game)
@@ -79,10 +81,10 @@ def get_body(game: Game):
 """
 
 
-def get_time_clock(game):
+def get_time_clock(game_info: GameInfo):
     time_clock = Table()
     time_clock.set(0, 0, TIME_CLOCK)
-    time_clock.set(0, 1, game.game_clock)
+    time_clock.set(0, 1, f"{f'{game_info.current_period} - ' if not game_info.game_clock.lower() == FINAL.lower() and not game_info.game_clock.lower() == nhl_api_client.TIME_CLOCK_DEFAULT.lower() else ''}{game_info.game_clock}")
     return time_clock
 
 
@@ -161,11 +163,11 @@ def get_start_time_table(game):
     start_time = Table()
     for i, value in enumerate(START_TIME_HEADER_ROW):
         start_time.set(i, 0, value)
-    start_time.set(0,1, game.start_time.astimezone(datetime_utils.PT).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
-    start_time.set(1,1, game.start_time.astimezone(datetime_utils.MT).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
-    start_time.set(2,1, game.start_time.astimezone(datetime_utils.CT).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
-    start_time.set(3,1, game.start_time.astimezone(datetime_utils.ET).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
-    start_time.set(4,1, game.start_time.astimezone(datetime_utils.AT).strftime(datetime_utils.START_TIME_FORMAT_NO_TZ))
+    start_time.set(0,1, game.start_time.astimezone(datetime_util.PT).strftime(datetime_util.START_TIME_FORMAT_NO_TZ))
+    start_time.set(1,1, game.start_time.astimezone(datetime_util.MT).strftime(datetime_util.START_TIME_FORMAT_NO_TZ))
+    start_time.set(2,1, game.start_time.astimezone(datetime_util.CT).strftime(datetime_util.START_TIME_FORMAT_NO_TZ))
+    start_time.set(3,1, game.start_time.astimezone(datetime_util.ET).strftime(datetime_util.START_TIME_FORMAT_NO_TZ))
+    start_time.set(4,1, game.start_time.astimezone(datetime_util.AT).strftime(datetime_util.START_TIME_FORMAT_NO_TZ))
     return start_time
 
 
