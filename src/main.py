@@ -1,38 +1,19 @@
-from dotenv import load_dotenv
-import os
-
-from src.utils import nhl_api_client, constants, post_util, db_client, datetime_util, logger
+from src.db.db_manager import DbManager
+from src.db.posts.post_dao import PostDao
+from src.utils import nhl_api_client, constants, post_util, datetime_util, logger
+from src.utils.environment_util import EnvironmentUtil
 from src.utils.signal_util import SignalUtil
 from src.utils.lemmy_client import LemmyClient
-
-global bot_name
-global password
-global lemmy_instance
-global community_name
 
 TAG = "main"
 
 DELAY_BETWEEN_UPDATING_POSTS = 30
 
-
-def get_env_variables():
-    load_dotenv()
-    global bot_name
-    global password
-    global lemmy_instance
-    global community_name
-    bot_name = os.getenv('BOT_NAME')
-    password = os.getenv('PASSWORD')
-    lemmy_instance = os.getenv('LEMMY_INSTANCE')
-    community_name = os.getenv('COMMUNITY_NAME')
-    if not lemmy_instance.startswith('https://'):
-        lemmy_instance = f"https://{lemmy_instance}"
-
-
 signal_util = SignalUtil()
-get_env_variables()
-db_client.initialize(constants.DB_PATH)
-lemmy_client = LemmyClient(lemmy_instance, bot_name, password, community_name)
+environment_util = EnvironmentUtil()
+db_manager = DbManager(constants.DB_PATH)
+post_dao = PostDao(db_manager)
+lemmy_client = LemmyClient(environment_util.lemmy_instance, environment_util.bot_name, environment_util.password, environment_util.community_name, post_dao)
 
 while not signal_util.is_interrupted:
     try:
@@ -42,7 +23,7 @@ while not signal_util.is_interrupted:
             try:
                 if game is None:
                     continue
-                post_id = db_client.get_post_id(game.id)
+                post_id = post_dao.get_post_id(game.id)
                 current_time = datetime_util.get_current_time_as_utc()
                 if datetime_util.is_time_to_make_post(current_time, game.start_time, game.end_time):
                     if post_id is not None:
