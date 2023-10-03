@@ -5,7 +5,6 @@ SCRIPT_PATH: Final = os.path.realpath(__file__)
 DIR_PATH: Final = f"{os.path.dirname(SCRIPT_PATH)}/../../"
 OUT_PATH: Final = f"{DIR_PATH}/out/"
 DB_PATH: Final = f"{OUT_PATH}/gdt_bot.db"
-TEST_RES_PATH: Final = f"{DIR_PATH}/tests/res/"
 
 MEGABYTE: Final = 1024 * 1024
 

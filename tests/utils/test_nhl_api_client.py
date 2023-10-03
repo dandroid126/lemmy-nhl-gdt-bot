@@ -5,6 +5,7 @@ import datetime
 import requests
 from dateutil.tz import tzutc
 
+import test_constants
 from src.datatypes.game import Game
 from src.datatypes.game_info import GameInfo
 from src.datatypes.goal import Goal
@@ -13,10 +14,10 @@ from src.datatypes.period import Period
 from src.datatypes.shootout import Shootout
 from src.datatypes.team_stats import TeamStats
 from src.datatypes.teams import Team
-from src.utils import constants, nhl_api_client
+from src.utils import nhl_api_client
 
-FEED_LIVE_TEST_FILE_PATH = f"{constants.TEST_RES_PATH}/2022020158_feed_live.json"
-SCHEDULED_FEED_LIVE_TEST_FILE_PATH = f"{constants.TEST_RES_PATH}/2023010001_feed_live.json"
+FEED_LIVE_TEST_FILE_PATH = f"{test_constants.TEST_RES_PATH}/2022020158_feed_live.json"
+SCHEDULED_FEED_LIVE_TEST_FILE_PATH = f"{test_constants.TEST_RES_PATH}/2023010001_feed_live.json"
 
 
 class TestNhlApiClient(unittest.TestCase):
