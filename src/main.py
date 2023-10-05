@@ -1,9 +1,11 @@
+from src.db.comments.comments_dao import CommentsDao
+from src.db.daily_threads.daily_threads_dao import DailyThreadsDao
 from src.db.db_manager import DbManager
-from src.db.posts.post_dao import PostDao
+from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao
 from src.utils import nhl_api_client, constants, post_util, datetime_util, logger
 from src.utils.environment_util import EnvironmentUtil
-from src.utils.signal_util import SignalUtil
 from src.utils.lemmy_client import LemmyClient
+from src.utils.signal_util import SignalUtil
 
 TAG = "main"
 
@@ -12,8 +14,11 @@ DELAY_BETWEEN_UPDATING_POSTS = 30
 signal_util = SignalUtil()
 environment_util = EnvironmentUtil()
 db_manager = DbManager(constants.DB_PATH)
-post_dao = PostDao(db_manager)
-lemmy_client = LemmyClient(environment_util.lemmy_instance, environment_util.bot_name, environment_util.password, environment_util.community_name, post_dao)
+game_day_threads_dao = GameDayThreadsDao(db_manager)
+daily_threads_dao = DailyThreadsDao(db_manager)
+comments_dao = CommentsDao(db_manager)
+lemmy_client = LemmyClient(environment_util.lemmy_instance, environment_util.bot_name, environment_util.password,
+                           environment_util.community_name, game_day_threads_dao, daily_threads_dao, comments_dao)
 
 while not signal_util.is_interrupted:
     try:
@@ -23,13 +28,14 @@ while not signal_util.is_interrupted:
             try:
                 if game is None:
                     continue
-                post_id = post_dao.get_post_id(game.id)
+                post = game_day_threads_dao.get_game_day_thread(game.id)
+                post_id = post.post_id if post else None
                 current_time = datetime_util.get_current_time_as_utc()
                 if datetime_util.is_time_to_make_post(current_time, game.start_time, game.end_time):
                     if post_id is not None:
-                        lemmy_client.update_post(post_util.get_title(game), post_util.get_body(game), post_id)
+                        lemmy_client.update_game_day_thread(post_util.get_title(game), post_util.get_body(game), post_id)
                     else:
-                        lemmy_client.create_post(post_util.get_title(game), post_util.get_body(game), game.id)
+                        lemmy_client.create_game_day_thread(post_util.get_title(game), post_util.get_body(game), game.id)
                 else:
                     logger.i(TAG, f"main: The post was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
             except InterruptedError as e:
@@ -41,7 +47,6 @@ while not signal_util.is_interrupted:
                 logger.e(TAG, "main: Some exception occurred while processing a game.", e)
         if not signal_util.is_interrupted:
             # If interrupted, don't sleep. Just exit.
-            # time.sleep(DELAY_BETWEEN_UPDATING_POSTS)
             signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
     except InterruptedError as e:
         logger.e(TAG, "main: An InterruptedError was raised while sleeping.", e)
