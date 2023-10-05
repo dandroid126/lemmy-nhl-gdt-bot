@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, date
-from dateutil import parser
+
 import pytz
+from dateutil import parser
 
 from src.utils import logger
 
@@ -13,6 +14,7 @@ ET = pytz.timezone('US/Eastern')
 AT = pytz.timezone('Canada/Atlantic')
 START_TIME_FORMAT = "%I:%M%p %Z"
 START_TIME_FORMAT_NO_TZ = "%I:%M%p"
+DATE_FORMAT = '%Y-%m-%d'
 MINUTES_BEFORE_GAME_START_TO_CREATE_POST = 60
 MINUTES_AFTER_GAME_END_TO_UPDATE_POST = 60
 
@@ -49,7 +51,7 @@ def parse_datetime(datetime_string: str):
 
 
 def today():
-    return date.today()
+    return str(date.today())
 
 
 def tomorrow():
@@ -58,3 +60,8 @@ def tomorrow():
 
 def yesterday():
     return str(date.today() - timedelta(days=1))
+
+
+def next_day(start_date: str):
+    # bum bum bum bum ba da bum
+    return (parser.parse(start_date) + timedelta(days=1)).strftime(DATE_FORMAT)

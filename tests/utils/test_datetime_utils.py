@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime, timedelta
+
 from src.utils import datetime_util
 
 
@@ -41,6 +42,11 @@ class TestDatetimeUtils(unittest.TestCase):
         start_time = current_time + timedelta(hours=3)
         end_time = current_time
         self.assertFalse(datetime_util.is_time_to_make_post(current_time, start_time, end_time))
+
+    def test_next_day(self):
+        today = datetime_util.today()
+        tomorrow = datetime_util.tomorrow()
+        self.assertEqual(datetime_util.next_day(today), tomorrow)
 
 
 if __name__ == '__main__':

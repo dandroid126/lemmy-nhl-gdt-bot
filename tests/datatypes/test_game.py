@@ -24,6 +24,10 @@ class TestGame(unittest.TestCase):
         game = Game(9999939999, None, None, None, None, None, None, None, None, None)
         self.assertEqual(game.get_game_type(), GameType.POSTSEASON)
 
+    def test_get_game_type_fake_id_allstar(self):
+        game = Game(9999949999, None, None, None, None, None, None, None, None, None)
+        self.assertEqual(game.get_game_type(), GameType.ALLSTAR)
+
 
 if __name__ == '__main__':
     unittest.main()
