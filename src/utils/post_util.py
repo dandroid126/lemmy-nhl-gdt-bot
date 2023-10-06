@@ -1,11 +1,8 @@
-from src.utils import datetime_util, nhl_api_client
-from src.datatypes.game_info import GameInfo
+from datetime import datetime
+
 from src.datatypes.game import Game
-
-
-def get_title(game: Game):
-    return f"[GDT] {game.away_team.city} {game.away_team.name} at {game.home_team.city} {game.home_team.name} - {game.start_time.astimezone(datetime_util.ET).strftime(datetime_util.START_TIME_FORMAT)}"
-
+from src.datatypes.game_info import GameInfo
+from src.utils import datetime_util
 
 FINAL = 'Final'
 TIME_CLOCK = 'Time Clock'
@@ -31,16 +28,32 @@ MT = "MT"
 CT = "CT"
 ET = "ET"
 AT = "AT"
+LINE_BREAK = "&nbsp;"
+MATCH_UP = "Match up"
 
 TEAM_STATS_HEADER_ROW = [TEAM, SHOTS, HITS, BLOCKED, FO_WINS, GIVEAWAYS, TAKEAWAYS, POWER_PLAYS]
 GOALS_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, STRENGTH, GOALIE, DESCRIPTION]
 PENALTY_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, TYPE, MIN, DESCRIPTION]
 START_TIME_HEADER_ROW = [PT, MT, CT, ET, AT]
+DAY_OVERVIEW_HEADER_ROW = [MATCH_UP, TIME]
 
 FOOTER_TEXT = "I am open source! Report issues, contribute, and fund me [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!"
 
 
-def get_body(game: Game):
+def get_title(game: Game):
+    return f"[GDT] {game.away_team.city} {game.away_team.name} at {game.home_team.city} {game.home_team.name} - {get_formatted_game_start_time(game.start_time)}"
+
+
+def get_gdt_body(game: Game):
+    return f"""{get_game_details(game)}
+
+{LINE_BREAK}
+
+{FOOTER_TEXT}
+"""
+
+
+def get_game_details(game: Game):
     if game is None:
         return ""
     time_clock = get_time_clock(game.game_info)
@@ -53,38 +66,41 @@ def get_body(game: Game):
     # Render everything
     return f"""{time_clock.render()}
 
-&nbsp;
+{LINE_BREAK}
 
 {periods.render()}
 
-&nbsp;
+{LINE_BREAK}
 
 {team_stats.render()}
 
-{"&nbsp;" if goal_details.render() else ""}
+{LINE_BREAK if goal_details.render() else ""}
 
 {goal_details.render()}
 
-{"&nbsp;" if penalty_details.render() else ""}
+{LINE_BREAK if penalty_details.render() else ""}
 
 {penalty_details.render()}
 
-&nbsp;
+{LINE_BREAK}
 
 #### Start Times
 
-{start_time_table.render()}
+{start_time_table.render()}"""
 
-&nbsp;
 
-{FOOTER_TEXT}
-"""
+def get_formatted_time_clock_time(game_info: GameInfo):
+    return f"{f'{game_info.current_period} - ' if not game_info.game_clock.lower() == FINAL.lower() and game_info.is_game_started() else ''}{game_info.game_clock}"
+
+
+def get_formatted_game_start_time(start_time: datetime):
+    return start_time.astimezone(datetime_util.ET).strftime(datetime_util.START_TIME_FORMAT)
 
 
 def get_time_clock(game_info: GameInfo):
     time_clock = Table()
     time_clock.set(0, 0, TIME_CLOCK)
-    time_clock.set(0, 1, f"{f'{game_info.current_period} - ' if not game_info.game_clock.lower() == FINAL.lower() and not game_info.game_clock.lower() == nhl_api_client.TIME_CLOCK_DEFAULT.lower() else ''}{game_info.game_clock}")
+    time_clock.set(0, 1, get_formatted_time_clock_time(game_info))
     return time_clock
 
 
@@ -169,6 +185,28 @@ def get_start_time_table(game):
     start_time.set(3,1, game.start_time.astimezone(datetime_util.ET).strftime(datetime_util.START_TIME_FORMAT_NO_TZ))
     start_time.set(4,1, game.start_time.astimezone(datetime_util.AT).strftime(datetime_util.START_TIME_FORMAT_NO_TZ))
     return start_time
+
+
+def get_daily_thread_title(day: str):
+    return f"[Daily Discussion Thread] All game details and discussion for games on {datetime_util.get_day_as_title_formatted(day)}"
+
+
+def get_daily_thread_body(games: list[Game]):
+    return f"""{get_day_score_overview_table(games).render()}
+    
+{LINE_BREAK}
+
+{FOOTER_TEXT}"""
+
+
+def get_day_score_overview_table(games: list[Game]):
+    score_overview = Table()
+    for i, value in enumerate(DAY_OVERVIEW_HEADER_ROW):
+        score_overview.set(i, 0, value)
+    for i, game in enumerate(games):
+        score_overview.set(0, i + 1, f"{game.away_team.get_team_table_entry()}{f' {game.away_team_stats.goals}' if game.game_info.is_game_started() else ''} - {game.home_team.get_team_table_entry()}{f' {game.home_team_stats.goals}' if game.game_info.is_game_started() else ''}")
+        score_overview.set(1, i + 1, f'{get_formatted_time_clock_time(game.game_info) if game.game_info.is_game_started() else get_formatted_game_start_time(game.start_time)}')
+    return score_overview
 
 
 class Table:

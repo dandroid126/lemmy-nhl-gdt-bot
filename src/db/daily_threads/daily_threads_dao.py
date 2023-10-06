@@ -33,10 +33,12 @@ class DailyThreadsDao:
             return DailyThreadsRecord(val[0], val[1])
         return None
 
-    def insert_daily_thread(self, post_id: int, date: str):
-        query = "INSERT INTO daily_threads VALUES(?, ?)"
+    def insert_daily_thread(self, post_id: int, date: str) -> Optional[DailyThreadsRecord]:
+        query = "INSERT INTO daily_threads VALUES(?, ?) RETURNING *"
         params = (post_id, date)
         logger.i(TAG, f"insert_daily_thread(): executing {query} with params {params}")
-        self.db_manager.cursor.execute(query, params)
+        val = self.db_manager.cursor.execute(query, params).fetchone()
         self.db_manager.connection.commit()
-        return post_id
+        if val is not None:
+            return DailyThreadsRecord(val[0], val[1])
+        return None

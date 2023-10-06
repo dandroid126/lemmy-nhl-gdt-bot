@@ -7,6 +7,7 @@ from src.utils import logger
 
 TAG = "datetime_util"
 
+IDLW = pytz.timezone('Etc/GMT+12')
 PT = pytz.timezone('US/Pacific')
 MT = pytz.timezone('US/Mountain')
 CT = pytz.timezone('US/Central')
@@ -15,6 +16,7 @@ AT = pytz.timezone('Canada/Atlantic')
 START_TIME_FORMAT = "%I:%M%p %Z"
 START_TIME_FORMAT_NO_TZ = "%I:%M%p"
 DATE_FORMAT = '%Y-%m-%d'
+DATE_TITLE_FORMAT = '%d %b %Y'
 MINUTES_BEFORE_GAME_START_TO_CREATE_POST = 60
 MINUTES_AFTER_GAME_END_TO_UPDATE_POST = 60
 
@@ -42,12 +44,20 @@ def is_time_to_make_post(current_time, game_start_time, game_end_time=None):
     return False
 
 
+def get_current_day_as_idlw():
+    return datetime.now(tz=IDLW).strftime(DATE_FORMAT)
+
+
 def get_current_time_as_utc():
     return datetime.now(tz=pytz.utc)
 
 
 def parse_datetime(datetime_string: str):
     return parser.parse(datetime_string)
+
+
+def get_day_as_title_formatted(day: str):
+    return parser.parse(day).strftime(DATE_TITLE_FORMAT)
 
 
 def today():
@@ -65,3 +75,8 @@ def yesterday():
 def next_day(start_date: str):
     # bum bum bum bum ba da bum
     return (parser.parse(start_date) + timedelta(days=1)).strftime(DATE_FORMAT)
+
+
+def is_same_day(start_time: datetime, day: str):
+    # TODO: revisit this. There has to be a better way to do this.
+    return start_time.astimezone(ET).strftime(DATE_FORMAT) == day

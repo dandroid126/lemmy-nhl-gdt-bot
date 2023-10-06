@@ -1,8 +1,11 @@
+from typing import Optional
+
 import pydash
 from pythorhead import Lemmy
 
 from src.db.comments.comments_dao import CommentsDao
 from src.db.daily_threads.daily_threads_dao import DailyThreadsDao
+from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
 from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao
 from src.utils import logger
 
@@ -33,6 +36,7 @@ class LemmyClient:
             raise ValueError(f"Community {community_name} not found")
 
     def create_game_day_thread(self, title, body, game_id) -> int:
+        # TODO: update to return GDT record instead of post id
         post_id = pydash.get(self.lemmy.post.create(self.community_id, name=title, body=body),
                              f"{DICT_KEY_POST_VIEW}.{DICT_KEY_POST}.{DICT_KEY_ID}", -1)
         if post_id == -1:
@@ -43,18 +47,19 @@ class LemmyClient:
     def update_game_day_thread(self, title, body, post_id):
         self.lemmy.post.edit(post_id=post_id, name=title, body=body)
 
-    def create_daily_thread(self, date, title, body) -> int:
+    def create_daily_thread(self, date, title, body) -> Optional[DailyThreadsRecord]:
         post_id = pydash.get(self.lemmy.post.create(self.community_id, name=title, body=body),
                              f"{DICT_KEY_POST_VIEW}.{DICT_KEY_POST}.{DICT_KEY_ID}", -1)
         if post_id == -1:
             logger.e(TAG, f"create_daily_thread(): Failed to create daily thread for date: {date}")
-            return -1
+            return None
         return self.daily_threads_dao.insert_daily_thread(post_id, date)
 
-    # def update_post(self, title, body, post_id):
-    #     self.lemmy.post.edit(post_id=post_id, name=title, body=body)
+    def update_daily_thread(self, post_id, title, body):
+        self.lemmy.post.edit(post_id=post_id, name=title, body=body)
 
     def create_comment(self, post_id, game_id, content) -> int:
+        # TODO: update to return comment record instead of comment id
         comment_id = pydash.get(self.lemmy.comment.create(post_id=post_id, content=content), f"comment_view.comment.id", -1)
         if comment_id == -1:
             logger.e(TAG, f"create_comment(): Failed to create comment. post_id: {post_id}; game_id: {game_id}")

@@ -19,6 +19,15 @@ class TestDailyThreadsDao(unittest.TestCase):
         db_manager = DbManager(test_constants.TEST_DB_PATH)
         self.daily_threads_dao = DailyThreadsDao(db_manager)
 
+    def test_insert_and_get(self):
+        random.seed(str(uuid.uuid4()))
+        post_id = random.randint(0, sys.maxsize)
+        today = datetime_util.today()
+        daily_thread = self.daily_threads_dao.insert_daily_thread(post_id, today)
+        self.assertIsNotNone(daily_thread, "daily_thread was None")
+        self.assertEqual(daily_thread.post_id, post_id, "post_id didn't match")
+        self.assertEqual(daily_thread.date, today, "date didn't match")
+
     def test_get_most_recent_daily_thread(self):
         random.seed(str(uuid.uuid4()))
         yesterday_post_id = random.randint(0, sys.maxsize)
