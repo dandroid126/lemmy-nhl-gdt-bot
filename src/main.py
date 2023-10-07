@@ -1,3 +1,5 @@
+from typing import Optional
+
 from src.datatypes.game import Game
 from src.db.comments.comments_dao import CommentsDao
 from src.db.daily_threads.daily_threads_dao import DailyThreadsDao
@@ -23,11 +25,11 @@ lemmy_client = LemmyClient(environment_util.lemmy_instance, environment_util.bot
                            environment_util.community_name, game_day_threads_dao, daily_threads_dao, comments_dao)
 
 
-def handle_daily_thread(games: list[Game]) -> DailyThreadsRecord:
+def handle_daily_thread(games: list[Game]) -> Optional[DailyThreadsRecord]:
+    if not games:
+        return None
     current_day_idlw = datetime_util.get_current_day_as_idlw()
-
     filtered_games = list(filter(lambda game: datetime_util.is_same_day(game.start_time, current_day_idlw), games))
-
     daily_thread = daily_threads_dao.get_daily_thread(current_day_idlw)
     if daily_thread:
         lemmy_client.update_daily_thread(daily_thread.post_id, post_util.get_daily_thread_title(current_day_idlw), post_util.get_daily_thread_body(filtered_games))
@@ -50,7 +52,7 @@ def handle_game_day_thread(game: Game):
 
 
 def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
-    if not game:
+    if not game or not daily_thread:
         return
     comment = comments_dao.get_comment(game.id)
     comment_id = comment.comment_id if comment else None
@@ -67,6 +69,8 @@ def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
 while not signal_util.is_interrupted:
     try:
         games = nhl_api_client.get_games(datetime_util.yesterday(), datetime_util.tomorrow())
+        if not games:
+            continue
         daily_thread = handle_daily_thread(games)
         for game in games:
             try:
