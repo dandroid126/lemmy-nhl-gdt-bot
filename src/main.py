@@ -57,7 +57,7 @@ def handle_game_day_thread(game: Game):
 
 def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
     if not game or not daily_thread:
-        logger.d(TAG, f"Game or daily thread is None. Don't make a post. daily_thread: {daily_thread}, game is None: {game is None}")
+        logger.d(TAG, f"Game or daily thread is None. Don't make a post. daily_thread is None: {daily_thread is None}, game is None: {game is None}")
         return
     comment = comments_dao.get_comment(game.id)
     comment_id = comment.comment_id if comment else None
