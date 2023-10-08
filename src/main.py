@@ -27,9 +27,13 @@ lemmy_client = LemmyClient(environment_util.lemmy_instance, environment_util.bot
 
 def handle_daily_thread(games: list[Game]) -> Optional[DailyThreadsRecord]:
     if not games:
+        logger.d(TAG, "List of games is empty. Exiting.")
         return None
     current_day_idlw = datetime_util.get_current_day_as_idlw()
     filtered_games = list(filter(lambda game: datetime_util.is_same_day(game.start_time, current_day_idlw), games))
+    if not filtered_games:
+        logger.d(TAG, "No games today. Don't create a daily post.")
+        return None
     daily_thread = daily_threads_dao.get_daily_thread(current_day_idlw)
     if daily_thread:
         lemmy_client.update_daily_thread(daily_thread.post_id, post_util.get_daily_thread_title(current_day_idlw), post_util.get_daily_thread_body(filtered_games))
@@ -53,6 +57,7 @@ def handle_game_day_thread(game: Game):
 
 def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
     if not game or not daily_thread:
+        logger.d(TAG, f"Game or daily thread is None. Don't make a post. daily_thread: {daily_thread}, game: {game}")
         return
     comment = comments_dao.get_comment(game.id)
     comment_id = comment.comment_id if comment else None
@@ -75,6 +80,7 @@ while not signal_util.is_interrupted:
         for game in games:
             try:
                 if game is None:
+                    logger.d(TAG, "Game is None. Skip making a post for this game.")
                     continue
                 game_type = game.get_game_type()
                 if game_type in environment_util.gdt_post_types:
