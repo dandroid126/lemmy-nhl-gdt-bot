@@ -30,7 +30,7 @@ def handle_daily_thread(games: list[Game]) -> Optional[DailyThreadsRecord]:
         logger.d(TAG, "List of games is empty. Exiting.")
         return None
     current_day_idlw = datetime_util.get_current_day_as_idlw()
-    filtered_games = list(filter(lambda game: datetime_util.is_same_day(game.start_time, current_day_idlw), games))
+    filtered_games = list(filter(lambda game: datetime_util.is_same_day(game.start_time, current_day_idlw) if game else None, games))
     if not filtered_games:
         logger.d(TAG, "No games today. Don't create a daily post.")
         return None
