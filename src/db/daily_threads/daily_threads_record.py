@@ -5,3 +5,4 @@ from dataclasses import dataclass
 class DailyThreadsRecord:
     post_id: int
     date: str
+    is_featured: bool

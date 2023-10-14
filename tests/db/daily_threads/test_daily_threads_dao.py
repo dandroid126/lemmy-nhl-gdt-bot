@@ -23,7 +23,7 @@ class TestDailyThreadsDao(unittest.TestCase):
         random.seed(str(uuid.uuid4()))
         post_id = random.randint(0, sys.maxsize)
         today = datetime_util.today()
-        daily_thread = self.daily_threads_dao.insert_daily_thread(post_id, today)
+        daily_thread = self.daily_threads_dao.insert_daily_thread(post_id, today, True)
         self.assertIsNotNone(daily_thread, "daily_thread was None")
         self.assertEqual(daily_thread.post_id, post_id, "post_id didn't match")
         self.assertEqual(daily_thread.date, today, "date didn't match")
@@ -36,9 +36,9 @@ class TestDailyThreadsDao(unittest.TestCase):
         yesterday = datetime_util.yesterday()
         today = datetime_util.today()
         tomorrow = datetime_util.tomorrow()
-        self.daily_threads_dao.insert_daily_thread(yesterday_post_id, yesterday)
-        self.daily_threads_dao.insert_daily_thread(today_post_id, today)
-        self.daily_threads_dao.insert_daily_thread(tomorrow_post_id, tomorrow)
+        self.daily_threads_dao.insert_daily_thread(yesterday_post_id, yesterday, False)
+        self.daily_threads_dao.insert_daily_thread(today_post_id, today, False)
+        self.daily_threads_dao.insert_daily_thread(tomorrow_post_id, tomorrow, True)
         self.assertEqual(self.daily_threads_dao.get_most_recent_daily_thread().date, tomorrow)
 
 

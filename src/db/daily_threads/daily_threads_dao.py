@@ -22,7 +22,7 @@ class DailyThreadsDao:
         logger.i(TAG, f"get_daily_thread_id(): executing {query} with params {params}")
         val = self.db_manager.cursor.execute(query, params).fetchone()
         if val is not None:
-            return DailyThreadsRecord(val[0], val[1])
+            return DailyThreadsRecord(val[0], val[1], val[2])
         return None
 
     def get_most_recent_daily_thread(self) -> Optional[DailyThreadsRecord]:
@@ -30,15 +30,42 @@ class DailyThreadsDao:
         logger.i(TAG, f"get_daily_thread_id(): executing {query}")
         val = self.db_manager.cursor.execute(query).fetchone()
         if val is not None:
-            return DailyThreadsRecord(val[0], val[1])
+            return DailyThreadsRecord(val[0], val[1], val[2])
         return None
 
-    def insert_daily_thread(self, post_id: int, date: str) -> Optional[DailyThreadsRecord]:
-        query = "INSERT INTO daily_threads VALUES(?, ?) RETURNING *"
-        params = (post_id, date)
+    def insert_daily_thread(self, post_id: int, date: str, is_featured: bool) -> Optional[DailyThreadsRecord]:
+        query = "INSERT INTO daily_threads VALUES(?, ?, ?) RETURNING *"
+        params = (post_id, date, is_featured)
         logger.i(TAG, f"insert_daily_thread(): executing {query} with params {params}")
         val = self.db_manager.cursor.execute(query, params).fetchone()
         self.db_manager.connection.commit()
         if val is not None:
-            return DailyThreadsRecord(val[0], val[1])
+            return DailyThreadsRecord(val[0], val[1], val[2])
         return None
+
+    def feature_daily_thread(self, post_id):
+        query = "UPDATE daily_threads SET is_featured = true WHERE post_id=? RETURNING *"
+        params = (post_id,)
+        logger.i(TAG, f"feature_daily_thread(): executing {query} with params {params}")
+        val = self.db_manager.cursor.execute(query, params).fetchone()
+        if val is not None:
+            return DailyThreadsRecord(val[0], val[1], val[2])
+        return None
+
+    def unfeature_daily_thread(self, post_id):
+        query = "UPDATE daily_threads SET is_featured = false WHERE post_id=? RETURNING *"
+        params = (post_id,)
+        logger.i(TAG, f"feature_daily_thread(): executing {query} with params {params}")
+        val = self.db_manager.cursor.execute(query, params).fetchone()
+        if val is not None:
+            return DailyThreadsRecord(val[0], val[1], val[2])
+        return None
+
+    def get_featured_daily_threads(self):
+        query = "SELECT * FROM daily_threads WHERE is_featured=true"
+        logger.i(TAG, f"get_featured_daily_threads(): executing {query}")
+        vals = self.db_manager.cursor.execute(query).fetchall()
+        out = []
+        for val in vals:
+            out.append(DailyThreadsRecord(val[0], val[1], val[2]))
+        return out

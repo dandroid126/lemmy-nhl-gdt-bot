@@ -2,6 +2,7 @@ from typing import Optional
 
 import pydash
 from pythorhead import Lemmy
+from pythorhead.types import FeatureType
 
 from src.db.comments.comments_dao import CommentsDao
 from src.db.daily_threads.daily_threads_dao import DailyThreadsDao
@@ -53,7 +54,7 @@ class LemmyClient:
         if post_id == -1:
             logger.e(TAG, f"create_daily_thread(): Failed to create daily thread for date: {date}")
             return None
-        return self.daily_threads_dao.insert_daily_thread(post_id, date)
+        return self.daily_threads_dao.insert_daily_thread(post_id, date, False)
 
     def update_daily_thread(self, post_id, title, body):
         self.lemmy.post.edit(post_id=post_id, name=title, body=body)
@@ -68,3 +69,11 @@ class LemmyClient:
 
     def update_comment(self, comment_id, content):
         self.lemmy.comment.edit(comment_id=comment_id, content=content)
+
+    def feature_daily_thread(self, post_id):
+        self.lemmy.post.feature(post_id, True, FeatureType.Community)
+        self.daily_threads_dao.feature_daily_thread(post_id)
+
+    def unfeature_daily_thread(self, post_id):
+        self.lemmy.post.feature(post_id, False, FeatureType.Community)
+        self.daily_threads_dao.unfeature_daily_thread(post_id)

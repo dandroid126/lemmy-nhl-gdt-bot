@@ -16,7 +16,7 @@ TAG = 'DbManager'
 
 class DbManager:
     def __init__(self, path_to_db):
-        self.DB_SCHEMA_VERSION = 2
+        self.DB_SCHEMA_VERSION = 3
         try:
             self.connection = sqlite3.connect(path_to_db)
             self.cursor = self.connection.cursor()
@@ -43,6 +43,11 @@ class DbManager:
         self.cursor.execute(
             "ALTER TABLE game_day_threads DROP COLUMN post_type")
         logger.d(TAG, "upgrade_db_to_version_2(): completed")
+
+    def upgrade_db_to_version_3(self):
+        logger.w(TAG, "upgrade_db_to_version_3(): upgrading db to version 3")
+        self.cursor.execute("ALTER TABLE daily_threads ADD COLUMN is_featured BOOLEAN NOT NULL DEFAULT false")
+        logger.d(TAG, "upgrade_db_to_version_3: ")
 
     def set_db_schema_version(self, version: int):
         query = "INSERT OR REPLACE INTO db_schema VALUES(0, ?)"
@@ -72,6 +77,7 @@ class DbManager:
                 # The key is the db schema version being upgraded to. The value is the name of the upgrade function. Do not add parentheses, or it will get executed every time.
                 1: self.create_tables,
                 2: self.upgrade_db_to_version_2,
+                3: self.upgrade_db_to_version_3,
             }
             upgrade.get(from_version + 1, lambda: None)()
             from_version = from_version + 1

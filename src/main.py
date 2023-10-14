@@ -36,10 +36,17 @@ def handle_daily_thread(games: list[Game]) -> Optional[DailyThreadsRecord]:
         return None
     daily_thread = daily_threads_dao.get_daily_thread(current_day_idlw)
     if daily_thread:
+        # Update daily thread
         lemmy_client.update_daily_thread(daily_thread.post_id, post_util.get_daily_thread_title(current_day_idlw), post_util.get_daily_thread_body(filtered_games))
         return daily_thread
+    # Unfeature all featured daily threads
+    featured_daily_threads = daily_threads_dao.get_featured_daily_threads()
+    for featured_daily_thread in featured_daily_threads:
+        lemmy_client.unfeature_daily_thread(featured_daily_thread.post_id)
     # Create daily thread
-    return lemmy_client.create_daily_thread(current_day_idlw, post_util.get_daily_thread_title(current_day_idlw), post_util.get_daily_thread_body(filtered_games))
+    created_daily_thread = lemmy_client.create_daily_thread(current_day_idlw, post_util.get_daily_thread_title(current_day_idlw), post_util.get_daily_thread_body(filtered_games))
+    lemmy_client.feature_daily_thread(created_daily_thread.post_id)
+    return created_daily_thread
 
 
 def handle_game_day_thread(game: Game):
