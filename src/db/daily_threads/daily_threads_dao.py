@@ -48,6 +48,7 @@ class DailyThreadsDao:
         params = (post_id,)
         logger.i(TAG, f"feature_daily_thread(): executing {query} with params {params}")
         val = self.db_manager.cursor.execute(query, params).fetchone()
+        self.db_manager.connection.commit()
         if val is not None:
             return DailyThreadsRecord(val[0], val[1], val[2])
         return None
@@ -57,6 +58,7 @@ class DailyThreadsDao:
         params = (post_id,)
         logger.i(TAG, f"feature_daily_thread(): executing {query} with params {params}")
         val = self.db_manager.cursor.execute(query, params).fetchone()
+        self.db_manager.connection.commit()
         if val is not None:
             return DailyThreadsRecord(val[0], val[1], val[2])
         return None
