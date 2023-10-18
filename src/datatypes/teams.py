@@ -1,3 +1,4 @@
+from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
@@ -15,6 +16,9 @@ class Team:
 
     def get_team_table_entry(self):
         return f"{self.get_logo_markdown()} {self.abbreviation}"
+
+    def __eq__(self, other: Team):
+        return self.id == other.id
 
 
 class Teams(Enum):
@@ -51,3 +55,7 @@ class Teams(Enum):
     VGK = Team(54, 'VGK', 'Vegas', 'Golden Knights', 'https://lemmy.ca/pictrs/image/20aaabff-312a-437f-8247-825fc137d33e.png')
     SEA = Team(55, 'SEA', 'Seattle', 'Kraken', 'https://lemmy.ca/pictrs/image/e8edb628-f3a4-40df-b6a0-7752152ad7b3.png')
     ERR = Team(0, 'ERR', 'Error', 'Error', '')
+
+    @staticmethod
+    def get_all_teams():
+        return [team.value for team in Teams]

@@ -78,9 +78,13 @@ def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
         logger.i(TAG,f"main: The comment was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
 
 
+def filter_games(games: list[Game]):
+    return list(filter(lambda game: game.home_team in environment_util.teams or game.away_team in environment_util.teams if game else None, games))
+
+
 while not signal_util.is_interrupted:
     try:
-        games = nhl_api_client.get_games(datetime_util.yesterday(), datetime_util.tomorrow())
+        games = filter_games(nhl_api_client.get_games(datetime_util.yesterday(), datetime_util.tomorrow()))
         if not games:
             continue
         daily_thread = handle_daily_thread(games)
