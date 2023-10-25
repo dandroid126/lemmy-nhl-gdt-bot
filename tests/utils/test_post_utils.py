@@ -67,50 +67,50 @@ class TestPostUtils(unittest.TestCase):
 
 | Team | 1st | 2nd | 3rd | OT | SO | Total |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | 3 | 1 | 1 | 0 | 2/2 | 6 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | 2 | 2 | 1 | 0 | 1/3 | 5 |
+| ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | 3 | 1 | 1 | 0 | 2/2 | 6 |
+| ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | 2 | 2 | 1 | 0 | 1/3 | 5 |
 
 &nbsp;
 
 | Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
-| ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
+| ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | 44 | 19 | 9 | 55.4% | 10 | 10 | 0/4 |
+| ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | 44 | 16 | 17 | 44.6% | 10 | 10 | 1/3 |
 
 &nbsp;
 
 | Period | Time | Team | Strength | Goalie | Description |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| SO | 00:00 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Even | Kahkonen | Troy Terry - Backhand |
-| SO | 00:00 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Even | Kahkonen | Trevor Zegras - Backhand |
-| SO | 00:00 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Even | Stolarz | Logan Couture - Wrist Shot |
-| 3rd | 17:48 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Even | Stolarz | Erik Karlsson (9) Wrist Shot, assists: Alexander Barabanov (5), Tomas Hertl (7) |
-| 3rd | 11:31 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Even | Kahkonen | Max Comtois (2) Wrist Shot, assists: Troy Terry (8), Nathan Beaulieu (1) |
-| 2nd | 15:31 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Even | Stolarz | Timo Meier (3) , assists: none |
-| 2nd | 15:10 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Even | Kahkonen | Ryan Strome (2) Deflected, assists: John Klingberg (3), Troy Terry (7) |
-| 2nd | 03:28 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Power Play | Stolarz | Timo Meier (2) Backhand, assists: Alexander Barabanov (4), Erik Karlsson (6) |
-| 1st | 19:45 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Even | Kahkonen | Adam Henrique (2) Backhand, assists: Trevor Zegras (2), Kevin Shattenkirk (4) |
-| 1st | 10:52 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Even | Kahkonen | Frank Vatrano (4) Wrist Shot, assists: Isac Lundestrom (4), Jakob Silfverberg (1) |
-| 1st | 06:41 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Even | Stolarz | Erik Karlsson (8) Slap Shot, assists: Jaycob Megna (4), Nico Sturm (1) |
-| 1st | 06:18 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Even | Stolarz | Erik Karlsson (7) Wrist Shot, assists: Evgeny Svechnikov (3), Tomas Hertl (6) |
-| 1st | 05:16 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Even | Kahkonen | Adam Henrique (1) Wrist Shot, assists: Kevin Shattenkirk (3) |
+| SO | 00:00 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Even | Kahkonen | Troy Terry - Backhand |
+| SO | 00:00 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Even | Kahkonen | Trevor Zegras - Backhand |
+| SO | 00:00 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Even | Stolarz | Logan Couture - Wrist Shot |
+| 3rd | 17:48 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Even | Stolarz | Erik Karlsson (9) Wrist Shot, assists: Alexander Barabanov (5), Tomas Hertl (7) |
+| 3rd | 11:31 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Even | Kahkonen | Max Comtois (2) Wrist Shot, assists: Troy Terry (8), Nathan Beaulieu (1) |
+| 2nd | 15:31 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Even | Stolarz | Timo Meier (3) , assists: none |
+| 2nd | 15:10 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Even | Kahkonen | Ryan Strome (2) Deflected, assists: John Klingberg (3), Troy Terry (7) |
+| 2nd | 03:28 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Power Play | Stolarz | Timo Meier (2) Backhand, assists: Alexander Barabanov (4), Erik Karlsson (6) |
+| 1st | 19:45 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Even | Kahkonen | Adam Henrique (2) Backhand, assists: Trevor Zegras (2), Kevin Shattenkirk (4) |
+| 1st | 10:52 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Even | Kahkonen | Frank Vatrano (4) Wrist Shot, assists: Isac Lundestrom (4), Jakob Silfverberg (1) |
+| 1st | 06:41 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Even | Stolarz | Erik Karlsson (8) Slap Shot, assists: Jaycob Megna (4), Nico Sturm (1) |
+| 1st | 06:18 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Even | Stolarz | Erik Karlsson (7) Wrist Shot, assists: Evgeny Svechnikov (3), Tomas Hertl (6) |
+| 1st | 05:16 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Even | Kahkonen | Adam Henrique (1) Wrist Shot, assists: Kevin Shattenkirk (3) |
 
 &nbsp;
 
 | Period | Time | Team | Type | Min | Description |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| OT | 00:22 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Minor | 2 | Erik Karlsson Holding against Troy Terry |
-| 3rd | 17:48 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Misconduct | 10 | Kevin Shattenkirk Misconduct |
-| 2nd | 19:05 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Minor | 2 | Derek Grant Roughing against Radim Simek |
-| 2nd | 16:06 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Minor | 2 | Logan Couture Interference against Isac Lundestrom |
-| 2nd | 12:31 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Minor | 2 | Trevor Zegras Slashing against Matt Benning |
-| 2nd | 08:56 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Minor | 2 | Kevin Labanc Hooking against Mason McTavish |
-| 2nd | 04:48 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Minor | 2 | Steven Lorentz Tripping against Troy Terry |
-| 2nd | 03:33 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Major | 5 | Nathan Beaulieu Fighting against Luke Kunin |
-| 2nd | 03:33 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Major | 5 | Luke Kunin Fighting against Nathan Beaulieu |
-| 2nd | 03:05 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Minor | 2 | Max Jones Holding the stick against Steven Lorentz |
-| 1st | 08:55 | ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS | Minor | 2 | Evgeny Svechnikov Roughing against Max Comtois |
-| 1st | 08:55 | ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA | Minor | 2 | Max Comtois Holding against Evgeny Svechnikov |
+| OT | 00:22 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Minor | 2 | Erik Karlsson Holding against Troy Terry |
+| 3rd | 17:48 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Misconduct | 10 | Kevin Shattenkirk Misconduct |
+| 2nd | 19:05 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Minor | 2 | Derek Grant Roughing against Radim Simek |
+| 2nd | 16:06 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Minor | 2 | Logan Couture Interference against Isac Lundestrom |
+| 2nd | 12:31 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Minor | 2 | Trevor Zegras Slashing against Matt Benning |
+| 2nd | 08:56 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Minor | 2 | Kevin Labanc Hooking against Mason McTavish |
+| 2nd | 04:48 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Minor | 2 | Steven Lorentz Tripping against Troy Terry |
+| 2nd | 03:33 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Major | 5 | Nathan Beaulieu Fighting against Luke Kunin |
+| 2nd | 03:33 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Major | 5 | Luke Kunin Fighting against Nathan Beaulieu |
+| 2nd | 03:05 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Minor | 2 | Max Jones Holding the stick against Steven Lorentz |
+| 1st | 08:55 | ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS | Minor | 2 | Evgeny Svechnikov Roughing against Max Comtois |
+| 1st | 08:55 | ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA | Minor | 2 | Max Comtois Holding against Evgeny Svechnikov |
 
 &nbsp;
 
@@ -138,15 +138,15 @@ I am open source! Report issues, contribute, and fund me [on my GitHub page](htt
 
 | Team | Total |
 |:-:|:-:|
-| ![Los Angeles Kings](https://lemmy.ca/pictrs/image/ffa7e866-dd9a-430b-a3a1-61ef62dff3d9.png "nhl_lak_workaround") LAK | 0 |
-| ![Arizona Coyotes](https://lemmy.ca/pictrs/image/c700df7c-41d6-405b-81c2-7b7610aa400b.png "nhl_ari_workaround") ARI | 0 |
+| ![LAK](https://lemmy.ca/pictrs/image/ffa7e866-dd9a-430b-a3a1-61ef62dff3d9.png) LAK | 0 |
+| ![ARI](https://lemmy.ca/pictrs/image/c700df7c-41d6-405b-81c2-7b7610aa400b.png) ARI | 0 |
 
 &nbsp;
 
 | Team | Shots | Hits | Blocked | FO Wins | Giveaways | Takeaways | Power Plays |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ![Los Angeles Kings](https://lemmy.ca/pictrs/image/ffa7e866-dd9a-430b-a3a1-61ef62dff3d9.png "nhl_lak_workaround") LAK | 0 | 0 | 0 | 0.0% | 0 | 0 | 0/0 |
-| ![Arizona Coyotes](https://lemmy.ca/pictrs/image/c700df7c-41d6-405b-81c2-7b7610aa400b.png "nhl_ari_workaround") ARI | 0 | 0 | 0 | 0.0% | 0 | 0 | 0/0 |
+| ![LAK](https://lemmy.ca/pictrs/image/ffa7e866-dd9a-430b-a3a1-61ef62dff3d9.png) LAK | 0 | 0 | 0 | 0.0% | 0 | 0 | 0/0 |
+| ![ARI](https://lemmy.ca/pictrs/image/c700df7c-41d6-405b-81c2-7b7610aa400b.png) ARI | 0 | 0 | 0 | 0.0% | 0 | 0 | 0/0 |
 
 
 
@@ -193,8 +193,8 @@ I am open source! Report issues, contribute, and fund me [on my GitHub page](htt
         ]
         expected = """| Match up | Time |
 |:-:|:-:|
-| ![Anaheim Ducks](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png "nhl_ana_workaround") ANA 6 - ![San Jose Sharks](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png "nhl_sjs_workaround") SJS 5 | Final |
-| ![Los Angeles Kings](https://lemmy.ca/pictrs/image/ffa7e866-dd9a-430b-a3a1-61ef62dff3d9.png "nhl_lak_workaround") LAK - ![Arizona Coyotes](https://lemmy.ca/pictrs/image/c700df7c-41d6-405b-81c2-7b7610aa400b.png "nhl_ari_workaround") ARI | 12:05AM EDT |
+| ![ANA](https://lemmy.ca/pictrs/image/9efd8b21-3414-4e4f-8be3-559809ec133a.png) ANA 6 - ![SJS](https://lemmy.ca/pictrs/image/a278e5aa-6f6f-4cdb-a0dc-03630b03a3a9.png) SJS 5 | Final |
+| ![LAK](https://lemmy.ca/pictrs/image/ffa7e866-dd9a-430b-a3a1-61ef62dff3d9.png) LAK - ![ARI](https://lemmy.ca/pictrs/image/c700df7c-41d6-405b-81c2-7b7610aa400b.png) ARI | 12:05AM EDT |
     
 &nbsp;
 
