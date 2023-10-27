@@ -90,14 +90,11 @@ def filter_games_by_start_time(games: list[Game]):
 while not signal_util.is_interrupted:
     try:
         schedule = nhl_api_client.get_schedule(datetime_util.yesterday(), datetime_util.tomorrow())
-        logger.d(TAG, f"unfiltered schedule: {schedule}")
         schedule_filtered_by_selected_teams = filter_games_by_selected_teams(schedule)
-        logger.d(TAG, f"schedule_filtered_by_selected_teams: {schedule_filtered_by_selected_teams}")
         if not schedule_filtered_by_selected_teams:
             continue
         daily_thread = handle_daily_thread(schedule_filtered_by_selected_teams)
         schedule_filtered_by_start_times = filter_games_by_start_time(schedule_filtered_by_selected_teams)
-        logger.d(TAG, f"schedule_filtered_by_start_times: {schedule_filtered_by_start_times}")
         games = nhl_api_client.get_games(schedule_filtered_by_start_times)
         for game in games:
             try:
