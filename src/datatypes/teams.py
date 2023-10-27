@@ -57,5 +57,14 @@ class Teams(Enum):
     ERR = Team(0, 'ERR', 'Error', 'Error', '')
 
     @staticmethod
-    def get_all_teams():
+    def get_all_teams() -> list[Team]:
         return [team.value for team in Teams]
+
+
+_team_id_abbr_map = {}
+for _team in Teams.get_all_teams():
+    _team_id_abbr_map[_team.id] = _team
+
+
+def get_team_from_id(team_id: int) -> Team:
+    return _team_id_abbr_map.get(team_id, None)

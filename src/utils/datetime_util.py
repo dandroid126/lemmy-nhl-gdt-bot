@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, date
+from typing import Optional
 
 import pytz
 from dateutil import parser
@@ -21,7 +22,7 @@ MINUTES_BEFORE_GAME_START_TO_CREATE_POST = 60
 MINUTES_AFTER_GAME_END_TO_UPDATE_POST = 60
 
 
-def is_time_to_make_post(current_time, game_start_time, game_end_time=None):
+def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game_end_time: Optional[datetime] = None):
     if current_time + timedelta(minutes=MINUTES_BEFORE_GAME_START_TO_CREATE_POST) > game_start_time:
         # Game start time is within bounds to post. Check if the game is over
         if game_end_time is None:

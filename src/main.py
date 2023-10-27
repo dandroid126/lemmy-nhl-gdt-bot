@@ -78,16 +78,27 @@ def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
         logger.i(TAG,f"main: The comment was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
 
 
-def filter_games(games: list[Game]):
+def filter_games_by_selected_teams(games: list[Game]):
     return list(filter(lambda game: game.home_team in environment_util.teams or game.away_team in environment_util.teams if game else None, games))
+
+
+def filter_games_by_start_time(games: list[Game]):
+    current_time = datetime_util.get_current_time_as_utc()
+    return list(filter(lambda game: datetime_util.is_time_to_make_post(current_time, game.start_time) if game else None, games))
 
 
 while not signal_util.is_interrupted:
     try:
-        games = filter_games(nhl_api_client.get_games(datetime_util.yesterday(), datetime_util.tomorrow()))
-        if not games:
+        schedule = nhl_api_client.get_schedule(datetime_util.yesterday(), datetime_util.tomorrow())
+        logger.d(TAG, f"unfiltered schedule: {schedule}")
+        schedule_filtered_by_selected_teams = filter_games_by_selected_teams(schedule)
+        logger.d(TAG, f"schedule_filtered_by_selected_teams: {schedule_filtered_by_selected_teams}")
+        if not schedule_filtered_by_selected_teams:
             continue
-        daily_thread = handle_daily_thread(games)
+        daily_thread = handle_daily_thread(schedule_filtered_by_selected_teams)
+        schedule_filtered_by_start_times = filter_games_by_start_time(schedule_filtered_by_selected_teams)
+        logger.d(TAG, f"schedule_filtered_by_start_times: {schedule_filtered_by_start_times}")
+        games = nhl_api_client.get_games(schedule_filtered_by_start_times)
         for game in games:
             try:
                 if game is None:

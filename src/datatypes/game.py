@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from typing import Optional
 
 from src.datatypes.game_info import GameInfo
 from src.datatypes.goal import Goal
@@ -22,12 +23,12 @@ class Game:
     away_team: Team
     home_team: Team
     start_time: datetime
-    end_time: datetime
+    end_time: Optional[datetime]
     game_info: GameInfo
-    away_team_stats: TeamStats
-    home_team_stats: TeamStats
-    goals: [Goal]
-    penalties: [Penalty]
+    away_team_stats: Optional[TeamStats]
+    home_team_stats: Optional[TeamStats]
+    goals: Optional[list[Goal]]
+    penalties: Optional[list[Penalty]]
 
     # This gets the game type by retrieving the 6th character in the game id.
     # 1 -> preseason

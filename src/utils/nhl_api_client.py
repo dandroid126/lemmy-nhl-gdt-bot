@@ -5,7 +5,7 @@ from src.datatypes.Exceptions.IllegalArgumentException import IllegalArgumentExc
 from src.datatypes.game_info import GameInfo
 from src.datatypes.goal import Goal
 from src.datatypes.penalty import Penalty
-from src.datatypes.teams import Teams
+from src.datatypes.teams import Teams, get_team_from_id
 
 from src.datatypes.game import Game
 from src.datatypes.period import Period
@@ -50,6 +50,7 @@ DICT_KEY_SCORES = 'scores'
 DICT_KEY_ATTEMPTS = 'attempts'
 DICT_KEY_HAS_SHOOTOUT = 'hasShootout'
 DICT_KEY_GAME_DATA = 'gameData'
+DICT_KEY_ID = 'id'
 DICT_KEY_ABBREVIATION = 'abbreviation'
 DICT_KEY_PLAYS = 'plays'
 DICT_KEY_ALL_PLAYS = 'allPlays'
@@ -91,6 +92,7 @@ DICT_KEY_PP_PERCENTAGE = 'powerPlayPercentage'
 
 EMPTY_NET = "Empty Net"
 TIME_CLOCK_DEFAULT = "--"
+PERIOD_DEFAULT = "0"
 REQUEST_TIMEOUT = 10
 
 def get_schedule_url(start_date: str, end_date: str):
@@ -107,34 +109,38 @@ def get_feed_live_url(game_id: int):
     return FEED_LIVE_URL.replace(URL_REPL_GAME_ID, str(game_id))
 
 
-def get_games(start_date: str = None, end_date: str = None) -> list[Game]:
+def get_schedule(start_date: str = None, end_date: str = None) -> list[Game]:
     if start_date is None:
         start_date = datetime_util.yesterday()
     if end_date is None:
         end_date = datetime_util.today()
     url = get_schedule_url(start_date, end_date)
-    logger.i(TAG, f"get_games(): url: {url}")
-    games = []
+    logger.i(TAG, f"get_schedule(): url: {url}")
     try:
         dates = pydash.get(json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text), DICT_KEY_DATES, [])
+        games = []
+        for date in dates:
+            games.extend(pydash.get(date, DICT_KEY_GAMES, []))
+        schedule = []
+        for game in games:
+            schedule.append(parse_schedule(game))
     except requests.exceptions.Timeout as e:
-        logger.e(TAG, "get_games(): a timeout occurred", e)
-        dates = []
+        logger.e(TAG, "get_schedule(): a timeout occurred", e)
+        schedule = []
     except requests.exceptions.ConnectionError as e:
-        logger.e(TAG, "get_games(): A connection error occurred", e)
-        dates = []
-    for date in dates:
-        games.extend(pydash.get(date, DICT_KEY_GAMES, []))
-    out = []
-    for game in games:
-        game_id = pydash.get(game, DICT_KEY_GAME_PK, None)
-        if not game_id:
-            logger.e(TAG, f"get_games(): Failed to get game ID! game: {game}")
-            continue
-        feed_live = get_feed_live(game_id)
-        parse_team_stats(feed_live)
-        out.append(parse_game(feed_live))  # TODO: only use feed_live
-    return out
+        logger.e(TAG, "get_schedule(): A connection error occurred", e)
+        schedule = []
+    return schedule
+
+
+def get_games(schedule: list[Game]) -> list[Game]:
+    if not schedule:
+        return []
+    games = []
+    for game in schedule:
+        feed_live = get_feed_live(game.id)
+        games.append(parse_game(feed_live))
+    return games
 
 
 def get_feed_live(game_id: int):
@@ -247,6 +253,33 @@ def parse_team_stats(feed_live: dict):
             periods=pydash.get(periods, key, []),
             shootout=pydash.get(shootouts, key, None))
     return out
+
+
+def parse_schedule(game: dict):
+    game_id = pydash.get(game, f"{DICT_KEY_GAME_PK}", None)
+    away_team_id = pydash.get(game, f"{DICT_KEY_TEAMS}.{DICT_KEY_AWAY}.{DICT_KEY_TEAM}.{DICT_KEY_ID}", None)
+    home_team_id = pydash.get(game, f"{DICT_KEY_TEAMS}.{DICT_KEY_HOME}.{DICT_KEY_TEAM}.{DICT_KEY_ID}", None)
+    start_time = pydash.get(game, f"{DICT_KEY_GAME_DATE}", None)
+
+    if not game_id or not away_team_id or not home_team_id or not start_time:
+        return []
+
+    away_team = get_team_from_id(away_team_id)
+    home_team = get_team_from_id(home_team_id)
+
+    if not away_team or not home_team:
+        return []
+
+    return Game(id=game_id,
+                away_team=away_team,
+                home_team=home_team,
+                start_time=datetime_util.parse_datetime(start_time),
+                end_time=None,
+                game_info=GameInfo(current_period=PERIOD_DEFAULT, game_clock=TIME_CLOCK_DEFAULT),
+                home_team_stats=None,
+                away_team_stats=None,
+                goals=None,
+                penalties=None)
 
 
 def parse_game(feed_live: dict):
