@@ -38,6 +38,8 @@ class EnvironmentUtil:
 
     @staticmethod
     def parse_game_types(game_types: str):
+        if not game_types:
+            return []
         return [GameType[game_type] for game_type in game_types.split(',')]
 
     @staticmethod
