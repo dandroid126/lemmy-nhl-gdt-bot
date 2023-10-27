@@ -16,6 +16,8 @@ DICT_KEY_POST_VIEW = 'post_view'
 DICT_KEY_POST = 'post'
 DICT_KEY_ID = 'id'
 
+REQUEST_TIMEOUT = 10
+
 
 class LemmyClient:
     def __init__(self, lemmy_instance: str, bot_name: str, password: str, community_name: str,
@@ -29,7 +31,7 @@ class LemmyClient:
         self.daily_threads_dao = daily_threads_dao
         self.comments_dao = comments_dao
 
-        self.lemmy = Lemmy(self.lemmy_instance)
+        self.lemmy = Lemmy(self.lemmy_instance, request_timeout=REQUEST_TIMEOUT)
         self.lemmy.log_in(self.bot_name, self.password)
         self.community_id = self.lemmy.discover_community(self.community_name)
         if self.community_id is None:
