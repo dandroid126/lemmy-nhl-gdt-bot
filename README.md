@@ -20,7 +20,8 @@ docker run --rm -d --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/ou
 There's a shell script `run.sh` included in the repo to do this. This is what the run configuration in Pycharm actually calls. So if you want to make your life easy, you can use that.
 
 ## Just host it
-1. Create the out directory. ([See section](#create-the-out-directory)) 
+1. Create the out directory. ([See section](#create-the-out-directory))
+2. Run it
 ```bash
 docker run --rm --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out ghcr.io/dandroid126/lemmy-nhl-gdt-bot:main
 ```
