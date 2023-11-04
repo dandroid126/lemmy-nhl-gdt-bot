@@ -19,6 +19,9 @@ def handle_daily_thread(games: list[Game]) -> Optional[DailyThreadsRecord]:
     if not games:
         logger.d(TAG, "List of games is empty. Exiting.")
         return None
+    if len(games) < 2:
+        logger.d(TAG, "List of games is less than 2. Don't make a daily thread.")
+        return None
     current_day_idlw = datetime_util.get_current_day_as_idlw()
     filtered_games = list(filter(lambda game: datetime_util.is_same_day(game.start_time, current_day_idlw) if game else None, games))
     if not filtered_games:
@@ -77,6 +80,22 @@ def filter_games_by_start_time(games: list[Game]):
     return list(filter(lambda game: datetime_util.is_time_to_make_post(current_time, game.start_time) if game else None, games))
 
 
+# def split_games_list_by_post_type(games: list[Game]) -> tuple[list[Game], list[Game]]:
+#     gdt_games = []
+#     comment_games = []
+#     for game in games:
+#         game_type = game.get_game_type()
+#         if game_type in environment_util.gdt_post_types:
+#             gdt_games.append(game)
+#         elif game_type in environment_util.comment_post_types:
+#             comment_games.append(game)
+#     return gdt_games, comment_games
+
+
+# def get_all_comment_type_games(games: list[Game]) -> list[Game]:
+#     return list(filter(lambda game: game.get_game_type() in environment_util.comment_post_types if game else None, games))
+
+
 def merge_games_with_schedule(schedule: list[Game], games: list[Game]):
     out = schedule.copy()
     for game in games:
@@ -95,7 +114,7 @@ while not signal_util.is_interrupted:
             continue
         schedule_filtered_by_start_times = filter_games_by_start_time(schedule_filtered_by_selected_teams)
         games = nhl_api_client.get_games(schedule_filtered_by_start_times)
-        merged_schedule_and_games = merge_games_with_schedule(schedule, games)
+        merged_schedule_and_games = merge_games_with_schedule(schedule_filtered_by_start_times, games)
         daily_thread = handle_daily_thread(merged_schedule_and_games)
         for game in games:
             try:

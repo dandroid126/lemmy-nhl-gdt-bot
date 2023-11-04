@@ -3,7 +3,9 @@ from datetime import datetime
 from src.datatypes.game import Game
 from src.datatypes.game_info import GameInfo
 from src.db.comments.comments_dao import comments_dao
+from src.db.game_day_threads.game_day_threads_dao import game_day_threads_dao
 from src.utils import datetime_util
+from src.utils.environment_util import environment_util
 
 FINAL = 'Final'
 TIME_CLOCK = 'Time Clock'
@@ -31,13 +33,13 @@ ET = "ET"
 AT = "AT"
 LINE_BREAK = "&nbsp;"
 MATCH_UP = "Match up"
-COMMENT = "Comment"
+LINK = "Link"
 
 TEAM_STATS_HEADER_ROW = [TEAM, SHOTS, HITS, BLOCKED, FO_WINS, GIVEAWAYS, TAKEAWAYS, POWER_PLAYS]
 GOALS_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, STRENGTH, GOALIE, DESCRIPTION]
 PENALTY_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, TYPE, MIN, DESCRIPTION]
 START_TIME_HEADER_ROW = [PT, MT, CT, ET, AT]
-DAY_OVERVIEW_HEADER_ROW = [MATCH_UP, TIME, COMMENT]
+DAY_OVERVIEW_HEADER_ROW = [MATCH_UP, TIME, LINK]
 
 FOOTER_TEXT = "I am open source! Report issues, contribute, and fund me [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!"
 
@@ -206,10 +208,17 @@ def get_day_score_overview_table(games: list[Game]):
     for i, value in enumerate(DAY_OVERVIEW_HEADER_ROW):
         score_overview.set(i, 0, value)
     for i, game in enumerate(games):
-        comment = comments_dao.get_comment(game.id)
+        game_type = game.get_game_type()
+        link = ""
+        if game_type in environment_util.comment_post_types:
+            comment = comments_dao.get_comment(game.id)
+            link = comment.get_comment_url() if comment else ""
+        elif game_type in environment_util.gdt_post_types:
+            game_day_thread = game_day_threads_dao.get_game_day_thread(game.id)
+            link = game_day_thread.get_game_day_thread_url() if game_day_thread else ""
         score_overview.set(0, i + 1, f"{game.away_team.get_team_table_entry()}{f' {game.away_team_stats.goals}' if game.game_info.is_game_started() else ''} - {game.home_team.get_team_table_entry()}{f' {game.home_team_stats.goals}' if game.game_info.is_game_started() else ''}")
         score_overview.set(1, i + 1, f'{get_formatted_time_clock_time(game.game_info) if game.game_info.is_game_started() else get_formatted_game_start_time(game.start_time)}')
-        score_overview.set(2, i + 1, f'{comment.get_comment_url() if comment else ""}')
+        score_overview.set(2, i + 1, f'{link}')
     return score_overview
 
 

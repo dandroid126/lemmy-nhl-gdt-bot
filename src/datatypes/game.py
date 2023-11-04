@@ -37,3 +37,8 @@ class Game:
     # 4 -> allstar
     def get_game_type(self):
         return GameType(int(str(self.id)[5:6]))
+
+    def __eq__(self, other):
+        if type(other) == Game:
+            return self.id == other.id
+        return False
