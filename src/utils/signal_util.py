@@ -24,3 +24,6 @@ class SignalUtil:
         self.condition.acquire()
         self.condition.wait(timeout)
         self.condition.release()
+
+
+signal_util = SignalUtil()

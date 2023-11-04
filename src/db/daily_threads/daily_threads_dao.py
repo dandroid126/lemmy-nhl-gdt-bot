@@ -1,7 +1,7 @@
 from typing import Optional
 
 from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
-from src.db.db_manager import DbManager
+from src.db.db_manager import DbManager, db_manager
 from src.utils import logger
 
 # Keeping these here for reference, but don't use them because formatted strings in queries are bad.
@@ -71,3 +71,6 @@ class DailyThreadsDao:
         for val in vals:
             out.append(DailyThreadsRecord(val[0], val[1], val[2]))
         return out
+
+
+daily_threads_dao = DailyThreadsDao(db_manager)

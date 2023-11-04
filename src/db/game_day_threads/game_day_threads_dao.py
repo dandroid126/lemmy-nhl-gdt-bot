@@ -1,6 +1,6 @@
 from typing import Optional
 
-from src.db.db_manager import DbManager
+from src.db.db_manager import DbManager, db_manager
 from src.db.game_day_threads.game_day_threads_record import GameDayThreadRecord
 from src.utils import logger
 
@@ -32,3 +32,6 @@ class GameDayThreadsDao:
         self.db_manager.cursor.execute(query, params)
         self.db_manager.connection.commit()
         return post_id
+
+
+game_day_threads_dao = GameDayThreadsDao(db_manager)

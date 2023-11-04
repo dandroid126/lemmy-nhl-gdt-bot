@@ -4,11 +4,12 @@ import pydash
 from pythorhead import Lemmy
 from pythorhead.types import FeatureType
 
-from src.db.comments.comments_dao import CommentsDao
-from src.db.daily_threads.daily_threads_dao import DailyThreadsDao
+from src.db.comments.comments_dao import CommentsDao, comments_dao
+from src.db.daily_threads.daily_threads_dao import DailyThreadsDao, daily_threads_dao
 from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
-from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao
+from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao, game_day_threads_dao
 from src.utils import logger
+from src.utils.environment_util import environment_util
 
 TAG = 'LemmyClient'
 
@@ -21,15 +22,16 @@ REQUEST_TIMEOUT = 10
 
 class LemmyClient:
     def __init__(self, lemmy_instance: str, bot_name: str, password: str, community_name: str,
-                 game_day_threads_dao: GameDayThreadsDao, daily_threads_dao: DailyThreadsDao,
-                 comments_dao: CommentsDao):
+                 client_game_day_threads_dao: Optional[GameDayThreadsDao] = None,
+                 client_daily_threads_dao: Optional[DailyThreadsDao] = None,
+                 client_comments_dao: Optional[CommentsDao] = None):
         self.lemmy_instance = lemmy_instance
         self.bot_name = bot_name
         self.password = password
         self.community_name = community_name
-        self.game_day_threads_dao = game_day_threads_dao
-        self.daily_threads_dao = daily_threads_dao
-        self.comments_dao = comments_dao
+        self.client_game_day_threads_dao = client_game_day_threads_dao if client_game_day_threads_dao else game_day_threads_dao
+        self.client_daily_threads_dao = client_daily_threads_dao if client_daily_threads_dao else daily_threads_dao
+        self.client_comments_dao = client_comments_dao if client_comments_dao else comments_dao
 
         self.lemmy = Lemmy(self.lemmy_instance, request_timeout=REQUEST_TIMEOUT)
         self.lemmy.log_in(self.bot_name, self.password)
@@ -45,7 +47,7 @@ class LemmyClient:
         if post_id == -1:
             logger.e(TAG, f"create_game_day_thread(): Failed to create post for game {game_id}")
             return -1
-        return self.game_day_threads_dao.insert_game_day_thread(post_id, game_id)
+        return self.client_game_day_threads_dao.insert_game_day_thread(post_id, game_id)
 
     def update_game_day_thread(self, title, body, post_id):
         self.lemmy.post.edit(post_id=post_id, name=title, body=body)
@@ -56,7 +58,7 @@ class LemmyClient:
         if post_id == -1:
             logger.e(TAG, f"create_daily_thread(): Failed to create daily thread for date: {date}")
             return None
-        return self.daily_threads_dao.insert_daily_thread(post_id, date, False)
+        return self.client_daily_threads_dao.insert_daily_thread(post_id, date, False)
 
     def update_daily_thread(self, post_id, title, body):
         self.lemmy.post.edit(post_id=post_id, name=title, body=body)
@@ -67,15 +69,19 @@ class LemmyClient:
         if comment_id == -1:
             logger.e(TAG, f"create_comment(): Failed to create comment. post_id: {post_id}; game_id: {game_id}")
             return -1
-        return self.comments_dao.insert_comment(comment_id, game_id)
+        return self.client_comments_dao.insert_comment(comment_id, game_id)
 
     def update_comment(self, comment_id, content):
         self.lemmy.comment.edit(comment_id=comment_id, content=content)
 
     def feature_daily_thread(self, post_id):
         self.lemmy.post.feature(post_id, True, FeatureType.Community)
-        self.daily_threads_dao.feature_daily_thread(post_id)
+        self.client_daily_threads_dao.feature_daily_thread(post_id)
 
     def unfeature_daily_thread(self, post_id):
         self.lemmy.post.feature(post_id, False, FeatureType.Community)
-        self.daily_threads_dao.unfeature_daily_thread(post_id)
+        self.client_daily_threads_dao.unfeature_daily_thread(post_id)
+
+
+lemmy_client = LemmyClient(environment_util.lemmy_instance, environment_util.bot_name, environment_util.password,
+                           environment_util.community_name)

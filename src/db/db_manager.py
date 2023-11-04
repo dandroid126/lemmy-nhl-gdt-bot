@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 
+from src.utils import constants
 from src.utils import logger
 
 global connection
@@ -82,3 +83,6 @@ class DbManager:
             upgrade.get(from_version + 1, lambda: None)()
             from_version = from_version + 1
         self.set_db_schema_version(self.DB_SCHEMA_VERSION)
+
+
+db_manager = DbManager(constants.DB_PATH)

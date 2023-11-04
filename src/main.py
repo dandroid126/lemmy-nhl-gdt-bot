@@ -1,28 +1,18 @@
 from typing import Optional
 
 from src.datatypes.game import Game
-from src.db.comments.comments_dao import CommentsDao
-from src.db.daily_threads.daily_threads_dao import DailyThreadsDao
+from src.db.comments.comments_dao import comments_dao
+from src.db.daily_threads.daily_threads_dao import daily_threads_dao
 from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
-from src.db.db_manager import DbManager
-from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao
-from src.utils import nhl_api_client, constants, post_util, datetime_util, logger
-from src.utils.environment_util import EnvironmentUtil
-from src.utils.lemmy_client import LemmyClient
-from src.utils.signal_util import SignalUtil
+from src.db.game_day_threads.game_day_threads_dao import game_day_threads_dao
+from src.utils import nhl_api_client, post_util, datetime_util, logger
+from src.utils.environment_util import environment_util
+from src.utils.lemmy_client import lemmy_client
+from src.utils.signal_util import signal_util
 
 TAG = "main"
 
 DELAY_BETWEEN_UPDATING_POSTS = 30
-
-signal_util = SignalUtil()
-environment_util = EnvironmentUtil()
-db_manager = DbManager(constants.DB_PATH)
-game_day_threads_dao = GameDayThreadsDao(db_manager)
-daily_threads_dao = DailyThreadsDao(db_manager)
-comments_dao = CommentsDao(db_manager)
-lemmy_client = LemmyClient(environment_util.lemmy_instance, environment_util.bot_name, environment_util.password,
-                           environment_util.community_name, game_day_threads_dao, daily_threads_dao, comments_dao)
 
 
 def handle_daily_thread(games: list[Game]) -> Optional[DailyThreadsRecord]:

@@ -1,7 +1,7 @@
 from typing import Optional
 
 from src.db.comments.comments_record import CommentsRecord
-from src.db.db_manager import DbManager
+from src.db.db_manager import db_manager, DbManager
 from src.utils import logger
 
 # Keeping these here for reference, but don't use them because formatted strings in queries are bad.
@@ -32,3 +32,6 @@ class CommentsDao:
         self.db_manager.cursor.execute(query, params)
         self.db_manager.connection.commit()
         return comment_id
+
+
+comments_dao = CommentsDao(db_manager)
