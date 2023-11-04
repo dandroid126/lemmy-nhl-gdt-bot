@@ -114,7 +114,7 @@ while not signal_util.is_interrupted:
             continue
         schedule_filtered_by_start_times = filter_games_by_start_time(schedule_filtered_by_selected_teams)
         games = nhl_api_client.get_games(schedule_filtered_by_start_times)
-        merged_schedule_and_games = merge_games_with_schedule(schedule_filtered_by_start_times, games)
+        merged_schedule_and_games = merge_games_with_schedule(schedule_filtered_by_selected_teams, games)
         daily_thread = handle_daily_thread(merged_schedule_and_games)
         for game in games:
             try:
