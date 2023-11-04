@@ -77,15 +77,26 @@ def filter_games_by_start_time(games: list[Game]):
     return list(filter(lambda game: datetime_util.is_time_to_make_post(current_time, game.start_time) if game else None, games))
 
 
+def merge_games_with_schedule(schedule: list[Game], games: list[Game]):
+    out = schedule.copy()
+    for game in games:
+        try:
+            out[out.index(game)] = game
+        except ValueError:
+            logger.e(TAG, f"Index of game with id '{game.id}' not found in schedule")
+    return out
+
+
 while not signal_util.is_interrupted:
     try:
         schedule = nhl_api_client.get_schedule(datetime_util.yesterday(), datetime_util.tomorrow())
         schedule_filtered_by_selected_teams = filter_games_by_selected_teams(schedule)
         if not schedule_filtered_by_selected_teams:
             continue
-        daily_thread = handle_daily_thread(schedule_filtered_by_selected_teams)
         schedule_filtered_by_start_times = filter_games_by_start_time(schedule_filtered_by_selected_teams)
         games = nhl_api_client.get_games(schedule_filtered_by_start_times)
+        merged_schedule_and_games = merge_games_with_schedule(schedule, games)
+        daily_thread = handle_daily_thread(merged_schedule_and_games)
         for game in games:
             try:
                 if game is None:
