@@ -80,22 +80,6 @@ def filter_games_by_start_time(games: list[Game]):
     return list(filter(lambda game: datetime_util.is_time_to_make_post(current_time, game.start_time) if game else None, games))
 
 
-# def split_games_list_by_post_type(games: list[Game]) -> tuple[list[Game], list[Game]]:
-#     gdt_games = []
-#     comment_games = []
-#     for game in games:
-#         game_type = game.get_game_type()
-#         if game_type in environment_util.gdt_post_types:
-#             gdt_games.append(game)
-#         elif game_type in environment_util.comment_post_types:
-#             comment_games.append(game)
-#     return gdt_games, comment_games
-
-
-# def get_all_comment_type_games(games: list[Game]) -> list[Game]:
-#     return list(filter(lambda game: game.get_game_type() in environment_util.comment_post_types if game else None, games))
-
-
 def merge_games_with_schedule(schedule: list[Game], games: list[Game]):
     out = schedule.copy()
     for game in games:
@@ -108,6 +92,7 @@ def merge_games_with_schedule(schedule: list[Game], games: list[Game]):
 
 while not signal_util.is_interrupted:
     try:
+        signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
         schedule = nhl_api_client.get_schedule(datetime_util.yesterday(), datetime_util.tomorrow())
         schedule_filtered_by_selected_teams = filter_games_by_selected_teams(schedule)
         if not schedule_filtered_by_selected_teams:
@@ -133,9 +118,6 @@ while not signal_util.is_interrupted:
                 break
             except Exception as e:
                 logger.e(TAG, "main: Some exception occurred while processing a game.", e)
-        if not signal_util.is_interrupted:
-            # If interrupted, don't sleep. Just exit.
-            signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
     except InterruptedError as e:
         logger.e(TAG, "main: An InterruptedError was raised while sleeping.", e)
 

@@ -26,10 +26,10 @@ def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game
     if current_time + timedelta(minutes=MINUTES_BEFORE_GAME_START_TO_CREATE_POST) > game_start_time:
         # Game start time is within bounds to post. Check if the game is over
         if game_end_time is None:
-            if current_time > game_start_time + timedelta(hours=6):
+            # if current_time > game_start_time + timedelta(hours=6):
                 # Game ended over 6 hours ago. Likely the API gave us bad data and the game is actually over.
-                logger.w(TAG, "Game ended over 6 hours ago. Likely the API gave us bad data and the game is actually over.")
-                return False
+                # logger.w(TAG, "Game ended over 6 hours ago. Likely the API gave us bad data and the game is actually over.")
+                # return False
             # Game hasn't ended. Either the game is about to start or is currently running.
             logger.i(TAG, "Game hasn't ended. Either the game is about to start or is currently running.")
             return True
