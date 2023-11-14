@@ -18,6 +18,7 @@ TAG = 'DbManager'
 class DbManager:
     def __init__(self, path_to_db):
         self.DB_SCHEMA_VERSION = 3
+        self.path_to_db = path_to_db
         try:
             self.connection = sqlite3.connect(path_to_db)
             self.cursor = self.connection.cursor()

@@ -19,7 +19,7 @@ def handle_daily_thread(games: list[Game]) -> Optional[DailyThreadsRecord]:
     if not games:
         logger.d(TAG, "List of games is empty. Exiting.")
         return None
-    if len(games) < 2:
+    if not any(game.get_game_type() in environment_util.comment_post_types for game in games) and len(games) < 2:
         logger.d(TAG, "List of games is less than 2. Don't make a daily thread.")
         return None
     current_day_idlw = datetime_util.get_current_day_as_idlw()
@@ -83,6 +83,10 @@ def filter_games_by_start_time(games: list[Game]):
 def merge_games_with_schedule(schedule: list[Game], games: list[Game]):
     out = schedule.copy()
     for game in games:
+        if not game:
+            # Sometimes a game is empty, probably due to an error in the data returned by the API.
+            # If that is the case, just skip it and leave it as a scheduled game.
+            continue
         try:
             out[out.index(game)] = game
         except ValueError:
@@ -90,35 +94,41 @@ def merge_games_with_schedule(schedule: list[Game], games: list[Game]):
     return out
 
 
-while not signal_util.is_interrupted:
-    try:
-        signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
-        schedule = nhl_api_client.get_schedule(datetime_util.yesterday(), datetime_util.tomorrow())
-        schedule_filtered_by_selected_teams = filter_games_by_selected_teams(schedule)
-        if not schedule_filtered_by_selected_teams:
-            continue
-        schedule_filtered_by_start_times = filter_games_by_start_time(schedule_filtered_by_selected_teams)
-        games = nhl_api_client.get_games(schedule_filtered_by_start_times)
-        merged_schedule_and_games = merge_games_with_schedule(schedule_filtered_by_selected_teams, games)
-        daily_thread = handle_daily_thread(merged_schedule_and_games)
-        for game in games:
-            try:
-                if game is None:
-                    logger.d(TAG, "Game is None. Skip making a post for this game.")
-                    continue
-                game_type = game.get_game_type()
-                if game_type in environment_util.gdt_post_types:
-                    handle_game_day_thread(game)
-                elif game_type in environment_util.comment_post_types:
-                    handle_comment(daily_thread, game)
-            except InterruptedError as e:
-                # If an InterruptedError is raised while processing games,
-                #  we need to break out before the catch-all below catches it and does nothing.
-                logger.e(TAG, "main: An InterruptedError was raised while processing games.", e)
-                break
-            except Exception as e:
-                logger.e(TAG, "main: Some exception occurred while processing a game.", e)
-    except InterruptedError as e:
-        logger.e(TAG, "main: An InterruptedError was raised while sleeping.", e)
+def main():
+    while not signal_util.is_interrupted:
+        try:
+            signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
+            if signal_util.is_interrupted:
+                continue
+            schedule = nhl_api_client.get_schedule(datetime_util.yesterday(), datetime_util.tomorrow())
+            schedule_filtered_by_selected_teams = filter_games_by_selected_teams(schedule)
+            if not schedule_filtered_by_selected_teams:
+                continue
+            schedule_filtered_by_start_times = filter_games_by_start_time(schedule_filtered_by_selected_teams)
+            games = nhl_api_client.get_games(schedule_filtered_by_start_times)
+            merged_schedule_and_games = merge_games_with_schedule(schedule_filtered_by_selected_teams, games)
+            daily_thread = handle_daily_thread(merged_schedule_and_games)
+            for game in games:
+                try:
+                    if game is None:
+                        logger.d(TAG, "Game is None. Skip making a post for this game.")
+                        continue
+                    game_type = game.get_game_type()
+                    if game_type in environment_util.gdt_post_types:
+                        handle_game_day_thread(game)
+                    elif game_type in environment_util.comment_post_types:
+                        handle_comment(daily_thread, game)
+                except InterruptedError as e:
+                    # If an InterruptedError is raised while processing games,
+                    #  we need to break out before the catch-all below catches it and does nothing.
+                    logger.e(TAG, "main: An InterruptedError was raised while processing games.", e)
+                    break
+                except Exception as e:
+                    logger.e(TAG, "main: Some exception occurred while processing a game.", e)
+        except InterruptedError as e:
+            logger.e(TAG, "main: An InterruptedError was raised while sleeping.", e)
+    logger.i(TAG, f"main: Reached the end. Shutting down. is_interrupted: {signal_util.is_interrupted}")
 
-logger.i(TAG, f"main: Reached the end. Shutting down. is_interrupted: {signal_util.is_interrupted}")
+
+if __name__ == "__main__":
+    main()
