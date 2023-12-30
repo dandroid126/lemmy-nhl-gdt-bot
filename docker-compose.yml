@@ -1,0 +1,14 @@
+# Example docker-compose.yml file:
+
+services:
+  lemmy-nhl-gdt-bot:
+    container_name: lemmy-nhl-gdt-bot
+    image: ghcr.io/dandroid126/lemmy-nhl-gdt-bot:main
+    restart: unless-stopped
+    volumes:
+      - "./.env:/app/.env"
+      - "./out:/app/out"
+#      - "/path/to/lemmy-nhl-gdt-bot/.env:/app/.env"
+#      - "/path/to/lemmy-nhl-gdt-bot/out:/app/out"
+    extra_hosts:
+      - "statsapi.web.nhl.com:18.66.2.22"

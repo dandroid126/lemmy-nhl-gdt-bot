@@ -21,6 +21,15 @@ class EnvironmentUtil:
     _ENVIRONMENT_VARIABLE_NAMES = [_BOT_NAME, _PASSWORD, _LEMMY_INSTANCE, _COMMUNITY_NAME, _COMMENT_POST_TYPES, _GDT_POST_TYPES, _TEAMS]
 
     def __init__(self, dotenv_path: Optional[str] = None):
+        """
+        Load the environment variables from the .env file.
+
+        Args:
+            dotenv_path: The path to the .env file.
+
+        Returns:
+            None
+        """
         for environment_variable_name in self._ENVIRONMENT_VARIABLE_NAMES:
             if os.environ.get(environment_variable_name):
                 del os.environ[environment_variable_name]
@@ -38,16 +47,35 @@ class EnvironmentUtil:
 
     @staticmethod
     def parse_game_types(game_types: str):
+        """
+        Parse the game types from the environment variable.
+
+        Args:
+            game_types: The game types to parse.
+
+        Returns:
+            The parsed game types.
+        """
         if not game_types:
             return []
         return [GameType[game_type] for game_type in game_types.split(',')]
 
     @staticmethod
     def parse_teams(teams: str) -> list[Team]:
+        """
+        Parse the teams from the environment variable.
+
+        Args:
+            teams: The teams to parse.
+
+        Returns:
+            The parsed teams.
+        """
         if teams:
             return [Teams[team].value for team in teams.split(',')]
         else:
             return Teams.get_all_teams()
 
 
+# Set the environment_util instance to be used globally
 environment_util = EnvironmentUtil()

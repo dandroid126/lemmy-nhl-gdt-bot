@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pydash
 import requests
 import json
@@ -95,7 +97,18 @@ TIME_CLOCK_DEFAULT = "--"
 PERIOD_DEFAULT = "0"
 REQUEST_TIMEOUT = 10
 
-def get_schedule_url(start_date: str, end_date: str):
+
+def get_schedule_url(start_date: str, end_date: str) -> str:
+    """
+    Gets the schedule URL
+
+    Args:
+        start_date: the start date of the schedule
+        end_date: the end date of the schedule
+
+    Returns:
+        str: the schedule URL
+    """
     if start_date is None:
         raise IllegalArgumentException(TAG, "start_date must not be None")
     if end_date is None:
@@ -103,13 +116,32 @@ def get_schedule_url(start_date: str, end_date: str):
     return SCHEDULE_URL.replace(URL_REPL_START_DATE, start_date).replace(URL_REPL_END_DATE, end_date)
 
 
-def get_feed_live_url(game_id: int):
+def get_feed_live_url(game_id: int) -> str:
+    """
+    Gets the feed live URL
+
+    Args:
+        game_id: the ID of the game
+
+    Returns:
+        str: the feed live URL
+    """
     if game_id is None:
         raise IllegalArgumentException(TAG, "game_id must not be None")
     return FEED_LIVE_URL.replace(URL_REPL_GAME_ID, str(game_id))
 
 
 def get_schedule(start_date: str = None, end_date: str = None) -> list[Game]:
+    """
+    Gets the schedule
+
+    Args:
+        start_date: The start date of the schedule
+        end_date: The end date of the schedule
+
+    Returns:
+        list[Game]: The schedule
+    """
     if start_date is None:
         start_date = datetime_util.yesterday()
     if end_date is None:
@@ -123,7 +155,7 @@ def get_schedule(start_date: str = None, end_date: str = None) -> list[Game]:
             games.extend(pydash.get(date, DICT_KEY_GAMES, []))
         schedule = []
         for game in games:
-            schedule.append(parse_schedule(game))
+            schedule.append(parse_scheduled_game(game))
     except requests.exceptions.Timeout as e:
         logger.e(TAG, "get_schedule(): a timeout occurred", e)
         schedule = []
@@ -134,6 +166,15 @@ def get_schedule(start_date: str = None, end_date: str = None) -> list[Game]:
 
 
 def get_games(schedule: list[Game]) -> list[Game]:
+    """
+    Gets the games
+
+    Args:
+        schedule: The schedule
+
+    Returns:
+        list[Game]: The games
+    """
     if not schedule:
         return []
     games = []
@@ -143,7 +184,16 @@ def get_games(schedule: list[Game]) -> list[Game]:
     return games
 
 
-def get_feed_live(game_id: int):
+def get_feed_live(game_id: int) -> dict:
+    """
+    Gets the feed live
+
+    Args:
+        game_id: the ID of the game
+
+    Returns:
+        dict: the feed live dictionary
+    """
     if game_id is None:
         raise IllegalArgumentException(TAG, "game_id must not be None")
     url = get_feed_live_url(game_id)
@@ -159,7 +209,16 @@ def get_feed_live(game_id: int):
     return box_score
 
 
-def parse_periods(feed_live: dict):
+def parse_periods(feed_live: dict) -> dict:
+    """
+    Parses the periods
+
+    Args:
+        feed_live: the feed live dictionary
+
+    Returns:
+        dict: the parsed periods
+    """
     out = {
         DICT_KEY_HOME: [],
         DICT_KEY_AWAY: []
@@ -179,7 +238,16 @@ def parse_periods(feed_live: dict):
     return out
 
 
-def parse_shootouts(feed_live: dict):
+def parse_shootouts(feed_live: dict) -> dict:
+    """
+    Parses the shootouts
+
+    Args:
+        feed_live: the feed live dictionary
+
+    Returns:
+        dict: the parsed shootouts
+    """
     shootout_info = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_SHOOTOUT_INFO}", {})
     return {
         DICT_KEY_HOME: Shootout(scores=pydash.get(shootout_info, f"{DICT_KEY_HOME}.{DICT_KEY_SCORES}", -1),
@@ -191,14 +259,32 @@ def parse_shootouts(feed_live: dict):
     }
 
 
-def parse_game_info(feed_live: dict):
+def parse_game_info(feed_live: dict) -> GameInfo:
+    """
+    Parses the game info
+
+    Args:
+        feed_live: the feed live dictionary
+
+    Returns:
+        GameInfo: the parsed game info
+    """
     return GameInfo(
         current_period=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_CURRENT_PERIOD_ORDINAL}", ""),
         game_clock=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_CURRENT_PERIOD_TIME_REMAINING}", TIME_CLOCK_DEFAULT),
     )
 
 
-def parse_goals(feed_live: dict):
+def parse_goals(feed_live: dict) -> list[Goal]:
+    """
+    Parses the goals
+
+    Args:
+        feed_live: the feed live dictionary
+
+    Returns:
+        list[Goal]: the parsed goals
+    """
     scoring_plays = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_PLAYS}.{DICT_KEY_SCORING_PLAYS}", [])
     goals = []
     for play in scoring_plays:
@@ -219,7 +305,16 @@ def parse_goals(feed_live: dict):
     return goals
 
 
-def parse_penalties(feed_live: dict):
+def parse_penalties(feed_live: dict) -> list[Penalty]:
+    """
+    Parses the penalties
+
+    Args:
+        feed_live: the feed live dictionary
+
+    Returns:
+        list[Penalty]: the parsed penalties
+    """
     penalty_plays = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_PLAYS}.{DICT_KEY_PENALTY_PLAYS}", [])
     penalties = []
     for play in penalty_plays:
@@ -233,7 +328,16 @@ def parse_penalties(feed_live: dict):
     return penalties
 
 
-def parse_team_stats(feed_live: dict):
+def parse_team_stats(feed_live: dict) -> dict:
+    """
+    Parses the team stats
+
+    Args:
+        feed_live: the feed live dictionary
+
+    Returns:
+        dict: the parsed team stats
+    """
     periods = parse_periods(feed_live)
     shootouts = parse_shootouts(feed_live)
     out = {}
@@ -255,20 +359,29 @@ def parse_team_stats(feed_live: dict):
     return out
 
 
-def parse_schedule(game: dict):
+def parse_scheduled_game(game: dict) -> Optional[Game]:
+    """
+    Parses the scheduled game
+
+    Args:
+        game: the game dictionary
+
+    Returns:
+        Optional[Game]: the parsed game or None if it cannot be parsed
+    """
     game_id = pydash.get(game, f"{DICT_KEY_GAME_PK}", None)
     away_team_id = pydash.get(game, f"{DICT_KEY_TEAMS}.{DICT_KEY_AWAY}.{DICT_KEY_TEAM}.{DICT_KEY_ID}", None)
     home_team_id = pydash.get(game, f"{DICT_KEY_TEAMS}.{DICT_KEY_HOME}.{DICT_KEY_TEAM}.{DICT_KEY_ID}", None)
     start_time = pydash.get(game, f"{DICT_KEY_GAME_DATE}", None)
 
     if not game_id or not away_team_id or not home_team_id or not start_time:
-        return []
+        return None
 
     away_team = get_team_from_id(away_team_id)
     home_team = get_team_from_id(home_team_id)
 
     if not away_team or not home_team:
-        return []
+        return None
 
     return Game(id=game_id,
                 away_team=away_team,
@@ -282,7 +395,16 @@ def parse_schedule(game: dict):
                 penalties=None)
 
 
-def parse_game(feed_live: dict):
+def parse_game(feed_live: dict) -> Optional[Game]:
+    """
+    Parses the game
+
+    Args:
+        feed_live: the feed live dictionary
+
+    Returns:
+        Optional[Game]: the parsed game or None if it cannot be parsed
+    """
     team_stats = parse_team_stats(feed_live)
 
     game_id = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_GAME}.{DICT_KEY_PK}", None)

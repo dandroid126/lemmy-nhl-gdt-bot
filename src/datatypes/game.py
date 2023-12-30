@@ -36,9 +36,33 @@ class Game:
     # 3 -> postseason
     # 4 -> allstar
     def get_game_type(self):
-        return GameType(int(str(self.id)[5:6]))
+        """
+        Returns the game type based on the ID of the object.
+
+        Returns:
+            GameType: The game type.
+        """
+        # Extract the relevant part of the ID as a string
+        id_str = str(self.id)[5:6]
+
+        # Convert the string to an integer
+        game_type_num = int(id_str)
+
+        # Create a new GameType object with the converted integer
+        game_type = GameType(game_type_num)
+
+        return game_type
 
     def __eq__(self, other):
-        if type(other) == Game:
+        """
+        Check if two Game objects are equal.
+
+        Args:
+            other (object): The object to compare with.
+
+        Returns:
+            bool: True if the objects are equal, False otherwise.
+        """
+        if isinstance(other, Game):
             return self.id == other.id
         return False

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 from src.datatypes.game import Game
@@ -44,11 +46,29 @@ DAY_OVERVIEW_HEADER_ROW = [MATCH_UP, TIME, LINK]
 FOOTER_TEXT = "I am open source! Report issues, contribute, and fund me [on my GitHub page](https://github.com/dandroid126/lemmy-nhl-gdt-bot)!"
 
 
-def get_title(game: Game):
+def get_title(game: Game) -> str:
+    """
+    Get the title for the post
+
+    Args:
+        game: The game
+
+    Returns:
+        str: The title for the post
+    """
     return f"[GDT] {game.away_team.city} {game.away_team.name} at {game.home_team.city} {game.home_team.name} - {get_formatted_game_start_time(game.start_time)}"
 
 
-def get_gdt_body(game: Game):
+def get_gdt_body(game: Game) -> str:
+    """
+    Get the body for the post
+
+    Args:
+        game: The game
+
+    Returns:
+        str: The body for the post
+    """
     return f"""{get_game_details(game)}
 
 {LINE_BREAK}
@@ -57,7 +77,16 @@ def get_gdt_body(game: Game):
 """
 
 
-def get_game_details(game: Game):
+def get_game_details(game: Game) -> str:
+    """
+    Get the game details
+
+    Args:
+        game: The game
+
+    Returns:
+        str: The game details
+    """
     if game is None:
         return ""
     time_clock = get_time_clock(game.game_info)
@@ -93,22 +122,58 @@ def get_game_details(game: Game):
 {start_time_table.render()}"""
 
 
-def get_formatted_time_clock_time(game_info: GameInfo):
+def get_formatted_time_clock_time(game_info: GameInfo) -> str:
+    """
+    Get the formatted time clock time
+
+    Args:
+        game_info: The game info
+
+    Returns:
+        str: The formatted time clock time
+    """
     return f"{f'{game_info.current_period} - ' if not game_info.game_clock.lower() == FINAL.lower() and game_info.is_game_started() else ''}{game_info.game_clock}"
 
 
-def get_formatted_game_start_time(start_time: datetime):
+def get_formatted_game_start_time(start_time: datetime) -> str:
+    """
+    Get the formatted game start time
+
+    Args:
+        start_time: The game start time
+
+    Returns:
+        str: The formatted game start time
+    """
     return start_time.astimezone(datetime_util.ET).strftime(datetime_util.START_TIME_FORMAT)
 
 
-def get_time_clock(game_info: GameInfo):
+def get_time_clock(game_info: GameInfo) -> Table:
+    """
+    Get the time clock table
+
+    Args:
+        game_info: The game info
+
+    Returns:
+        Table: The time clock table
+    """
     time_clock = Table()
     time_clock.set(0, 0, TIME_CLOCK)
     time_clock.set(0, 1, get_formatted_time_clock_time(game_info))
     return time_clock
 
 
-def get_periods(game):
+def get_periods(game) -> Table:
+    """
+    Get the periods table
+
+    Args:
+        game: The game
+
+    Returns:
+        Table: The periods table
+    """
     periods = Table()
     periods.set(0, 0, TEAM)
     periods.set(0, 1, game.away_team.get_team_table_entry())
@@ -130,7 +195,16 @@ def get_periods(game):
     return periods
 
 
-def get_team_stats(game):
+def get_team_stats(game) -> Table:
+    """
+    Get the team stats table
+
+    Args:
+        game: The game
+
+    Returns:
+        Table: The team stats table
+    """
     team_stats = Table()
     for i, value in enumerate(TEAM_STATS_HEADER_ROW):
         team_stats.set(i, 0, value)
@@ -147,7 +221,16 @@ def get_team_stats(game):
     return team_stats
 
 
-def get_goal_details(game):
+def get_goal_details(game) -> Table:
+    """
+    Get the goal details table
+
+    Args:
+        game: The game
+
+    Returns:
+        Table: The goal details table
+    """
     goal_details = Table()
     if not game.goals:
         return goal_details
@@ -163,7 +246,16 @@ def get_goal_details(game):
     return goal_details
 
 
-def get_penalty_details(game):
+def get_penalty_details(game) -> Table:
+    """
+    Get the penalty details table
+
+    Args:
+        game: The game
+
+    Returns:
+        Table: The penalty details table
+    """
     penalty_details = Table()
     if not game.penalties:
         return penalty_details
@@ -179,7 +271,16 @@ def get_penalty_details(game):
     return penalty_details
 
 
-def get_start_time_table(game):
+def get_start_time_table(game) -> Table:
+    """
+    Get the start time table
+
+    Args:
+        game: The game
+
+    Returns:
+        Table: The start time table
+    """
     start_time = Table()
     for i, value in enumerate(START_TIME_HEADER_ROW):
         start_time.set(i, 0, value)
@@ -191,11 +292,29 @@ def get_start_time_table(game):
     return start_time
 
 
-def get_daily_thread_title(day: str):
+def get_daily_thread_title(day: str) -> str:
+    """
+    Get the title for the daily thread
+
+    Args:
+        day: The day
+
+    Returns:
+        str: The title for the daily thread
+    """
     return f"[Daily Discussion Thread] All game details and discussion for games on {datetime_util.get_day_as_title_formatted(day)}"
 
 
-def get_daily_thread_body(games: list[Game]):
+def get_daily_thread_body(games: list[Game]) -> str:
+    """
+    Get the body for the daily thread
+
+    Args:
+        games: The games
+
+    Returns:
+        str: The body for the daily thread
+    """
     return f"""{get_day_score_overview_table(games).render()}
     
 {LINE_BREAK}
@@ -203,7 +322,16 @@ def get_daily_thread_body(games: list[Game]):
 {FOOTER_TEXT}"""
 
 
-def get_day_score_overview_table(games: list[Game]):
+def get_day_score_overview_table(games: list[Game]) -> Table:
+    """
+    Get the score overview table
+
+    Args:
+        games: The games
+
+    Returns:
+        Table: The score overview table
+    """
     score_overview = Table()
     for i, value in enumerate(DAY_OVERVIEW_HEADER_ROW):
         score_overview.set(i, 0, value)
@@ -223,19 +351,45 @@ def get_day_score_overview_table(games: list[Game]):
 
 
 class Table:
+    """
+    Table class for rendering SelfGrowingTable in Markdown format.
+
+    Use set(x, y, value) to assign a value to a cell in the SelfGrowingTable.
+    Tables can be rendered in Markdown format with render().
+    """
     def __init__(self):
+        """
+        Initialize the table
+        """
         self.data = SelfGrowingTable(lambda: SelfGrowingTable(str))
         self.max_x = 0
         self.max_y = 0
 
-    def set(self, x, y, value):
+    def set(self, x: int, y: int, value: str):
+        """
+        Set a value in the table
+
+        Args:
+            x: The x coordinate
+            y: The y coordinate
+            value: The value to set
+
+        Returns:
+            None
+        """
         if x > self.max_x:
             self.max_x = x
         if y > self.max_y:
             self.max_y = y
         self.data[x][y] = value
 
-    def render(self):
+    def render(self) -> str:
+        """
+        Render the table in Markdown format
+
+        Returns:
+            str: The table in Markdown format
+        """
         out = ''
         if self.max_x == 0 and self.max_y == 0:
             return out
@@ -256,6 +410,9 @@ class Table:
 # I shamelessly stole this from here:
 # https://stackoverflow.com/questions/44629273/how-to-dynamically-resize-2d-list-in-python
 class SelfGrowingTable(list):
+    """
+    SelfGrowingTable class for storing data in a 2D list in such way that the list grows automatically.
+    """
 
     def __init__(self, default_factory, *args, **kwargs):
         super().__init__(*args, **kwargs)

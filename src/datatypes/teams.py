@@ -12,10 +12,28 @@ class Team:
     logo_url: str
 
     def get_logo_markdown(self):
+        """
+        Return the Markdown string for displaying the logo.
+
+        Returns:
+            str: The Markdown string with the logo image.
+        """
         return f'![{self.abbreviation}]({self.logo_url})'
 
     def get_team_table_entry(self):
-        return f"{self.get_logo_markdown()} {self.abbreviation}"
+        """
+        Generates a table entry for the team.
+
+        Returns:
+            str: The table entry for the team, including the team logo and abbreviation.
+        """
+        # Get the team logo in Markdown format
+        logo_markdown = self.get_logo_markdown()
+
+        # Combine the logo markdown and team abbreviation
+        table_entry = f"{logo_markdown} {self.abbreviation}"
+
+        return table_entry
 
     def __eq__(self, other: Team):
         return self.id == other.id
@@ -58,6 +76,12 @@ class Teams(Enum):
 
     @staticmethod
     def get_all_teams() -> list[Team]:
+        """
+        Returns a list of all teams.
+
+        :return: A list of Team objects representing all the teams.
+        :rtype: list[Team]
+        """
         return [team.value for team in Teams]
 
 
@@ -67,4 +91,13 @@ for _team in Teams.get_all_teams():
 
 
 def get_team_from_id(team_id: int) -> Team:
+    """
+    Retrieve the Team object corresponding to the given team_id.
+
+    Args:
+        team_id (int): The ID of the team to retrieve.
+
+    Returns:
+        Team: The Team object corresponding to the given team_id, or None if not found.
+    """
     return _team_id_abbr_map.get(team_id, None)

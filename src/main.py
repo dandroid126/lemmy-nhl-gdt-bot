@@ -131,16 +131,44 @@ def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
         logger.i(TAG, f"main: The comment was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
 
 
-def filter_games_by_selected_teams(games: list[Game]):
+def filter_games_by_selected_teams(games: list[Game]) -> list[Game]:
+    """
+    Filter games by selected teams.
+
+    Args:
+        games: The games to filter
+
+    Returns:
+        list[Game]: The filtered games
+    """
     return list(filter(lambda game: game.home_team in environment_util.teams or game.away_team in environment_util.teams if game else None, games))
 
 
-def filter_games_by_start_time(games: list[Game]):
+def filter_games_by_start_time(games: list[Game]) -> list[Game]:
+    """
+    Filter games by start time.
+
+    Args:
+        games: The games to filter
+
+    Returns:
+        list[Game]: The filtered games
+    """
     current_time = datetime_util.get_current_time_as_utc()
     return list(filter(lambda game: datetime_util.is_time_to_make_post(current_time, game.start_time) if game else None, games))
 
 
-def merge_games_with_schedule(schedule: list[Game], games: list[Game]):
+def merge_games_with_schedule(schedule: list[Game], games: list[Game]) -> list[Game]:
+    """
+    Merge started games with scheduled games.
+
+    Args:
+        schedule: List of scheduled games.
+        games: List of started games.
+
+    Returns:
+        list[Game]: The merged games list.
+    """
     out = schedule.copy()
     for game in games:
         if not game:
@@ -155,6 +183,12 @@ def merge_games_with_schedule(schedule: list[Game], games: list[Game]):
 
 
 def main():
+    """
+    The main function.
+
+    Returns:
+        None
+    """
     while not signal_util.is_interrupted:
         try:
             signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
