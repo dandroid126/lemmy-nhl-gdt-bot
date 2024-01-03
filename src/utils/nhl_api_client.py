@@ -443,6 +443,7 @@ penalty_type_map = {
     "MAJ": "Major",
     "BEN": "Bench",
     "MIS": "Misconduct",
+    "GAM": "Game Misconduct",
 }
 
 penalty_description_map = {
