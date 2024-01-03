@@ -5,6 +5,7 @@ import os
 
 from src.utils import constants
 
+
 # Shamelessly borrowed this idea from this link:
 # https://stackoverflow.com/questions/19425736/how-to-redirect-stdout-and-stderr-to-logger-in-python
 class StreamToLogger(object):
@@ -65,6 +66,14 @@ file_handler = logging.handlers.RotatingFileHandler(filename=f'{constants.OUT_PA
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(formatter)
 
+# Error File Handler
+error_file_handler = logging.handlers.RotatingFileHandler(filename=f'{constants.OUT_PATH}/errors.txt',
+                                                    maxBytes=1 * constants.MEGABYTE,
+                                                    backupCount=2)
+error_file_handler.setLevel(logging.ERROR)
+error_file_handler.setFormatter(formatter)
+
+
 # stdout Handler
 stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setLevel(logging.DEBUG)
@@ -77,6 +86,7 @@ stderr_handler.setLevel(logging.ERROR)
 stderr_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
+logger.addHandler(error_file_handler)
 logger.addHandler(stdout_handler)
 logger.addHandler(stderr_handler)
 sys.stdout = StreamToLogger(logger, logging.INFO)
