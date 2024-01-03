@@ -61,6 +61,7 @@ DICT_KEY_GOALS = 'goals'
 DICT_KEY_HIGHLIGHT_CLIP = 'highlightClip'
 DICT_KEY_SEASON_SERIES = 'seasonSeries'
 DICT_KEY_IN_INTERMISSION = 'inIntermission'
+DICT_KEY_GAME_STATE = 'gameState'
 
 DICT_KEY_FIRST_NAME = 'firstName'
 DICT_KEY_LAST_NAME = 'lastName'
@@ -97,10 +98,11 @@ class TeamStatCategories(Enum):
 
 
 class GameState(Enum):
-    FUT = "FUT",
-    PRE = "PRE",
-    LIVE = "LIVE",
-    OFF = "OFF",
+    FUT = "FUT"
+    PRE = "PRE"
+    LIVE = "LIVE"
+    FINAL = "FINAL"
+    OFF = "OFF"
 
 
 EMPTY_NET = "Empty Net"
@@ -331,11 +333,18 @@ def parse_game_info(landing: dict) -> GameInfo:
         if pydash.get(game, DICT_KEY_ID, 0) == pydash.get(landing, DICT_KEY_ID, -1):
             current_period = get_period_ordinal(pydash.get(game, f"{DICT_KEY_PERIOD}", ""))
     in_intermission = pydash.get(landing, f"{DICT_KEY_CLOCK}.{DICT_KEY_IN_INTERMISSION}", False)
+    is_final = pydash.get(landing, f"{DICT_KEY_GAME_STATE}", "")
+
+    if is_final == GameState.FINAL.value or is_final == GameState.OFF.value:
+        game_clock = GameState.FINAL.value
+    elif in_intermission:
+        game_clock = INTERMISSION_TIME_CLOCK
+    else:
+        game_clock = pydash.get(landing, f"{DICT_KEY_CLOCK}.{DICT_KEY_TIME_REMAINING}", TIME_CLOCK_DEFAULT)
 
     return GameInfo(
         current_period=current_period if current_period else "",
-        game_clock=pydash.get(landing, f"{DICT_KEY_CLOCK}.{DICT_KEY_TIME_REMAINING}", TIME_CLOCK_DEFAULT) if not in_intermission else INTERMISSION_TIME_CLOCK,
-
+        game_clock=game_clock,
     )
 
 
