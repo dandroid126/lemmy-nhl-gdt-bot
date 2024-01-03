@@ -192,7 +192,7 @@ def main():
     """
     while not signal_util.is_interrupted:
         try:
-            # signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
+            signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
             if signal_util.is_interrupted:
                 continue
             schedule = nhl_api_client.get_schedule()
@@ -222,7 +222,6 @@ def main():
                     logger.e(TAG, "main: Some exception occurred while processing a game.", e)
         except InterruptedError as e:
             logger.e(TAG, "main: An InterruptedError was raised while sleeping.", e)
-        signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
     logger.i(TAG, f"main: Reached the end. Shutting down. is_interrupted: {signal_util.is_interrupted}")
 
 
