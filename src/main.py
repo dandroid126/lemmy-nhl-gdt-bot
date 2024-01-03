@@ -176,7 +176,8 @@ def merge_games_with_schedule(schedule: list[Game], games: list[Game]) -> list[G
             # If that is the case, just skip it and leave it as a scheduled game.
             continue
         try:
-            out[out.index(game)] = game
+            index = next((i for i, item in enumerate(out) if item.id == game.id), None)
+            out[index] = game
         except ValueError:
             logger.e(TAG, f"Index of game with id '{game.id}' not found in schedule")
     return out
@@ -191,10 +192,10 @@ def main():
     """
     while not signal_util.is_interrupted:
         try:
-            signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
+            # signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
             if signal_util.is_interrupted:
                 continue
-            schedule = nhl_api_client.get_schedule(datetime_util.yesterday(), datetime_util.tomorrow())
+            schedule = nhl_api_client.get_schedule()
             schedule_filtered_by_selected_teams = filter_games_by_selected_teams(schedule)
             if not schedule_filtered_by_selected_teams:
                 continue
@@ -221,6 +222,7 @@ def main():
                     logger.e(TAG, "main: Some exception occurred while processing a game.", e)
         except InterruptedError as e:
             logger.e(TAG, "main: An InterruptedError was raised while sleeping.", e)
+        signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
     logger.i(TAG, f"main: Reached the end. Shutting down. is_interrupted: {signal_util.is_interrupted}")
 
 

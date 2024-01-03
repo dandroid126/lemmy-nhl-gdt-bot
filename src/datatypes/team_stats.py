@@ -14,8 +14,6 @@ class TeamStats:
     fo_wins: str
     giveaways: int
     takeaways: int
-    pp_opportunities: int
-    pp_goals: int
-    pp_percentage: str
+    pp_fraction: str
     periods: list[Period]
     shootout: Shootout

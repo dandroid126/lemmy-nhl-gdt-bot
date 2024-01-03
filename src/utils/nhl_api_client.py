@@ -1,122 +1,133 @@
+import json
+from enum import Enum
 from typing import Optional
 
 import pydash
 import requests
-import json
+import inflect
+
 from src.datatypes.Exceptions.IllegalArgumentException import IllegalArgumentException
+from src.datatypes.game import Game
 from src.datatypes.game_info import GameInfo
 from src.datatypes.goal import Goal
 from src.datatypes.penalty import Penalty
-from src.datatypes.teams import Teams, get_team_from_id
-
-from src.datatypes.game import Game
 from src.datatypes.period import Period
 from src.datatypes.shootout import Shootout
 from src.datatypes.team_stats import TeamStats
+from src.datatypes.teams import Teams, get_team_from_id
 from src.utils import logger, datetime_util
 
 TAG = "nhl_api_client.py"
 
-URL_REPL_GAME_ID = "{{GAME_ID}}"
-URL_REPL_START_DATE = "{{START_DATE}}"
-URL_REPL_END_DATE = "{{END_DATE}}"
+URL_REPL_ID = "{{ID}}"
+URL_REPL_DATE = "{{DATE}}"
 
-BASE_URL = "https://statsapi.web.nhl.com/api/v1"
-SCHEDULE_URL = f"{BASE_URL}/schedule?startDate={URL_REPL_START_DATE}&endDate={URL_REPL_END_DATE}&expand=schedule.broadcasts"
-FEED_LIVE_URL = f"{BASE_URL}/game/{URL_REPL_GAME_ID}/feed/live"
+NHL_API_BASE_URL = "https://api-web.nhle.com/v1"
+SCHEDULE_URL = f"{NHL_API_BASE_URL}/schedule/{URL_REPL_DATE}"
+LANDING_URL = f"{NHL_API_BASE_URL}/gamecenter/{URL_REPL_ID}/landing"
 
-DICT_KEY_DATES = 'dates'
-LIST_KEY_FIRST = 0
+VIDEO_BASE_URL = "https://players.brightcove.net/6415718365001/EXtG1xJ7H_default/index.html?videoId="
+VIDEO_URL = f"{VIDEO_BASE_URL}{URL_REPL_ID}"
+
 DICT_KEY_GAMES = 'games'
-DICT_KEY_GAME = 'game'
-DICT_KEY_GAME_DATE = 'gameDate'
-DICT_KEY_GAME_PK = 'gamePk'
-DICT_KEY_TEAMS = 'teams'
+DICT_KEY_START_TIME_UTC = 'startTimeUTC'
+DICT_KEY_HOME_TEAM = 'homeTeam'
+DICT_KEY_AWAY_TEAM = 'awayTeam'
 DICT_KEY_AWAY = 'away'
 DICT_KEY_HOME = 'home'
-DICT_KEY_TEAM = 'team'
-DICT_KEY_NAME = 'name'
-DICT_KEY_STATUS = 'status'
-DICT_KEY_DETAILED_STATE = 'detailedState'
-DICT_KEY_SHOTS_ON_GOAL = 'shotsOnGoal'
-DICT_KEY_LIVE_DATA = 'liveData'
+DICT_KEY_TEAM_ABBREV = 'teamAbbrev'
+DICT_KEY_ABBREV = 'abbrev'
 DICT_KEY_LINESCORE = 'linescore'
-DICT_KEY_BOX_SCORE = 'boxscore'
-DICT_KEY_PERIODS = 'periods'
-DICT_KEY_TEAM_STATS = 'teamStats'
-DICT_KEY_TEAM_SKATER_STATS = 'teamSkaterStats'
-DICT_KEY_NUM = 'num'
-DICT_KEY_ORDINAL_NUM = 'ordinalNum'
-DICT_KEY_SHOOTOUT_INFO = 'shootoutInfo'
-DICT_KEY_SCORES = 'scores'
-DICT_KEY_ATTEMPTS = 'attempts'
-DICT_KEY_HAS_SHOOTOUT = 'hasShootout'
-DICT_KEY_GAME_DATA = 'gameData'
+DICT_KEY_PERIOD = 'period'
+DICT_KEY_PERIOD_DESCRIPTOR = 'periodDescriptor'
+DICT_KEY_SHOOTOUT = 'shootout'
+DICT_KEY_HOME_CONVERSIONS = 'homeConversions'
+DICT_KEY_AWAY_CONVERSIONS = 'awayConversions'
+DICT_KEY_HOME_ATTEMPTS = 'homeAttempts'
+DICT_KEY_AWAY_ATTEMPTS = 'awayAttempts'
 DICT_KEY_ID = 'id'
-DICT_KEY_ABBREVIATION = 'abbreviation'
-DICT_KEY_PLAYS = 'plays'
-DICT_KEY_ALL_PLAYS = 'allPlays'
-DICT_KEY_SCORING_PLAYS = 'scoringPlays'
-DICT_KEY_RESULT = 'result'
-DICT_KEY_ABOUT = 'about'
-DICT_KEY_PERIOD_TIME = 'periodTime'
-DICT_KEY_TRI_CODE = 'triCode'
+DICT_KEY_TIME_IN_PERIOD = 'timeInPeriod'
 DICT_KEY_STRENGTH = 'strength'
-DICT_KEY_DESCRIPTION = 'description'
 DICT_KEY_EMPTY_NET = 'emptyNet'
-DICT_KEY_PLAYERS = 'players'
-DICT_KEY_PLAYER = 'player'
-DICT_KEY_PLAYER_TYPE = 'playerType'
-DICT_KEY_FULL_NAME = 'fullName'
-DICT_KEY_DATETIME = 'datetime'
-DICT_KEY_DATE_TIME = 'dateTime'  # WTF NHL??????? Why are these different?????
-DICT_KEY_END_DATE_TIME = 'endDateTime'
-DICT_KEY_CURRENT_PERIOD_TIME_REMAINING = 'currentPeriodTimeRemaining'
-DICT_KEY_CURRENT_PERIOD_ORDINAL = 'currentPeriodOrdinal'
-DICT_KEY_PK = 'pk'
-DICT_KEY_PENALTY_PLAYS = 'penaltyPlays'
-DICT_KEY_PENALTY_MINUTES = 'penaltyMinutes'
-DICT_KEY_PENALTY_SEVERITY = 'penaltySeverity'
+DICT_KEY_CLOCK = 'clock'
+DICT_KEY_TIME_REMAINING = 'timeRemaining'
+DICT_KEY_PENALTIES = 'penalties'
+DICT_KEY_GAME_WEEK = 'gameWeek'
+DICT_KEY_SUMMARY = 'summary'
+DICT_KEY_SHOTS_BY_PERIOD = 'shotsByPeriod'
+DICT_KEY_BY_PERIOD = 'byPeriod'
+DICT_KEY_SCORING = 'scoring'
+DICT_KEY_GOALS = 'goals'
+DICT_KEY_HIGHLIGHT_CLIP = 'highlightClip'
+DICT_KEY_SEASON_SERIES = 'seasonSeries'
+DICT_KEY_IN_INTERMISSION = 'inIntermission'
+
+DICT_KEY_FIRST_NAME = 'firstName'
+DICT_KEY_LAST_NAME = 'lastName'
+DICT_KEY_GOALS_TO_DATE = 'goalsToDate'
+DICT_KEY_SHOT_TYPE = 'shotType'
+DICT_KEY_ASSISTS = 'assists'
+DICT_KEY_ASSISTS_TO_DATE = 'assistsToDate'
+
+DICT_KEY_TYPE = 'type'
+DICT_KEY_DURATION = 'duration'
+DICT_KEY_COMMITTED_BY_PLAYER = 'committedByPlayer'
+DICT_KEY_DRAWN_BY = 'drawnBy'
+DICT_KEY_DESC_KEY = 'descKey'
 
 DICT_VALUE_GOALIE = 'Goalie'
 
 # Team Stats
-DICT_KEY_GOALS = 'goals'
-DICT_KEY_SHOTS = 'shots'
-DICT_KEY_BLOCKED = 'blocked'
-DICT_KEY_HITS = 'hits'
-DICT_KEY_FO_WIN_PERCENTAGE = 'faceOffWinPercentage'
-DICT_KEY_GIVEAWAYS = 'giveaways'
-DICT_KEY_TAKEAWAYS = 'takeaways'
-DICT_KEY_PP_OPPORTUNITIES = 'powerPlayOpportunities'
-DICT_KEY_PP_GOALS = 'powerPlayGoals'
-DICT_KEY_PP_PERCENTAGE = 'powerPlayPercentage'
+DICT_KEY_TEAM_GAME_STATS = 'teamGameStats'
+DICT_KEY_CATEGORY = 'category'
+DICT_KEY_HOME_VALUE = 'homeValue'
+DICT_KEY_AWAY_VALUE = 'awayValue'
+DICT_KEY_TOTALS = 'totals'
+
+
+class TeamStatCategories(Enum):
+    SOG = 'sog'
+    FACEOFF_PCTG = 'faceoffPctg'
+    POWER_PLAY = 'powerPlay'
+    PIM = 'pim'
+    HITS = 'hits'
+    BLOCKED_SHOTS = 'blockedShots'
+    GIVEAWAYS = 'giveaways'
+    TAKEAWAYS = 'takeaways'
+
+
+class GameState(Enum):
+    FUT = "FUT",
+    PRE = "PRE",
+    LIVE = "LIVE",
+    OFF = "OFF",
+
 
 EMPTY_NET = "Empty Net"
 TIME_CLOCK_DEFAULT = "--"
 PERIOD_DEFAULT = "0"
 REQUEST_TIMEOUT = 10
+INTERMISSION_TIME_CLOCK = "INT"
+
+p = inflect.engine()
 
 
-def get_schedule_url(start_date: str, end_date: str) -> str:
+def get_schedule_url(date: str) -> str:
     """
     Gets the schedule URL
 
     Args:
-        start_date: the start date of the schedule
-        end_date: the end date of the schedule
+        date: the date to get the schedule for
 
     Returns:
         str: the schedule URL
     """
-    if start_date is None:
+    if date is None:
         raise IllegalArgumentException(TAG, "start_date must not be None")
-    if end_date is None:
-        raise IllegalArgumentException(TAG, "end_date must not be None")
-    return SCHEDULE_URL.replace(URL_REPL_START_DATE, start_date).replace(URL_REPL_END_DATE, end_date)
+    return SCHEDULE_URL.replace(URL_REPL_DATE, date)
 
 
-def get_feed_live_url(game_id: int) -> str:
+def get_landing_url(game_id: int) -> str:
     """
     Gets the feed live URL
 
@@ -128,34 +139,64 @@ def get_feed_live_url(game_id: int) -> str:
     """
     if game_id is None:
         raise IllegalArgumentException(TAG, "game_id must not be None")
-    return FEED_LIVE_URL.replace(URL_REPL_GAME_ID, str(game_id))
+    return LANDING_URL.replace(URL_REPL_ID, str(game_id))
 
 
-def get_schedule(start_date: str = None, end_date: str = None) -> list[Game]:
+def get_video_url(video_id: int) -> str:
+    """
+    Gets the video URL
+
+    Args:
+        video_id: the ID of the video
+
+    Returns:
+        str: the video URL
+    """
+    if video_id is None or video_id == 0:
+        logger.w(TAG, "video_id is None or 0. Returning empty string.")
+        return ""
+    return VIDEO_URL.replace(URL_REPL_ID, str(video_id))
+
+
+def filter_games_by_date(games: list[Game], date: str) -> list[Game]:
+    """
+    Filters games by date
+
+    Args:
+        games: The games to filter
+        date: The date to match
+
+    Returns:
+        list[Game]: The filtered games
+    """
+    return list(filter(lambda game: datetime_util.is_same_day(game.start_time, date) if game else None, games))
+
+
+def get_schedule(schedule_date: str = None) -> list[Game]:
     """
     Gets the schedule
 
     Args:
-        start_date: The start date of the schedule
-        end_date: The end date of the schedule
+        schedule_date: the date of the schedule
 
     Returns:
         list[Game]: The schedule
     """
-    if start_date is None:
-        start_date = datetime_util.yesterday()
-    if end_date is None:
-        end_date = datetime_util.today()
-    url = get_schedule_url(start_date, end_date)
+    if schedule_date is None:
+        schedule_date = datetime_util.get_current_day_as_idlw()
+    url = get_schedule_url(schedule_date)
     logger.i(TAG, f"get_schedule(): url: {url}")
     try:
-        dates = pydash.get(json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text), DICT_KEY_DATES, [])
+        game_week = pydash.get(json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text), DICT_KEY_GAME_WEEK, [])
         games = []
-        for date in dates:
-            games.extend(pydash.get(date, DICT_KEY_GAMES, []))
+        for date in game_week:
+            game_list = pydash.get(date, DICT_KEY_GAMES, [])
+            for game in game_list:
+                games.append(game)
         schedule = []
         for game in games:
             schedule.append(parse_scheduled_game(game))
+        schedule = filter_games_by_date(schedule, schedule_date)
     except requests.exceptions.Timeout as e:
         logger.e(TAG, "get_schedule(): a timeout occurred", e)
         schedule = []
@@ -179,42 +220,42 @@ def get_games(schedule: list[Game]) -> list[Game]:
         return []
     games = []
     for game in schedule:
-        feed_live = get_feed_live(game.id)
-        games.append(parse_game(feed_live))
+        landing = get_landing(game.id)
+        games.append(parse_game(landing))
     return games
 
 
-def get_feed_live(game_id: int) -> dict:
+def get_landing(game_id: int) -> dict:
     """
-    Gets the feed live
+    Gets the landing
 
     Args:
         game_id: the ID of the game
 
     Returns:
-        dict: the feed live dictionary
+        dict: the landing dictionary
     """
     if game_id is None:
         raise IllegalArgumentException(TAG, "game_id must not be None")
-    url = get_feed_live_url(game_id)
-    logger.i(TAG, f"get_feed_live(): url: {url}")
+    url = get_landing_url(game_id)
+    logger.i(TAG, f"get_landing(): url: {url}")
     try:
-        box_score = json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text)
+        landing = json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text)
     except requests.exceptions.Timeout as e:
-        logger.e(TAG, "get_games(): a timeout occured", e)
-        box_score = {}
+        logger.e(TAG, "get_landing(): a timeout occurred", e)
+        landing = {}
     except requests.exceptions.ConnectionError as e:
-        logger.e(TAG, "get_feed_live(): A connection error occurred", e)
-        box_score = {}
-    return box_score
+        logger.e(TAG, "get_landing(): A connection error occurred", e)
+        landing = {}
+    return landing
 
 
-def parse_periods(feed_live: dict) -> dict:
+def parse_periods(landing: dict) -> dict:
     """
     Parses the periods
 
     Args:
-        feed_live: the feed live dictionary
+        landing: the landing dictionary
 
     Returns:
         dict: the parsed periods
@@ -223,14 +264,18 @@ def parse_periods(feed_live: dict) -> dict:
         DICT_KEY_HOME: [],
         DICT_KEY_AWAY: []
     }
-    periods = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_PERIODS}", [])
-    for period in periods:
-        home_goals = pydash.get(period, f"{DICT_KEY_HOME}.{DICT_KEY_GOALS}", -1)
-        home_shots = pydash.get(period, f"{DICT_KEY_HOME}.{DICT_KEY_SHOTS_ON_GOAL}", -1)
-        away_goals = pydash.get(period, f"{DICT_KEY_AWAY}.{DICT_KEY_GOALS}", -1)
-        away_shots = pydash.get(period, f"{DICT_KEY_AWAY}.{DICT_KEY_SHOTS_ON_GOAL}", -1)
-        period_number = pydash.get(period, DICT_KEY_NUM, -1)
-        ordinal_number = pydash.get(period, DICT_KEY_ORDINAL_NUM, "-1")
+    shots_by_period = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_SHOTS_BY_PERIOD}", [])
+    linescore_by_period = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_LINESCORE}.{DICT_KEY_BY_PERIOD}", [])
+    if not len(shots_by_period) == len(linescore_by_period):
+        logger.e(TAG, "parse_periods(): shots_by_period and linescore_by_period must have the same length")
+        return out
+    for i in range(0, len(shots_by_period)):
+        home_goals = pydash.get(linescore_by_period[i], f"{DICT_KEY_HOME}", 0)
+        home_shots = pydash.get(shots_by_period[i], f"{DICT_KEY_HOME}", 0)
+        away_goals = pydash.get(linescore_by_period[i], f"{DICT_KEY_AWAY}", 0)
+        away_shots = pydash.get(shots_by_period[i], f"{DICT_KEY_AWAY}", 0)
+        period_number = pydash.get(shots_by_period[i], DICT_KEY_PERIOD, 0)
+        ordinal_number = get_period_ordinal(period_number)
         out[DICT_KEY_HOME].append(
             Period(goals=home_goals, shots=home_shots, period_number=period_number, ordinal_number=ordinal_number))
         out[DICT_KEY_AWAY].append(
@@ -238,124 +283,277 @@ def parse_periods(feed_live: dict) -> dict:
     return out
 
 
-def parse_shootouts(feed_live: dict) -> dict:
+def get_period_ordinal(period_number: int) -> str:
+    if period_number in range(1, 4):
+        return p.ordinal(period_number)
+    elif period_number == 4:
+        return "OT"
+    elif period_number == 5:
+        return "SO"
+    else:
+        return ""
+
+
+def parse_shootouts(landing: dict) -> dict:
     """
     Parses the shootouts
 
     Args:
-        feed_live: the feed live dictionary
+        landing: the landing dictionary
 
     Returns:
         dict: the parsed shootouts
     """
-    shootout_info = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_SHOOTOUT_INFO}", {})
+    shootout_info = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_LINESCORE}.{DICT_KEY_SHOOTOUT}", {})
     return {
-        DICT_KEY_HOME: Shootout(scores=pydash.get(shootout_info, f"{DICT_KEY_HOME}.{DICT_KEY_SCORES}", -1),
-                                attempts=pydash.get(shootout_info, f"{DICT_KEY_HOME}.{DICT_KEY_ATTEMPTS}", -1),
-                                has_been_played=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_HAS_SHOOTOUT}", False)),
-        DICT_KEY_AWAY: Shootout(scores=pydash.get(shootout_info, f"{DICT_KEY_AWAY}.{DICT_KEY_SCORES}", -1),
-                                attempts=pydash.get(shootout_info, f"{DICT_KEY_AWAY}.{DICT_KEY_ATTEMPTS}", -1),
-                                has_been_played=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_HAS_SHOOTOUT}", False)),
+        DICT_KEY_HOME: Shootout(scores=pydash.get(shootout_info, f"{DICT_KEY_HOME_CONVERSIONS}", 0),
+                                attempts=pydash.get(shootout_info, f"{DICT_KEY_HOME_ATTEMPTS}", 0),
+                                has_been_played=not shootout_info == {}),
+        DICT_KEY_AWAY: Shootout(scores=pydash.get(shootout_info, f"{DICT_KEY_AWAY_CONVERSIONS}", 0),
+                                attempts=pydash.get(shootout_info, f"{DICT_KEY_AWAY_ATTEMPTS}", 0),
+                                has_been_played=not shootout_info == {}),
     }
 
 
-def parse_game_info(feed_live: dict) -> GameInfo:
+def parse_game_info(landing: dict) -> GameInfo:
     """
     Parses the game info
 
     Args:
-        feed_live: the feed live dictionary
+        landing: the landing dictionary
 
     Returns:
         GameInfo: the parsed game info
     """
+    current_period = ""
+    season_series = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_SEASON_SERIES}", [])
+    for game in season_series:
+        if pydash.get(game, DICT_KEY_ID, 0) == pydash.get(landing, DICT_KEY_ID, -1):
+            current_period = get_period_ordinal(pydash.get(game, f"{DICT_KEY_PERIOD}", ""))
+    in_intermission = pydash.get(landing, f"{DICT_KEY_CLOCK}.{DICT_KEY_IN_INTERMISSION}", False)
+
     return GameInfo(
-        current_period=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_CURRENT_PERIOD_ORDINAL}", ""),
-        game_clock=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_CURRENT_PERIOD_TIME_REMAINING}", TIME_CLOCK_DEFAULT),
+        current_period=current_period if current_period else "",
+        game_clock=pydash.get(landing, f"{DICT_KEY_CLOCK}.{DICT_KEY_TIME_REMAINING}", TIME_CLOCK_DEFAULT) if not in_intermission else INTERMISSION_TIME_CLOCK,
+
     )
 
 
-def parse_goals(feed_live: dict) -> list[Goal]:
+def parse_goals(landing: dict) -> list[Goal]:
     """
     Parses the goals
 
     Args:
-        feed_live: the feed live dictionary
+        landing: the landing dictionary
 
     Returns:
         list[Goal]: the parsed goals
     """
-    scoring_plays = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_PLAYS}.{DICT_KEY_SCORING_PLAYS}", [])
+    periods = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_SCORING}", [])
     goals = []
-    for play in scoring_plays:
-        scoring_play_details = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_PLAYS}.{DICT_KEY_ALL_PLAYS}.{play}", {})
-        goalie = EMPTY_NET
-        for player in pydash.get(scoring_play_details, DICT_KEY_PLAYERS, []):
-            if pydash.get(player, DICT_KEY_PLAYER_TYPE, "") == DICT_VALUE_GOALIE:
-                # NOTE: if the player's last name has a space in it, this won't work.
-                #  If that ever happens, do it the long way.
-                #  Map the player's ID to the "players" list in JSON[gameData][players][ID...]
-                goalie = pydash.get(player,f"{DICT_KEY_PLAYER}.{DICT_KEY_FULL_NAME}", "").split(" ")[-1]
-        goals.append(Goal(period=pydash.get(scoring_play_details, f"{DICT_KEY_ABOUT}.{DICT_KEY_ORDINAL_NUM}", ""),
-                          time=pydash.get(scoring_play_details, f"{DICT_KEY_ABOUT}.{DICT_KEY_PERIOD_TIME}", ""),
-                          team=Teams[pydash.get(scoring_play_details, f"{DICT_KEY_TEAM}.{DICT_KEY_TRI_CODE}", "ERR")].value,
-                          strength=pydash.get(scoring_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_STRENGTH}.{DICT_KEY_NAME}", ""),
-                          goalie=goalie,
-                          description=pydash.get(scoring_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_DESCRIPTION}", "")))
+    for period in periods:
+        scoring_plays = pydash.get(period, f"{DICT_KEY_GOALS}", [])
+        for play in scoring_plays:
+            goals.append(Goal(period=get_period_ordinal(pydash.get(period, f"{DICT_KEY_PERIOD}", 0)),
+                              time=pydash.get(play, f"{DICT_KEY_TIME_IN_PERIOD}", ""),
+                              team=Teams[pydash.get(play, f"{DICT_KEY_TEAM_ABBREV}", "ERR")].value,
+                              strength=strength_map[pydash.get(play, f"{DICT_KEY_STRENGTH}", "")],
+                              goalie="",
+                              description=get_goal_description(play),
+                              video_url=get_video_url(pydash.get(play, f"{DICT_KEY_HIGHLIGHT_CLIP}", 0)),
+                              ))
     return goals
 
 
-def parse_penalties(feed_live: dict) -> list[Penalty]:
+strength_map = {
+    "ev": "Even Strength",
+    "pp": "Power Play",
+    "sh": "Short Handed",
+    "": "",
+}
+
+def get_goal_description(goal_dictionary: dict) -> str:
+    """
+    Get the description of the goal
+    Example output: "Joe Pavelski (8) snap shot, assists: Joe Thornton (8), Logan Couture (8)"
+
+    Args:
+        goal_dictionary:
+
+    Returns:
+        str: The description of the goal
+    """
+    scorer_first_name = pydash.get(goal_dictionary, f"{DICT_KEY_FIRST_NAME}", "")
+    scorer_last_name = pydash.get(goal_dictionary, f"{DICT_KEY_LAST_NAME}", "")
+    goals_to_date = pydash.get(goal_dictionary, f"{DICT_KEY_GOALS_TO_DATE}", "")
+    shot_type = pydash.get(goal_dictionary, f"{DICT_KEY_SHOT_TYPE}", "")
+
+    assisted_by = []
+    for player in pydash.get(goal_dictionary, f"{DICT_KEY_ASSISTS}", []):
+        assistant_first_name = pydash.get(player, f"{DICT_KEY_FIRST_NAME}", "")
+        assistant_last_name = pydash.get(player, f"{DICT_KEY_LAST_NAME}", "")
+        assists_to_date = pydash.get(player, f"{DICT_KEY_ASSISTS_TO_DATE}", "")
+        assisted_by.append(f"{assistant_first_name} {assistant_last_name} ({assists_to_date})")
+
+    return f'{scorer_first_name} {scorer_last_name} ({goals_to_date}) {shot_type} shot, assists: {", ".join(assisted_by)}'
+
+
+# shot_type_map = {
+#     "snap": "Snap Shot",
+#     "slap": "Slap Shot",
+# }
+
+
+def parse_penalties(landing: dict) -> list[Penalty]:
     """
     Parses the penalties
 
     Args:
-        feed_live: the feed live dictionary
+        landing: the landing dictionary
 
     Returns:
         list[Penalty]: the parsed penalties
     """
-    penalty_plays = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_PLAYS}.{DICT_KEY_PENALTY_PLAYS}", [])
+    periods = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_PENALTIES}", [])
     penalties = []
-    for play in penalty_plays:
-        penalty_play_details = pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_PLAYS}.{DICT_KEY_ALL_PLAYS}.{play}", {})
-        penalties.append(Penalty(period=pydash.get(penalty_play_details, f"{DICT_KEY_ABOUT}.{DICT_KEY_ORDINAL_NUM}", ""),
-                                 time=pydash.get(penalty_play_details, f"{DICT_KEY_ABOUT}.{DICT_KEY_PERIOD_TIME}", ""),
-                                 team=Teams[pydash.get(penalty_play_details, f"{DICT_KEY_TEAM}.{DICT_KEY_TRI_CODE}", "ERR")].value,
-                                 type=pydash.get(penalty_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_PENALTY_SEVERITY}", ""),
-                                 min=pydash.get(penalty_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_PENALTY_MINUTES}", -1),
-                                 description=pydash.get(penalty_play_details, f"{DICT_KEY_RESULT}.{DICT_KEY_DESCRIPTION}", "")))
+    for period in periods:
+        penalty_plays = pydash.get(period, f"{DICT_KEY_PENALTIES}", [])
+        for penalty in penalty_plays:
+            penalties.append(Penalty(period=get_period_ordinal(pydash.get(period, f"{DICT_KEY_PERIOD}", 0)),
+                                     time=pydash.get(penalty, f"{DICT_KEY_TIME_IN_PERIOD}", ""),
+                                     team=Teams[pydash.get(penalty, f"{DICT_KEY_TEAM_ABBREV}", "ERR")].value,
+                                     type=penalty_type_map[pydash.get(penalty, f"{DICT_KEY_TYPE}", "")],
+                                     min=pydash.get(penalty, f"{DICT_KEY_DURATION}", 0),
+                                     description=get_penalty_description(penalty)
+                                     ))
     return penalties
 
 
-def parse_team_stats(feed_live: dict) -> dict:
+penalty_type_map = {
+    "MIN": "Minor",
+    "MAJ": "Major",
+    "BEN": "Bench",
+    "MIS": "Misconduct",
+}
+
+penalty_description_map = {
+    "delaying-game-puck-over-glass": "Puck Over Glass",
+    "holding": "Holding",
+    "hooking": "Hooking",
+    "roughing": "Roughing",
+    "embellishment": "Embellishment",
+    "slashing": "Slashing",
+}
+
+
+def get_penalty_description(penalty_dictionary: dict) -> str:
+    """
+    Get the description of the penalty
+    Example output: "Nick Foligno hooking against Miro Heiskanen"
+
+    Args:
+        penalty_dictionary:
+
+    Returns:
+        str: The description of the penalty
+    """
+    committed_by = pydash.get(penalty_dictionary, f"{DICT_KEY_COMMITTED_BY_PLAYER}", "")
+    description_key = pydash.get(penalty_dictionary, f"{DICT_KEY_DESC_KEY}", "")
+    drawn_by = pydash.get(penalty_dictionary, f"{DICT_KEY_DRAWN_BY}", "")
+
+    out = f'{committed_by} {description_key}'
+    if drawn_by:
+        out += f' against {drawn_by}'
+    return out
+
+
+def parse_team_stats(landing: dict) -> dict:
     """
     Parses the team stats
 
     Args:
-        feed_live: the feed live dictionary
+        landing: the landing dictionary
 
     Returns:
         dict: the parsed team stats
     """
-    periods = parse_periods(feed_live)
-    shootouts = parse_shootouts(feed_live)
+    periods = parse_periods(landing)
+    shootouts = parse_shootouts(landing)
     out = {}
-    for key, team in pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_BOX_SCORE}.{DICT_KEY_TEAMS}", {}).items():
-        team_skater_stats = pydash.get(team, f"{DICT_KEY_TEAM_STATS}.{DICT_KEY_TEAM_SKATER_STATS}", {})
-        out[key] = TeamStats(
-            goals=pydash.get(feed_live, f"{DICT_KEY_LIVE_DATA}.{DICT_KEY_LINESCORE}.{DICT_KEY_TEAMS}.{key}.{DICT_KEY_GOALS}", ""),
-            shots=pydash.get(team_skater_stats, f"{DICT_KEY_SHOTS}", ""),
-            blocked=pydash.get(team_skater_stats, f"{DICT_KEY_BLOCKED}", ""),
-            hits=pydash.get(team_skater_stats, f"{DICT_KEY_HITS}", ""),
-            fo_wins=pydash.get(team_skater_stats, f"{DICT_KEY_FO_WIN_PERCENTAGE}", ""),
-            giveaways=pydash.get(team_skater_stats, f"{DICT_KEY_GIVEAWAYS}", ""),
-            takeaways=pydash.get(team_skater_stats, f"{DICT_KEY_TAKEAWAYS}", ""),
-            pp_opportunities=int(pydash.get(team_skater_stats, f"{DICT_KEY_PP_OPPORTUNITIES}", -1)),
-            pp_goals=int(pydash.get(team_skater_stats, f"{DICT_KEY_PP_GOALS}", -1)),
-            pp_percentage=pydash.get(team_skater_stats, f"{DICT_KEY_PP_PERCENTAGE}", ""),
-            periods=pydash.get(periods, key, []),
-            shootout=pydash.get(shootouts, key, None))
+    home_shots = 0
+    away_shots = 0
+    home_fo_wins = "0"
+    away_fo_wins = "0"
+    home_pp = ""
+    away_pp = ""
+    home_blocked = 0
+    away_blocked = 0
+    home_hits = 0
+    away_hits = 0
+    home_takeaways = 0
+    away_takeaways = 0
+    home_giveaways = 0
+    away_giveaways = 0
+
+    home_goals = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_LINESCORE}.{DICT_KEY_TOTALS}.{DICT_KEY_HOME}", 0)
+    away_goals = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_LINESCORE}.{DICT_KEY_TOTALS}.{DICT_KEY_AWAY}", 0)
+
+    team_game_stats = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_TEAM_GAME_STATS}", {})
+    for stat in team_game_stats:
+        category = pydash.get(stat, DICT_KEY_CATEGORY, "")
+        match category:
+            case TeamStatCategories.SOG.value:
+                home_shots = int(pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", 0))
+                away_shots = int(pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", 0))
+            case TeamStatCategories.FACEOFF_PCTG.value:
+                home_fo_wins = pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", "0")
+                away_fo_wins = pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", "0")
+            case TeamStatCategories.POWER_PLAY.value:
+                home_pp = pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", "")
+                away_pp = pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", "")
+            case TeamStatCategories.PIM.value:
+                # Currently not storing this data
+                pass
+            case TeamStatCategories.HITS.value:
+                home_hits = int(pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", 0))
+                away_hits = int(pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", 0))
+            case TeamStatCategories.BLOCKED_SHOTS.value:
+                home_blocked = int(pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", 0))
+                away_blocked = int(pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", 0))
+            case TeamStatCategories.GIVEAWAYS.value:
+                home_giveaways = int(pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", 0))
+                away_giveaways = int(pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", 0))
+            case TeamStatCategories.TAKEAWAYS.value:
+                home_takeaways = int(pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", 0))
+                away_takeaways = int(pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", 0))
+            case _:
+                logger.e(TAG, f"parse_team_stats: Unknown stat category: {category}")
+
+    out[DICT_KEY_HOME] = TeamStats(
+        goals=home_goals,
+        shots=home_shots,
+        blocked=home_blocked,
+        hits=home_hits,
+        fo_wins=home_fo_wins,
+        giveaways=home_giveaways,
+        takeaways=home_takeaways,
+        pp_fraction=home_pp,
+        periods=pydash.get(periods, DICT_KEY_HOME, []),
+        shootout=pydash.get(shootouts, DICT_KEY_HOME, None)
+    )
+
+    out[DICT_KEY_AWAY] = TeamStats(
+        goals=away_goals,
+        shots=away_shots,
+        blocked=away_blocked,
+        hits=away_hits,
+        fo_wins=away_fo_wins,
+        giveaways=away_giveaways,
+        takeaways=away_takeaways,
+        pp_fraction=away_pp,
+        periods=pydash.get(periods, DICT_KEY_AWAY, []),
+        shootout=pydash.get(shootouts, DICT_KEY_AWAY, None)
+    )
     return out
 
 
@@ -369,10 +567,10 @@ def parse_scheduled_game(game: dict) -> Optional[Game]:
     Returns:
         Optional[Game]: the parsed game or None if it cannot be parsed
     """
-    game_id = pydash.get(game, f"{DICT_KEY_GAME_PK}", None)
-    away_team_id = pydash.get(game, f"{DICT_KEY_TEAMS}.{DICT_KEY_AWAY}.{DICT_KEY_TEAM}.{DICT_KEY_ID}", None)
-    home_team_id = pydash.get(game, f"{DICT_KEY_TEAMS}.{DICT_KEY_HOME}.{DICT_KEY_TEAM}.{DICT_KEY_ID}", None)
-    start_time = pydash.get(game, f"{DICT_KEY_GAME_DATE}", None)
+    game_id = pydash.get(game, f"{DICT_KEY_ID}", None)
+    away_team_id = pydash.get(game, f"{DICT_KEY_AWAY_TEAM}.{DICT_KEY_ID}", None)
+    home_team_id = pydash.get(game, f"{DICT_KEY_HOME_TEAM}.{DICT_KEY_ID}", None)
+    start_time = pydash.get(game, f"{DICT_KEY_START_TIME_UTC}", None)
 
     if not game_id or not away_team_id or not home_team_id or not start_time:
         return None
@@ -395,25 +593,23 @@ def parse_scheduled_game(game: dict) -> Optional[Game]:
                 penalties=None)
 
 
-def parse_game(feed_live: dict) -> Optional[Game]:
+def parse_game(landing: dict) -> Optional[Game]:
     """
     Parses the game
 
     Args:
-        feed_live: the feed live dictionary
+        landing: the landing dictionary
 
     Returns:
         Optional[Game]: the parsed game or None if it cannot be parsed
     """
-    team_stats = parse_team_stats(feed_live)
+    team_stats = parse_team_stats(landing)
 
-    game_id = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_GAME}.{DICT_KEY_PK}", None)
-    away_team_abbr = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_TEAMS}.{DICT_KEY_AWAY}.{DICT_KEY_ABBREVIATION}", None)
-    home_team_abbr = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_TEAMS}.{DICT_KEY_HOME}.{DICT_KEY_ABBREVIATION}", None)
-    start_time = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_DATETIME}.{DICT_KEY_DATE_TIME}", None)
-    end_time = pydash.get(feed_live, f"{DICT_KEY_GAME_DATA}.{DICT_KEY_DATETIME}.{DICT_KEY_END_DATE_TIME}", None)
-    if end_time is not None:
-        end_time = datetime_util.parse_datetime(end_time)
+    game_id = pydash.get(landing, f"{DICT_KEY_ID}", None)
+    away_team_abbr = pydash.get(landing, f"{DICT_KEY_AWAY_TEAM}.{DICT_KEY_ABBREV}", None)
+    home_team_abbr = pydash.get(landing, f"{DICT_KEY_HOME_TEAM}.{DICT_KEY_ABBREV}", None)
+    start_time = pydash.get(landing, f"{DICT_KEY_START_TIME_UTC}", None)
+    end_time = None
     home_team_stats = pydash.get(team_stats, f"{DICT_KEY_HOME}", None)
     away_team_stats = pydash.get(team_stats, f"{DICT_KEY_AWAY}", None)
 
@@ -425,8 +621,8 @@ def parse_game(feed_live: dict) -> Optional[Game]:
                 home_team=Teams[home_team_abbr].value,
                 start_time=datetime_util.parse_datetime(start_time),
                 end_time=end_time,
-                game_info=parse_game_info(feed_live),
+                game_info=parse_game_info(landing),
                 home_team_stats=home_team_stats,
                 away_team_stats=away_team_stats,
-                goals=parse_goals(feed_live),
-                penalties=parse_penalties(feed_live))
+                goals=parse_goals(landing),
+                penalties=parse_penalties(landing))

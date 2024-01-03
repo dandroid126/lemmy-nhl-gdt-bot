@@ -85,9 +85,9 @@ class Teams(Enum):
         return [team.value for team in Teams]
 
 
-_team_id_abbr_map = {}
+_team_id_map = {}
 for _team in Teams.get_all_teams():
-    _team_id_abbr_map[_team.id] = _team
+    _team_id_map[_team.id] = _team
 
 
 def get_team_from_id(team_id: int) -> Team:
@@ -100,4 +100,4 @@ def get_team_from_id(team_id: int) -> Team:
     Returns:
         Team: The Team object corresponding to the given team_id, or None if not found.
     """
-    return _team_id_abbr_map.get(team_id, None)
+    return _team_id_map.get(team_id, None)

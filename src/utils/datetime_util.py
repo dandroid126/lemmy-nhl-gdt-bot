@@ -22,7 +22,7 @@ MINUTES_BEFORE_GAME_START_TO_CREATE_POST = 60
 MINUTES_AFTER_GAME_END_TO_UPDATE_POST = 60
 
 
-def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game_end_time: Optional[datetime] = None):
+def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game_end_time: Optional[datetime] = None) -> bool:
     """
     Check if it is time to make a post based on the current time, the game start time, and the optional game end time.
 
@@ -56,12 +56,9 @@ def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game
     return False
 
 
-def get_current_day_as_idlw():
+def get_current_day_as_idlw() -> str:
     """
     Get the current day in the IDLW timezone.
-
-    Args:
-        None
 
     Returns:
         str: The current day in the IDLW timezone.
@@ -70,12 +67,9 @@ def get_current_day_as_idlw():
     return datetime.now(tz=IDLW).strftime(DATE_FORMAT)
 
 
-def get_current_time_as_utc():
+def get_current_time_as_utc() -> datetime:
     """
     Get the current time in the UTC timezone.
-
-    Args:
-        None
 
     Returns:
         datetime: The current time in the UTC timezone.
@@ -83,7 +77,7 @@ def get_current_time_as_utc():
     return datetime.now(tz=pytz.utc)
 
 
-def parse_datetime(datetime_string: str):
+def parse_datetime(datetime_string: str) -> datetime:
     """
     Parse a datetime string into a datetime object.
 
@@ -96,7 +90,7 @@ def parse_datetime(datetime_string: str):
     return parser.parse(datetime_string)
 
 
-def get_day_as_title_formatted(day: str):
+def get_day_as_title_formatted(day: str) -> str:
     """
     Parse a datetime string into the format desired for the daily discussion thread title.
 
@@ -109,7 +103,7 @@ def get_day_as_title_formatted(day: str):
     return parser.parse(day).strftime(DATE_TITLE_FORMAT)
 
 
-def today():
+def today() -> str:
     """
     Get the current date in the current timezone.
     TODO: revisit this. It may be better to have repeatable timezones.
@@ -123,7 +117,7 @@ def today():
     return str(date.today())
 
 
-def tomorrow():
+def tomorrow() -> str:
     """
     Get the tomorrow's date in the current timezone.
     TODO: revisit this. It may be better to have repeatable timezones.
@@ -137,7 +131,7 @@ def tomorrow():
     return str(date.today() + timedelta(days=1))
 
 
-def yesterday():
+def yesterday() -> str:
     """
     Get the yesterday's date in the current timezone.
     TODO: revisit this. It may be better to have repeatable timezones.
@@ -151,7 +145,7 @@ def yesterday():
     return str(date.today() - timedelta(days=1))
 
 
-def next_day(start_date: str):
+def next_day(start_date: str) -> str:
     """
     Get the next day's date in the current timezone.
 

@@ -11,3 +11,4 @@ class Goal:
     strength: str
     goalie: str
     description: str
+    video_url: str = ""

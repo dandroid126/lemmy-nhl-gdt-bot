@@ -52,17 +52,3 @@ class Game:
         game_type = GameType(game_type_num)
 
         return game_type
-
-    def __eq__(self, other):
-        """
-        Check if two Game objects are equal.
-
-        Args:
-            other (object): The object to compare with.
-
-        Returns:
-            bool: True if the objects are equal, False otherwise.
-        """
-        if isinstance(other, Game):
-            return self.id == other.id
-        return False
