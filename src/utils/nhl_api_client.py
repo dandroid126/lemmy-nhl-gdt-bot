@@ -484,8 +484,8 @@ def parse_team_stats(landing: dict) -> dict:
     away_shots = 0
     home_fo_wins = "0"
     away_fo_wins = "0"
-    home_pp = ""
-    away_pp = ""
+    home_pp = "0/0"
+    away_pp = "0/0"
     home_blocked = 0
     away_blocked = 0
     home_hits = 0
