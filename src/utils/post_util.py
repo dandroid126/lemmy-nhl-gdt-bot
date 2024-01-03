@@ -242,7 +242,7 @@ def get_goal_details(game) -> Table:
         goal_details.set(2, i + 1, goal.team.get_team_table_entry())
         goal_details.set(3, i + 1, goal.strength)
         goal_details.set(4, i + 1, goal.goalie)
-        goal_details.set(5, i + 1, goal.description)
+        goal_details.set(5, i + 1, f"[{goal.description}]({goal.video_url})" if goal.video_url else goal.description)
     return goal_details
 
 
