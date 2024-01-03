@@ -509,8 +509,8 @@ def parse_team_stats(landing: dict) -> dict:
                 home_fo_wins = pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", "0")
                 away_fo_wins = pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", "0")
             case TeamStatCategories.POWER_PLAY.value:
-                home_pp = pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", "")
-                away_pp = pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", "")
+                home_pp = pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", "0/0")
+                away_pp = pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", "0/0")
             case TeamStatCategories.PIM.value:
                 # Currently not storing this data
                 pass
