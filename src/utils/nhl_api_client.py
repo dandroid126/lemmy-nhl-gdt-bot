@@ -62,6 +62,7 @@ DICT_KEY_HIGHLIGHT_CLIP = 'highlightClip'
 DICT_KEY_SEASON_SERIES = 'seasonSeries'
 DICT_KEY_IN_INTERMISSION = 'inIntermission'
 DICT_KEY_GAME_STATE = 'gameState'
+DICT_KEY_DEFAULT = 'default'
 
 DICT_KEY_FIRST_NAME = 'firstName'
 DICT_KEY_LAST_NAME = 'lastName'
@@ -363,9 +364,12 @@ def parse_goals(landing: dict) -> list[Goal]:
     for period in periods:
         scoring_plays = pydash.get(period, f"{DICT_KEY_GOALS}", [])
         for play in scoring_plays:
+            team = pydash.get(play, f"{DICT_KEY_TEAM_ABBREV}", "ERR")
+            if type(team) is dict:
+                team = pydash.get(team, DICT_KEY_DEFAULT, "ERR")
             goals.append(Goal(period=get_period_ordinal(pydash.get(period, f"{DICT_KEY_PERIOD}", 0)),
                               time=pydash.get(play, f"{DICT_KEY_TIME_IN_PERIOD}", ""),
-                              team=Teams[pydash.get(play, f"{DICT_KEY_TEAM_ABBREV}", "ERR")].value,
+                              team=Teams[team].value,
                               strength=strength_map[pydash.get(play, f"{DICT_KEY_STRENGTH}", "")],
                               goalie="",
                               description=get_goal_description(play),
@@ -393,14 +397,22 @@ def get_goal_description(goal_dictionary: dict) -> str:
         str: The description of the goal
     """
     scorer_first_name = pydash.get(goal_dictionary, f"{DICT_KEY_FIRST_NAME}", "")
+    if type(scorer_first_name) is dict:
+        scorer_first_name = pydash.get(scorer_first_name, f"{DICT_KEY_DEFAULT}", "")
     scorer_last_name = pydash.get(goal_dictionary, f"{DICT_KEY_LAST_NAME}", "")
+    if type(scorer_last_name) is dict:
+        scorer_last_name = pydash.get(scorer_last_name, f"{DICT_KEY_DEFAULT}", "")
     goals_to_date = pydash.get(goal_dictionary, f"{DICT_KEY_GOALS_TO_DATE}", "")
     shot_type = pydash.get(goal_dictionary, f"{DICT_KEY_SHOT_TYPE}", "")
 
     assisted_by = []
     for player in pydash.get(goal_dictionary, f"{DICT_KEY_ASSISTS}", []):
         assistant_first_name = pydash.get(player, f"{DICT_KEY_FIRST_NAME}", "")
+        if type(assistant_first_name) is dict:
+            assistant_first_name = pydash.get(assistant_first_name, f"{DICT_KEY_DEFAULT}", "")
         assistant_last_name = pydash.get(player, f"{DICT_KEY_LAST_NAME}", "")
+        if type(assistant_last_name) is dict:
+            assistant_last_name = pydash.get(assistant_last_name, f"{DICT_KEY_DEFAULT}", "")
         assists_to_date = pydash.get(player, f"{DICT_KEY_ASSISTS_TO_DATE}", "")
         assisted_by.append(f"{assistant_first_name} {assistant_last_name} ({assists_to_date})")
 
