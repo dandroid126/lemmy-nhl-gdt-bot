@@ -415,6 +415,8 @@ def get_goal_description(goal_dictionary: dict) -> str:
             assistant_last_name = pydash.get(assistant_last_name, f"{DICT_KEY_DEFAULT}", "")
         assists_to_date = pydash.get(player, f"{DICT_KEY_ASSISTS_TO_DATE}", "")
         assisted_by.append(f"{assistant_first_name} {assistant_last_name} ({assists_to_date})")
+    if len(assisted_by) == 0:
+        assisted_by = ["None"]
 
     return f'{scorer_first_name} {scorer_last_name} ({goals_to_date}) {shot_type} shot, assists: {", ".join(assisted_by)}'
 
@@ -456,6 +458,7 @@ penalty_type_map = {
     "BEN": "Bench",
     "MIS": "Misconduct",
     "GAM": "Game Misconduct",
+    "MAT": "Match Penalty",
 }
 
 penalty_description_map = {
