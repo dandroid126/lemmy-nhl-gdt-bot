@@ -75,6 +75,15 @@ class TestNhlApiClient(unittest.TestCase):
         print(games)
         self.assertEqual(expected, games)
 
+    def test_get_penalty_types(self):
+        # This is a really dumb test, but I wasn't sure how map.get with default values works in python, so I wanted to write a scratch for it just to be sure I understood it.
+        # But I figured if I am writing a scratch, I might as well keep it as a test case to reference later in case I forget. :)
+        bad_key = "BAD_KEY"
+        not_found = "NOT_FOUND"
+        for i in range(len(nhl_api_client.penalty_type_map)):
+            self.assertEqual(nhl_api_client.penalty_type_map.get(list(nhl_api_client.penalty_type_map.keys())[i], not_found), list(nhl_api_client.penalty_type_map.values())[i], "Key/value mismatch: key: " + list(nhl_api_client.penalty_type_map.keys())[i] + " value: " + list(nhl_api_client.penalty_type_map.values())[i])
+        self.assertEqual(nhl_api_client.penalty_type_map.get(bad_key, not_found), not_found, "Bad key test failed: key: " + bad_key + " value: " + not_found)
+
 
 if __name__ == '__main__':
     unittest.main()

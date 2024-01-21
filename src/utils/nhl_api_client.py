@@ -367,10 +367,11 @@ def parse_goals(landing: dict) -> list[Goal]:
             team = pydash.get(play, f"{DICT_KEY_TEAM_ABBREV}", "ERR")
             if type(team) is dict:
                 team = pydash.get(team, DICT_KEY_DEFAULT, "ERR")
+            strength = pydash.get(play, f"{DICT_KEY_STRENGTH}", "")
             goals.append(Goal(period=get_period_ordinal(pydash.get(period, f"{DICT_KEY_PERIOD}", 0)),
                               time=pydash.get(play, f"{DICT_KEY_TIME_IN_PERIOD}", ""),
                               team=Teams[team].value,
-                              strength=strength_map[pydash.get(play, f"{DICT_KEY_STRENGTH}", "")],
+                              strength=strength_map.get(strength, strength),
                               goalie="",
                               description=get_goal_description(play),
                               video_url=get_video_url(pydash.get(play, f"{DICT_KEY_HIGHLIGHT_CLIP}", 0)),
@@ -442,10 +443,11 @@ def parse_penalties(landing: dict) -> list[Penalty]:
     for period in periods:
         penalty_plays = pydash.get(period, f"{DICT_KEY_PENALTIES}", [])
         for penalty in penalty_plays:
+            penalty_type = pydash.get(penalty, f"{DICT_KEY_TYPE}", "")
             penalties.append(Penalty(period=get_period_ordinal(pydash.get(period, f"{DICT_KEY_PERIOD}", 0)),
                                      time=pydash.get(penalty, f"{DICT_KEY_TIME_IN_PERIOD}", ""),
                                      team=Teams[pydash.get(penalty, f"{DICT_KEY_TEAM_ABBREV}", "ERR")].value,
-                                     type=penalty_type_map[pydash.get(penalty, f"{DICT_KEY_TYPE}", "")],
+                                     type=penalty_type_map.get(penalty_type, penalty_type),  # If penalty type is not in the map, use the value itself as a default
                                      min=pydash.get(penalty, f"{DICT_KEY_DURATION}", 0),
                                      description=get_penalty_description(penalty)
                                      ))
@@ -459,6 +461,7 @@ penalty_type_map = {
     "MIS": "Misconduct",
     "GAM": "Game Misconduct",
     "MAT": "Match Penalty",
+    "PS": "Penalty Shot",
 }
 
 penalty_description_map = {
@@ -482,6 +485,7 @@ def get_penalty_description(penalty_dictionary: dict) -> str:
     Returns:
         str: The description of the penalty
     """
+    # TODO: add "served by" for applicable penalties
     committed_by = pydash.get(penalty_dictionary, f"{DICT_KEY_COMMITTED_BY_PLAYER}", "")
     description_key = pydash.get(penalty_dictionary, f"{DICT_KEY_DESC_KEY}", "")
     drawn_by = pydash.get(penalty_dictionary, f"{DICT_KEY_DRAWN_BY}", "")

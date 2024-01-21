@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, EnumMeta
 
 
 @dataclass
@@ -39,7 +39,15 @@ class Team:
         return self.id == other.id
 
 
-class Teams(Enum):
+class TeamsEnumMeta(EnumMeta):
+
+    def __getitem__(self, item):
+        if item not in Teams.__members__:
+            return Teams.ERR
+        return super().__getitem__(item)
+
+
+class Teams(Enum, metaclass=TeamsEnumMeta):
     NJD = Team(1, 'NJD', 'New Jersey', 'Devils', 'https://lemmy.ca/pictrs/image/eb1a001e-6e70-4cee-b412-6ffc41755d51.png')
     NYI = Team(2, 'NYI', 'New York', 'Islanders', 'https://lemmy.ca/pictrs/image/9901d131-6f32-4bc2-8013-6a1037c1d4db.png')
     NYR = Team(3, 'NYR', 'New York', 'Rangers', 'https://lemmy.ca/pictrs/image/7061371d-fe61-4237-bf32-fa68b2a316cd.png')
