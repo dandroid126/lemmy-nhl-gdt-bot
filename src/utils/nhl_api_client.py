@@ -40,6 +40,7 @@ DICT_KEY_ABBREV = 'abbrev'
 DICT_KEY_LINESCORE = 'linescore'
 DICT_KEY_PERIOD = 'period'
 DICT_KEY_PERIOD_DESCRIPTOR = 'periodDescriptor'
+DICT_KEY_NUMBER = 'number'
 DICT_KEY_SHOOTOUT = 'shootout'
 DICT_KEY_HOME_CONVERSIONS = 'homeConversions'
 DICT_KEY_AWAY_CONVERSIONS = 'awayConversions'
@@ -89,7 +90,7 @@ DICT_KEY_TOTALS = 'totals'
 
 class TeamStatCategories(Enum):
     SOG = 'sog'
-    FACEOFF_PCTG = 'faceoffPctg'
+    FACEOFF_PCTG = 'faceoffWinningPctg'
     POWER_PLAY = 'powerPlay'
     PIM = 'pim'
     HITS = 'hits'
@@ -277,7 +278,7 @@ def parse_periods(landing: dict) -> dict:
         home_shots = pydash.get(shots_by_period[i], f"{DICT_KEY_HOME}", 0)
         away_goals = pydash.get(linescore_by_period[i], f"{DICT_KEY_AWAY}", 0)
         away_shots = pydash.get(shots_by_period[i], f"{DICT_KEY_AWAY}", 0)
-        period_number = pydash.get(shots_by_period[i], DICT_KEY_PERIOD, 0)
+        period_number = pydash.get(shots_by_period[i], f"{DICT_KEY_PERIOD_DESCRIPTOR}.{DICT_KEY_NUMBER}", 0)
         ordinal_number = get_period_ordinal(period_number)
         out[DICT_KEY_HOME].append(
             Period(goals=home_goals, shots=home_shots, period_number=period_number, ordinal_number=ordinal_number))
@@ -294,6 +295,7 @@ def get_period_ordinal(period_number: int) -> str:
     elif period_number == 5:
         return "SO"
     else:
+        logger.e(TAG, f"get_period_ordinal(): Invalid period number: {period_number}")
         return ""
 
 
@@ -332,7 +334,7 @@ def parse_game_info(landing: dict) -> GameInfo:
     season_series = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_SEASON_SERIES}", [])
     for game in season_series:
         if pydash.get(game, DICT_KEY_ID, 0) == pydash.get(landing, DICT_KEY_ID, -1):
-            current_period = get_period_ordinal(pydash.get(game, f"{DICT_KEY_PERIOD}", ""))
+            current_period = get_period_ordinal(pydash.get(game, f"{DICT_KEY_PERIOD_DESCRIPTOR}.{DICT_KEY_NUMBER}", 0))
     in_intermission = pydash.get(landing, f"{DICT_KEY_CLOCK}.{DICT_KEY_IN_INTERMISSION}", False)
     is_final = pydash.get(landing, f"{DICT_KEY_GAME_STATE}", "")
 
@@ -368,7 +370,7 @@ def parse_goals(landing: dict) -> list[Goal]:
             if type(team) is dict:
                 team = pydash.get(team, DICT_KEY_DEFAULT, "ERR")
             strength = pydash.get(play, f"{DICT_KEY_STRENGTH}", "")
-            goals.append(Goal(period=get_period_ordinal(pydash.get(period, f"{DICT_KEY_PERIOD}", 0)),
+            goals.append(Goal(period=get_period_ordinal(pydash.get(period, f"{DICT_KEY_PERIOD_DESCRIPTOR}.{DICT_KEY_NUMBER}", 0)),
                               time=pydash.get(play, f"{DICT_KEY_TIME_IN_PERIOD}", ""),
                               team=Teams[team].value,
                               strength=strength_map.get(strength, strength),
@@ -444,7 +446,7 @@ def parse_penalties(landing: dict) -> list[Penalty]:
         penalty_plays = pydash.get(period, f"{DICT_KEY_PENALTIES}", [])
         for penalty in penalty_plays:
             penalty_type = pydash.get(penalty, f"{DICT_KEY_TYPE}", "")
-            penalties.append(Penalty(period=get_period_ordinal(pydash.get(period, f"{DICT_KEY_PERIOD}", 0)),
+            penalties.append(Penalty(period=get_period_ordinal(pydash.get(period, f"{DICT_KEY_PERIOD_DESCRIPTOR}.{DICT_KEY_NUMBER}", 0)),
                                      time=pydash.get(penalty, f"{DICT_KEY_TIME_IN_PERIOD}", ""),
                                      team=Teams[pydash.get(penalty, f"{DICT_KEY_TEAM_ABBREV}", "ERR")].value,
                                      type=penalty_type_map.get(penalty_type, penalty_type),  # If penalty type is not in the map, use the value itself as a default

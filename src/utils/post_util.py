@@ -214,7 +214,7 @@ def get_team_stats(game) -> Table:
         team_stats.set(1, i + 1, value.shots)
         team_stats.set(2, i + 1, value.hits)
         team_stats.set(3, i + 1, value.blocked)
-        team_stats.set(4, i + 1, f'{value.fo_wins}%')
+        team_stats.set(4, i + 1, f'{str(round(float(value.fo_wins) * 100 , 1))}%')
         team_stats.set(5, i + 1, value.giveaways)
         team_stats.set(6, i + 1, value.takeaways)
         team_stats.set(7, i + 1, value.pp_fraction)
