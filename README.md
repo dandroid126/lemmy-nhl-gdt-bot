@@ -16,7 +16,7 @@ Alternatively, if you don't want to use Pycharm, you can build and run it from c
 git clone git@github.com:dandroid126/lemmy-nhl-gdt-bot.git
 cd lemmy-nhl-gdt-bot
 podman build --tag  lemmy-nhl-gdt-bot .
-docker run --rm -d --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out localhost/lemmy-nhl-gdt-bot:latest
+docker run --rm -d --name lemmy-nhl-gdt-bot -e TZ={{timezone}} -v ./.env:/app/.env -v ./out:/app/out localhost/lemmy-nhl-gdt-bot:latest
 ```
 There's a shell script `run.sh` included in the repo to do this. This is what the run configuration in Pycharm actually calls. So if you want to make your life easy, you can use that.
 
@@ -25,7 +25,7 @@ There's a shell script `run.sh` included in the repo to do this. This is what th
 2. Create the environment file. ([See section](#create-the-environment-file))
 3. Run it
 ```bash
-docker run --rm --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out ghcr.io/dandroid126/lemmy-nhl-gdt-bot:main
+docker run --rm --name lemmy-nhl-gdt-bot -e TZ={{timezone}} -v ./.env:/app/.env -v ./out:/app/out ghcr.io/dandroid126/lemmy-nhl-gdt-bot:main
 ```
 
 ## Create the out directory
@@ -40,7 +40,7 @@ docker run --rm --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out g
     mkdir -p lemmy-nhl-gdt-bot/out
     cd lemmy-nhl-gdt-bot
     sudo chmod 777 out
-    podman run --rm -d --name lemmy-nhl-gdt-bot -v ./.env:/app/.env -v ./out:/app/out ghcr.io/dandroid126/lemmy-nhl-gdt-bot:main
+    podman run --rm -d --name lemmy-nhl-gdt-bot -e TZ={{timezone}} -v ./.env:/app/.env -v ./out:/app/out ghcr.io/dandroid126/lemmy-nhl-gdt-bot:main
     sleep 5 # Only needed if running this in a script
     podman kill lemmy-nhl-gdt-bot
     userId=$(ls -al out/log.txt | cut -d " " -f 3)
