@@ -1,11 +1,11 @@
+import datetime
 import json
 import unittest
-import datetime
 
 import requests
 from dateutil.tz import tzutc
 
-import test_constants
+import tests.test_constants as test_constants
 from src.datatypes.game import Game
 from src.datatypes.game_info import GameInfo
 from src.datatypes.goal import Goal

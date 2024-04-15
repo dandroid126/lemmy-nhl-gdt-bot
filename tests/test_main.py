@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from unittest.mock import MagicMock
 
-import main
+import src.main as main
 from src.datatypes.game import Game
 from src.db.comments.comments_dao import comments_dao
 from src.db.comments.comments_record import CommentsRecord

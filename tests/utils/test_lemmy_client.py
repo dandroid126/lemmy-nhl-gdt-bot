@@ -3,15 +3,15 @@ import sys
 import unittest
 import uuid
 
-from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
+import tests.test_constants as test_constants
 from src.db.comments.comments_dao import CommentsDao
 from src.db.daily_threads.daily_threads_dao import DailyThreadsDao
+from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
 from src.db.db_manager import DbManager
 from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao
 from src.utils import datetime_util
 from src.utils.environment_util import EnvironmentUtil
 from src.utils.lemmy_client import LemmyClient
-from tests import test_constants
 
 TEST_POST_ID = 105088
 

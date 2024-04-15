@@ -3,15 +3,15 @@ import unittest
 
 from dateutil.tz import tzutc
 
+import src.utils.post_util as post_util
+from src.datatypes.game import Game
 from src.datatypes.game_info import GameInfo
 from src.datatypes.goal import Goal
 from src.datatypes.penalty import Penalty
-from src.datatypes.teams import Team
-from src.datatypes.game import Game
 from src.datatypes.period import Period
 from src.datatypes.shootout import Shootout
 from src.datatypes.team_stats import TeamStats
-from src.utils import post_util
+from src.datatypes.teams import Team
 from src.utils.post_util import Table
 
 
