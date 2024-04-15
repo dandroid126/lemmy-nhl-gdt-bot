@@ -11,7 +11,7 @@ class TeamStats:
     shots: int
     blocked: int
     hits: int
-    fo_wins: str
+    fo_wins: float
     giveaways: int
     takeaways: int
     pp_fraction: str

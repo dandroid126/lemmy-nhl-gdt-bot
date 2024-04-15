@@ -279,6 +279,9 @@ def parse_periods(landing: dict) -> dict:
         away_goals = pydash.get(linescore_by_period[i], f"{DICT_KEY_AWAY}", 0)
         away_shots = pydash.get(shots_by_period[i], f"{DICT_KEY_AWAY}", 0)
         period_number = pydash.get(shots_by_period[i], f"{DICT_KEY_PERIOD_DESCRIPTOR}.{DICT_KEY_NUMBER}", 0)
+        if period_number == 5:
+            logger.d(TAG, "Skipping SO period, as that is handled separately.")
+            break
         ordinal_number = get_period_ordinal(period_number)
         out[DICT_KEY_HOME].append(
             Period(goals=home_goals, shots=home_shots, period_number=period_number, ordinal_number=ordinal_number))
@@ -513,8 +516,8 @@ def parse_team_stats(landing: dict) -> dict:
     out = {}
     home_shots = 0
     away_shots = 0
-    home_fo_wins = "0"
-    away_fo_wins = "0"
+    home_fo_wins = 0.0
+    away_fo_wins = 0.0
     home_pp = "0/0"
     away_pp = "0/0"
     home_blocked = 0

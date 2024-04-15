@@ -51,7 +51,7 @@ def get_title(game: Game) -> str:
     Get the title for the post
 
     Args:
-        game: The game
+        game (Game): The game
 
     Returns:
         str: The title for the post
@@ -64,7 +64,7 @@ def get_gdt_body(game: Game) -> str:
     Get the body for the post
 
     Args:
-        game: The game
+        game (Game): The game
 
     Returns:
         str: The body for the post
@@ -82,7 +82,7 @@ def get_game_details(game: Game) -> str:
     Get the game details
 
     Args:
-        game: The game
+        game (Game): The game
 
     Returns:
         str: The game details
@@ -127,7 +127,7 @@ def get_formatted_time_clock_time(game_info: GameInfo) -> str:
     Get the formatted time clock time
 
     Args:
-        game_info: The game info
+        game_info (GameInfo): The game info
 
     Returns:
         str: The formatted time clock time
@@ -140,7 +140,7 @@ def get_formatted_game_start_time(start_time: datetime) -> str:
     Get the formatted game start time
 
     Args:
-        start_time: The game start time
+        start_time (datetime): The game start time
 
     Returns:
         str: The formatted game start time
@@ -153,7 +153,7 @@ def get_time_clock(game_info: GameInfo) -> Table:
     Get the time clock table
 
     Args:
-        game_info: The game info
+        game_info (GameInfo: The game info
 
     Returns:
         Table: The time clock table
@@ -164,12 +164,12 @@ def get_time_clock(game_info: GameInfo) -> Table:
     return time_clock
 
 
-def get_periods(game) -> Table:
+def get_periods(game: Game) -> Table:
     """
     Get the periods table
 
     Args:
-        game: The game
+        game (Game): The game
 
     Returns:
         Table: The periods table
@@ -195,21 +195,28 @@ def get_periods(game) -> Table:
     return periods
 
 
-def get_team_stats(game) -> Table:
+def get_team_stats(game: Game) -> Table:
     """
-    Get the team stats table
+    Get the team stats table for a given game.
 
     Args:
-        game: The game
+        game (Game): The game for which the team stats are to be generated.
 
     Returns:
-        Table: The team stats table
+        Table: The team stats table containing stats for both the away and home teams.
     """
+    # Create a new Table to store the team stats
     team_stats = Table()
+
+    # Set the header row of the team stats table
     for i, value in enumerate(TEAM_STATS_HEADER_ROW):
         team_stats.set(i, 0, value)
+
+    # Set the team entries for the away and home teams
     team_stats.set(0, 1, game.away_team.get_team_table_entry())
     team_stats.set(0, 2, game.home_team.get_team_table_entry())
+
+    # Set the individual stats for the away and home teams
     for i, value in enumerate([game.away_team_stats, game.home_team_stats]):
         team_stats.set(1, i + 1, value.shots)
         team_stats.set(2, i + 1, value.hits)
@@ -218,24 +225,32 @@ def get_team_stats(game) -> Table:
         team_stats.set(5, i + 1, value.giveaways)
         team_stats.set(6, i + 1, value.takeaways)
         team_stats.set(7, i + 1, value.pp_fraction)
+
     return team_stats
 
 
-def get_goal_details(game) -> Table:
+def get_goal_details(game: Game) -> Table:
     """
     Get the goal details table
 
     Args:
-        game: The game
+        game (Game): The game object containing goal details
 
     Returns:
-        Table: The goal details table
+        Table: The goal details table containing information about each goal in the game
     """
+    # Create a new table to store the goal details
     goal_details = Table()
+
+    # If there are no goals in the game, return an empty goal details table
     if not game.goals:
         return goal_details
+
+    # Set the headers for the goal details table
     for i, value in enumerate(GOALS_DETAILS_HEADER_ROW):
         goal_details.set(i, 0, value)
+
+    # Populate the goal details table with information about each goal in the game
     for i, goal in enumerate(reversed(game.goals)):
         goal_details.set(0, i + 1, goal.period)
         goal_details.set(1, i + 1, goal.time)
@@ -243,15 +258,16 @@ def get_goal_details(game) -> Table:
         goal_details.set(3, i + 1, goal.strength)
         goal_details.set(4, i + 1, goal.goalie)
         goal_details.set(5, i + 1, f"[{goal.description}]({goal.video_url})" if goal.video_url else goal.description)
+
     return goal_details
 
 
-def get_penalty_details(game) -> Table:
+def get_penalty_details(game: Game) -> Table:
     """
     Get the penalty details table
 
     Args:
-        game: The game
+        game (Game): The game
 
     Returns:
         Table: The penalty details table
@@ -271,12 +287,12 @@ def get_penalty_details(game) -> Table:
     return penalty_details
 
 
-def get_start_time_table(game) -> Table:
+def get_start_time_table(game: Game) -> Table:
     """
     Get the start time table
 
     Args:
-        game: The game
+        game (Game): The game
 
     Returns:
         Table: The start time table
@@ -297,7 +313,7 @@ def get_daily_thread_title(day: str) -> str:
     Get the title for the daily thread
 
     Args:
-        day: The day
+        day (str): The day
 
     Returns:
         str: The title for the daily thread
@@ -310,7 +326,7 @@ def get_daily_thread_body(games: list[Game]) -> str:
     Get the body for the daily thread
 
     Args:
-        games: The games
+        games (list[Game]): The games
 
     Returns:
         str: The body for the daily thread
@@ -327,7 +343,7 @@ def get_day_score_overview_table(games: list[Game]) -> Table:
     Get the score overview table
 
     Args:
-        games: The games
+        games (list[Game]): The games
 
     Returns:
         Table: The score overview table

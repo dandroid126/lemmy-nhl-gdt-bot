@@ -194,10 +194,12 @@ def main():
         try:
             signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
             if signal_util.is_interrupted:
+                logger.d(TAG, "main: Interrupted. Exiting.")
                 continue
             schedule = nhl_api_client.get_schedule()
             schedule_filtered_by_selected_teams = filter_games_by_selected_teams(schedule)
             if not schedule_filtered_by_selected_teams:
+                logger.d(TAG, "schedule_filtered_by_selected_teams is empty. Skip making a post for this day.")
                 continue
             schedule_filtered_by_start_times = filter_games_by_start_time(schedule_filtered_by_selected_teams)
             games = nhl_api_client.get_games(schedule_filtered_by_start_times)

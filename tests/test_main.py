@@ -68,7 +68,7 @@ class TestHandleDailyThread(unittest.TestCase):
         post_util_get_daily_thread_body = post_util.get_daily_thread_body
 
         # Set up
-        games = [Game(2023020193, None, None, datetime.now(), None, None, None, None, None, None)]
+        games = [Game(2023020193, None, None, datetime.now(), None, None, None, None, None, None), Game(2023020194, None, None, datetime.now(), None, None, None, None, None, None)]
         daily_thread = DailyThreadsRecord(12341234, "2023-11-10", True)
         daily_threads_dao.get_daily_thread = MagicMock(return_value=daily_thread)
         lemmy_client.update_daily_thread = MagicMock(return_value=daily_thread)
@@ -97,7 +97,7 @@ class TestHandleDailyThread(unittest.TestCase):
         post_util_get_daily_thread_body = post_util.get_daily_thread_body
 
         # Set up
-        games = [Game(2023020193, None, None, datetime.now(), None, None, None, None, None, None)]
+        games = [Game(2023020193, None, None, datetime.now(), None, None, None, None, None, None), Game(2023020194, None, None, datetime.now(), None, None, None, None, None, None)]
         created_daily_thread = DailyThreadsRecord(12341234, str(datetime.today()), True)
         daily_threads_dao.get_daily_thread = MagicMock(return_value=None)
         lemmy_client.create_daily_thread = MagicMock(return_value=created_daily_thread)
