@@ -17,10 +17,10 @@ TEST_POST_ID = 105088
 
 
 class TestLemmyClient(unittest.TestCase):
-    comment_id: int
-    post_id: int
-    result_daily_thread: DailyThreadsRecord
-    lemmy_client: LemmyClient
+    comment_id: int = None
+    post_id: int = None
+    result_daily_thread: DailyThreadsRecord = None
+    lemmy_client: LemmyClient = None
 
     def setUp(self) -> None:
         environment_util = EnvironmentUtil()
