@@ -16,12 +16,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run unit tests
+      - name: Create .env file
         env:
-          BOT_NAME: nhl_gdt_bot
-          PASSWORD: ${{ secrets.TEST_SECRET }}
-          LEMMY_INSTANCE: lemmy.world
-          COMMUNITY_NAME: test5677754@lemmy.world
-          GDT_POST_TYPES: POSTSEASON,ALLSTAR,PRESEASON,REGULAR
+          LEMMY_PASSWORD: ${{ secrets.TEST_SECRET }}
+        run: |
+          echo "BOT_NAME=nhl_gdt_bot" >> .env
+          echo "PASSWORD=$LEMMY_PASSWORD" >> .env
+          echo "LEMMY_INSTANCE=lemmy.world" >> .env
+          echo "COMMUNITY_NAME=test5677754@lemmy.world" >> .env
+          echo "GDT_POST_TYPES=POSTSEASON,ALLSTAR,PRESEASON,REGULAR" >> .env
+      - name: Run unit tests
         run: |
           pytest
