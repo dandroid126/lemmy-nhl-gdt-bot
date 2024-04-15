@@ -13,7 +13,8 @@ from src.utils import datetime_util
 from src.utils.environment_util import EnvironmentUtil
 from src.utils.lemmy_client import LemmyClient
 
-TEST_POST_ID = 105088
+# This is a post ID for a dummy post on lemmy.world that is safe to spam comments to
+TEST_POST_ID = 14305925
 
 
 class TestLemmyClient(unittest.TestCase):

@@ -66,6 +66,7 @@ class TestHandleDailyThread(unittest.TestCase):
         lemmy_client_update_daily_thread = lemmy_client.update_daily_thread
         post_util_get_daily_thread_title = post_util.get_daily_thread_title
         post_util_get_daily_thread_body = post_util.get_daily_thread_body
+        datetime_util_is_same_day = datetime_util.is_same_day
 
         # Set up
         games = [Game(2023020193, None, None, datetime.now(), None, None, None, None, None, None), Game(2023020194, None, None, datetime.now(), None, None, None, None, None, None)]
@@ -74,6 +75,7 @@ class TestHandleDailyThread(unittest.TestCase):
         lemmy_client.update_daily_thread = MagicMock(return_value=daily_thread)
         post_util.get_daily_thread_title = MagicMock(return_value="title")
         post_util.get_daily_thread_body = MagicMock(return_value="body")
+        datetime_util.is_same_day = MagicMock(return_value=True)
 
         # Execute
         result = main.handle_daily_thread(games)
@@ -87,6 +89,7 @@ class TestHandleDailyThread(unittest.TestCase):
         lemmy_client.update_daily_thread = lemmy_client_update_daily_thread
         post_util.get_daily_thread_title = post_util_get_daily_thread_title
         post_util.get_daily_thread_body = post_util_get_daily_thread_body
+        datetime_util.is_same_day = datetime_util_is_same_day
 
     def test_create_new_daily_thread(self):
         # Save old values
@@ -95,6 +98,7 @@ class TestHandleDailyThread(unittest.TestCase):
         lemmy_client_feature_daily_thread = lemmy_client.feature_daily_thread
         post_util_get_daily_thread_title = post_util.get_daily_thread_title
         post_util_get_daily_thread_body = post_util.get_daily_thread_body
+        datetime_util_is_same_day = datetime_util.is_same_day
 
         # Set up
         games = [Game(2023020193, None, None, datetime.now(), None, None, None, None, None, None), Game(2023020194, None, None, datetime.now(), None, None, None, None, None, None)]
@@ -104,6 +108,7 @@ class TestHandleDailyThread(unittest.TestCase):
         lemmy_client.feature_daily_thread = MagicMock(return_value=None)
         post_util.get_daily_thread_title = MagicMock(return_value="title")
         post_util.get_daily_thread_body = MagicMock(return_value="body")
+        datetime_util.is_same_day = MagicMock(return_value=True)
 
         # Execute
         result = main.handle_daily_thread(games)
@@ -119,6 +124,7 @@ class TestHandleDailyThread(unittest.TestCase):
         lemmy_client.feature_daily_thread = lemmy_client_feature_daily_thread
         post_util.get_daily_thread_title = post_util_get_daily_thread_title
         post_util.get_daily_thread_body = post_util_get_daily_thread_body
+        datetime_util.is_same_day = datetime_util_is_same_day
 
 
 class TestHandleGameDayThread(unittest.TestCase):
