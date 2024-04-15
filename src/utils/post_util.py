@@ -14,6 +14,7 @@ TIME_CLOCK = 'Time Clock'
 TEAM = 'Team'
 TOTAL = 'Total'
 SO = 'SO'
+REGULATION_FINAL_PERIOD = "3rd"
 SHOTS = 'Shots'
 HITS = 'Hits'
 BLOCKED = 'Blocked'
@@ -132,7 +133,14 @@ def get_formatted_time_clock_time(game_info: GameInfo) -> str:
     Returns:
         str: The formatted time clock time
     """
-    return f"{f'{game_info.current_period} - ' if not game_info.game_clock.lower() == FINAL.lower() and game_info.is_game_started() else ''}{game_info.game_clock}"
+    game_clock = ""
+    is_final = game_info.game_clock.lower() == FINAL.lower()
+    if not is_final and game_info.is_game_started():
+        game_clock += f'{game_info.current_period} - '
+    game_clock += game_info.game_clock
+    if is_final and game_info.current_period != REGULATION_FINAL_PERIOD:
+        game_clock += f" - {game_info.current_period}"
+    return game_clock
 
 
 def get_formatted_game_start_time(start_time: datetime) -> str:
