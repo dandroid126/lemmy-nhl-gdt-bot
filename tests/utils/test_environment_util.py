@@ -1,8 +1,8 @@
 import unittest
 
-import test_constants
-from src.datatypes.teams import Teams
+import tests.test_constants as test_constants
 from src.datatypes.game import GameType
+from src.datatypes.teams import Teams
 from src.utils.environment_util import EnvironmentUtil
 
 EXAMPLE_ENV_FILE = f"{test_constants.TEST_RES_PATH}/environment_example"

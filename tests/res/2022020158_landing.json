@@ -2,20 +2,29 @@
     "id": 2022020158,
     "season": 20222023,
     "gameType": 2,
+    "limitedScoring": false,
     "gameDate": "2022-11-01",
     "venue": {
         "default": "SAP Center at San Jose"
+    },
+    "venueLocation": {
+        "default": "San Jose"
     },
     "startTimeUTC": "2022-11-02T02:30:00Z",
     "easternUTCOffset": "-04:00",
     "venueUTCOffset": "-07:00",
     "venueTimezone": "US/Pacific",
+    "periodDescriptor": {
+        "number": 5,
+        "periodType": "SO"
+    },
     "tvBroadcasts": [
         {
             "id": 309,
             "market": "N",
             "countryCode": "US",
-            "network": "ESPN"
+            "network": "ESPN",
+            "sequenceNumber": 1
         }
     ],
     "gameState": "OFF",
@@ -51,17 +60,10 @@
     "regPeriods": 3,
     "otInUse": true,
     "tiesInUse": false,
-    "clock": {
-        "timeRemaining": "00:00",
-        "secondsRemaining": 0,
-        "running": false,
-        "inIntermission": false
-    },
     "summary": {
         "linescore": {
             "byPeriod": [
                 {
-                    "period": 1,
                     "periodDescriptor": {
                         "number": 1,
                         "periodType": "REG"
@@ -70,7 +72,6 @@
                     "home": 2
                 },
                 {
-                    "period": 2,
                     "periodDescriptor": {
                         "number": 2,
                         "periodType": "REG"
@@ -79,7 +80,6 @@
                     "home": 2
                 },
                 {
-                    "period": 3,
                     "periodDescriptor": {
                         "number": 3,
                         "periodType": "REG"
@@ -88,7 +88,6 @@
                     "home": 1
                 },
                 {
-                    "period": 4,
                     "periodDescriptor": {
                         "number": 4,
                         "periodType": "OT"
@@ -97,7 +96,6 @@
                     "home": 0
                 },
                 {
-                    "period": 5,
                     "periodDescriptor": {
                         "number": 5,
                         "periodType": "SO"
@@ -121,7 +119,6 @@
         },
         "scoring": [
             {
-                "period": 1,
                 "periodDescriptor": {
                     "number": 1,
                     "periodType": "REG"
@@ -131,24 +128,42 @@
                         "situationCode": "1551",
                         "strength": "ev",
                         "playerId": 8474641,
-                        "firstName": "Adam",
-                        "lastName": "Henrique",
-                        "name": "A. Henrique",
-                        "teamAbbrev": "ANA",
+                        "firstName": {
+                            "default": "Adam"
+                        },
+                        "lastName": {
+                            "default": "Henrique"
+                        },
+                        "name": {
+                            "default": "A. Henrique"
+                        },
+                        "teamAbbrev": {
+                            "default": "ANA"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/ANA/8474641.png",
                         "highlightClip": 6335809960112,
+                        "highlightClipFr": 6335809960112,
                         "goalsToDate": 1,
                         "awayScore": 1,
                         "homeScore": 0,
-                        "leadingTeamAbbrev": "ANA",
+                        "leadingTeamAbbrev": {
+                            "default": "ANA"
+                        },
                         "timeInPeriod": "05:16",
                         "shotType": "wrist",
                         "goalModifier": "none",
                         "assists": [
                             {
                                 "playerId": 8474031,
-                                "firstName": "Kevin",
-                                "lastName": "Shattenkirk",
+                                "firstName": {
+                                    "default": "Kevin"
+                                },
+                                "lastName": {
+                                    "default": "Shattenkirk"
+                                },
+                                "name": {
+                                    "default": "K. Shattenkirk"
+                                },
                                 "assistsToDate": 3
                             }
                         ]
@@ -157,12 +172,21 @@
                         "situationCode": "1551",
                         "strength": "ev",
                         "playerId": 8474578,
-                        "firstName": "Erik",
-                        "lastName": "Karlsson",
-                        "name": "E. Karlsson",
-                        "teamAbbrev": "SJS",
+                        "firstName": {
+                            "default": "Erik"
+                        },
+                        "lastName": {
+                            "default": "Karlsson"
+                        },
+                        "name": {
+                            "default": "E. Karlsson"
+                        },
+                        "teamAbbrev": {
+                            "default": "SJS"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/SJS/8474578.png",
                         "highlightClip": 6335811710112,
+                        "highlightClipFr": 6335811710112,
                         "goalsToDate": 7,
                         "awayScore": 1,
                         "homeScore": 1,
@@ -172,14 +196,36 @@
                         "assists": [
                             {
                                 "playerId": 8478431,
-                                "firstName": "Evgeny",
-                                "lastName": "Svechnikov",
+                                "firstName": {
+                                    "default": "Evgeny",
+                                    "cs": "Jevgenij",
+                                    "sk": "Jevgenij"
+                                },
+                                "lastName": {
+                                    "default": "Svechnikov",
+                                    "cs": "Svečnikov",
+                                    "sk": "Svečnikov"
+                                },
+                                "name": {
+                                    "default": "E. Svechnikov",
+                                    "cs": "J. Svečnikov",
+                                    "sk": "J. Svečnikov"
+                                },
                                 "assistsToDate": 3
                             },
                             {
                                 "playerId": 8476881,
-                                "firstName": "Tomas",
-                                "lastName": "Hertl",
+                                "firstName": {
+                                    "default": "Tomas",
+                                    "cs": "Tomáš",
+                                    "sk": "Tomáš"
+                                },
+                                "lastName": {
+                                    "default": "Hertl"
+                                },
+                                "name": {
+                                    "default": "T. Hertl"
+                                },
                                 "assistsToDate": 6
                             }
                         ]
@@ -188,30 +234,55 @@
                         "situationCode": "1551",
                         "strength": "ev",
                         "playerId": 8474578,
-                        "firstName": "Erik",
-                        "lastName": "Karlsson",
-                        "name": "E. Karlsson",
-                        "teamAbbrev": "SJS",
+                        "firstName": {
+                            "default": "Erik"
+                        },
+                        "lastName": {
+                            "default": "Karlsson"
+                        },
+                        "name": {
+                            "default": "E. Karlsson"
+                        },
+                        "teamAbbrev": {
+                            "default": "SJS"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/SJS/8474578.png",
                         "highlightClip": 6335810655112,
+                        "highlightClipFr": 6335810655112,
                         "goalsToDate": 8,
                         "awayScore": 1,
                         "homeScore": 2,
-                        "leadingTeamAbbrev": "SJS",
+                        "leadingTeamAbbrev": {
+                            "default": "SJS"
+                        },
                         "timeInPeriod": "06:41",
                         "shotType": "slap",
                         "goalModifier": "none",
                         "assists": [
                             {
                                 "playerId": 8477034,
-                                "firstName": "Jaycob",
-                                "lastName": "Megna",
+                                "firstName": {
+                                    "default": "Jaycob"
+                                },
+                                "lastName": {
+                                    "default": "Megna"
+                                },
+                                "name": {
+                                    "default": "J. Megna"
+                                },
                                 "assistsToDate": 4
                             },
                             {
                                 "playerId": 8481477,
-                                "firstName": "Nico",
-                                "lastName": "Sturm",
+                                "firstName": {
+                                    "default": "Nico"
+                                },
+                                "lastName": {
+                                    "default": "Sturm"
+                                },
+                                "name": {
+                                    "default": "N. Sturm"
+                                },
                                 "assistsToDate": 1
                             }
                         ]
@@ -220,12 +291,21 @@
                         "situationCode": "1441",
                         "strength": "ev",
                         "playerId": 8478366,
-                        "firstName": "Frank",
-                        "lastName": "Vatrano",
-                        "name": "F. Vatrano",
-                        "teamAbbrev": "ANA",
+                        "firstName": {
+                            "default": "Frank"
+                        },
+                        "lastName": {
+                            "default": "Vatrano"
+                        },
+                        "name": {
+                            "default": "F. Vatrano"
+                        },
+                        "teamAbbrev": {
+                            "default": "ANA"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/ANA/8478366.png",
                         "highlightClip": 6335810159112,
+                        "highlightClipFr": 6335810159112,
                         "goalsToDate": 4,
                         "awayScore": 2,
                         "homeScore": 2,
@@ -235,14 +315,32 @@
                         "assists": [
                             {
                                 "playerId": 8480806,
-                                "firstName": "Isac",
-                                "lastName": "Lundestrom",
+                                "firstName": {
+                                    "default": "Isac"
+                                },
+                                "lastName": {
+                                    "default": "Lundestrom",
+                                    "cs": "Lundeström",
+                                    "sk": "Lundeström"
+                                },
+                                "name": {
+                                    "default": "I. Lundestrom",
+                                    "cs": "I. Lundeström",
+                                    "sk": "I. Lundeström"
+                                },
                                 "assistsToDate": 4
                             },
                             {
                                 "playerId": 8475164,
-                                "firstName": "Jakob",
-                                "lastName": "Silfverberg",
+                                "firstName": {
+                                    "default": "Jakob"
+                                },
+                                "lastName": {
+                                    "default": "Silfverberg"
+                                },
+                                "name": {
+                                    "default": "J. Silfverberg"
+                                },
                                 "assistsToDate": 1
                             }
                         ]
@@ -251,30 +349,55 @@
                         "situationCode": "1551",
                         "strength": "ev",
                         "playerId": 8474641,
-                        "firstName": "Adam",
-                        "lastName": "Henrique",
-                        "name": "A. Henrique",
-                        "teamAbbrev": "ANA",
+                        "firstName": {
+                            "default": "Adam"
+                        },
+                        "lastName": {
+                            "default": "Henrique"
+                        },
+                        "name": {
+                            "default": "A. Henrique"
+                        },
+                        "teamAbbrev": {
+                            "default": "ANA"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/ANA/8474641.png",
                         "highlightClip": 6335808677112,
+                        "highlightClipFr": 6335808677112,
                         "goalsToDate": 2,
                         "awayScore": 3,
                         "homeScore": 2,
-                        "leadingTeamAbbrev": "ANA",
+                        "leadingTeamAbbrev": {
+                            "default": "ANA"
+                        },
                         "timeInPeriod": "19:45",
                         "shotType": "backhand",
                         "goalModifier": "none",
                         "assists": [
                             {
                                 "playerId": 8481533,
-                                "firstName": "Trevor",
-                                "lastName": "Zegras",
+                                "firstName": {
+                                    "default": "Trevor"
+                                },
+                                "lastName": {
+                                    "default": "Zegras"
+                                },
+                                "name": {
+                                    "default": "T. Zegras"
+                                },
                                 "assistsToDate": 2
                             },
                             {
                                 "playerId": 8474031,
-                                "firstName": "Kevin",
-                                "lastName": "Shattenkirk",
+                                "firstName": {
+                                    "default": "Kevin"
+                                },
+                                "lastName": {
+                                    "default": "Shattenkirk"
+                                },
+                                "name": {
+                                    "default": "K. Shattenkirk"
+                                },
                                 "assistsToDate": 4
                             }
                         ]
@@ -282,7 +405,6 @@
                 ]
             },
             {
-                "period": 2,
                 "periodDescriptor": {
                     "number": 2,
                     "periodType": "REG"
@@ -292,12 +414,21 @@
                         "situationCode": "1451",
                         "strength": "pp",
                         "playerId": 8478414,
-                        "firstName": "Timo",
-                        "lastName": "Meier",
-                        "name": "T. Meier",
-                        "teamAbbrev": "SJS",
+                        "firstName": {
+                            "default": "Timo"
+                        },
+                        "lastName": {
+                            "default": "Meier"
+                        },
+                        "name": {
+                            "default": "T. Meier"
+                        },
+                        "teamAbbrev": {
+                            "default": "SJS"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/SJS/8478414.png",
                         "highlightClip": 6335810650112,
+                        "highlightClipFr": 6335810650112,
                         "goalsToDate": 2,
                         "awayScore": 3,
                         "homeScore": 3,
@@ -307,14 +438,28 @@
                         "assists": [
                             {
                                 "playerId": 8482222,
-                                "firstName": "Alexander",
-                                "lastName": "Barabanov",
+                                "firstName": {
+                                    "default": "Alexander"
+                                },
+                                "lastName": {
+                                    "default": "Barabanov"
+                                },
+                                "name": {
+                                    "default": "A. Barabanov"
+                                },
                                 "assistsToDate": 4
                             },
                             {
                                 "playerId": 8474578,
-                                "firstName": "Erik",
-                                "lastName": "Karlsson",
+                                "firstName": {
+                                    "default": "Erik"
+                                },
+                                "lastName": {
+                                    "default": "Karlsson"
+                                },
+                                "name": {
+                                    "default": "E. Karlsson"
+                                },
                                 "assistsToDate": 6
                             }
                         ]
@@ -323,30 +468,55 @@
                         "situationCode": "1551",
                         "strength": "ev",
                         "playerId": 8476458,
-                        "firstName": "Ryan",
-                        "lastName": "Strome",
-                        "name": "R. Strome",
-                        "teamAbbrev": "ANA",
+                        "firstName": {
+                            "default": "Ryan"
+                        },
+                        "lastName": {
+                            "default": "Strome"
+                        },
+                        "name": {
+                            "default": "R. Strome"
+                        },
+                        "teamAbbrev": {
+                            "default": "ANA"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/ANA/8476458.png",
                         "highlightClip": 6335810252112,
+                        "highlightClipFr": 6335810252112,
                         "goalsToDate": 2,
                         "awayScore": 4,
                         "homeScore": 3,
-                        "leadingTeamAbbrev": "ANA",
+                        "leadingTeamAbbrev": {
+                            "default": "ANA"
+                        },
                         "timeInPeriod": "15:10",
                         "shotType": "deflected",
                         "goalModifier": "none",
                         "assists": [
                             {
                                 "playerId": 8475906,
-                                "firstName": "John",
-                                "lastName": "Klingberg",
+                                "firstName": {
+                                    "default": "John"
+                                },
+                                "lastName": {
+                                    "default": "Klingberg"
+                                },
+                                "name": {
+                                    "default": "J. Klingberg"
+                                },
                                 "assistsToDate": 3
                             },
                             {
                                 "playerId": 8478873,
-                                "firstName": "Troy",
-                                "lastName": "Terry",
+                                "firstName": {
+                                    "default": "Troy"
+                                },
+                                "lastName": {
+                                    "default": "Terry"
+                                },
+                                "name": {
+                                    "default": "T. Terry"
+                                },
                                 "assistsToDate": 7
                             }
                         ]
@@ -355,12 +525,21 @@
                         "situationCode": "1551",
                         "strength": "ev",
                         "playerId": 8478414,
-                        "firstName": "Timo",
-                        "lastName": "Meier",
-                        "name": "T. Meier",
-                        "teamAbbrev": "SJS",
+                        "firstName": {
+                            "default": "Timo"
+                        },
+                        "lastName": {
+                            "default": "Meier"
+                        },
+                        "name": {
+                            "default": "T. Meier"
+                        },
+                        "teamAbbrev": {
+                            "default": "SJS"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/SJS/8478414.png",
                         "highlightClip": 6335810713112,
+                        "highlightClipFr": 6335810713112,
                         "goalsToDate": 3,
                         "awayScore": 4,
                         "homeScore": 4,
@@ -371,7 +550,6 @@
                 ]
             },
             {
-                "period": 3,
                 "periodDescriptor": {
                     "number": 3,
                     "periodType": "REG"
@@ -381,30 +559,55 @@
                         "situationCode": "1551",
                         "strength": "ev",
                         "playerId": 8480031,
-                        "firstName": "Max",
-                        "lastName": "Comtois",
-                        "name": "M. Comtois",
-                        "teamAbbrev": "ANA",
+                        "firstName": {
+                            "default": "Max"
+                        },
+                        "lastName": {
+                            "default": "Comtois"
+                        },
+                        "name": {
+                            "default": "M. Comtois"
+                        },
+                        "teamAbbrev": {
+                            "default": "ANA"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/ANA/8480031.png",
                         "highlightClip": 6335811310112,
+                        "highlightClipFr": 6335811310112,
                         "goalsToDate": 2,
                         "awayScore": 5,
                         "homeScore": 4,
-                        "leadingTeamAbbrev": "ANA",
+                        "leadingTeamAbbrev": {
+                            "default": "ANA"
+                        },
                         "timeInPeriod": "11:31",
                         "shotType": "wrist",
                         "goalModifier": "none",
                         "assists": [
                             {
                                 "playerId": 8478873,
-                                "firstName": "Troy",
-                                "lastName": "Terry",
+                                "firstName": {
+                                    "default": "Troy"
+                                },
+                                "lastName": {
+                                    "default": "Terry"
+                                },
+                                "name": {
+                                    "default": "T. Terry"
+                                },
                                 "assistsToDate": 8
                             },
                             {
                                 "playerId": 8476470,
-                                "firstName": "Nathan",
-                                "lastName": "Beaulieu",
+                                "firstName": {
+                                    "default": "Nathan"
+                                },
+                                "lastName": {
+                                    "default": "Beaulieu"
+                                },
+                                "name": {
+                                    "default": "N. Beaulieu"
+                                },
                                 "assistsToDate": 1
                             }
                         ]
@@ -413,12 +616,21 @@
                         "situationCode": "1560",
                         "strength": "ev",
                         "playerId": 8474578,
-                        "firstName": "Erik",
-                        "lastName": "Karlsson",
-                        "name": "E. Karlsson",
-                        "teamAbbrev": "SJS",
+                        "firstName": {
+                            "default": "Erik"
+                        },
+                        "lastName": {
+                            "default": "Karlsson"
+                        },
+                        "name": {
+                            "default": "E. Karlsson"
+                        },
+                        "teamAbbrev": {
+                            "default": "SJS"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/SJS/8474578.png",
                         "highlightClip": 6335810352112,
+                        "highlightClipFr": 6335810352112,
                         "goalsToDate": 9,
                         "awayScore": 5,
                         "homeScore": 5,
@@ -428,14 +640,30 @@
                         "assists": [
                             {
                                 "playerId": 8482222,
-                                "firstName": "Alexander",
-                                "lastName": "Barabanov",
+                                "firstName": {
+                                    "default": "Alexander"
+                                },
+                                "lastName": {
+                                    "default": "Barabanov"
+                                },
+                                "name": {
+                                    "default": "A. Barabanov"
+                                },
                                 "assistsToDate": 5
                             },
                             {
                                 "playerId": 8476881,
-                                "firstName": "Tomas",
-                                "lastName": "Hertl",
+                                "firstName": {
+                                    "default": "Tomas",
+                                    "cs": "Tomáš",
+                                    "sk": "Tomáš"
+                                },
+                                "lastName": {
+                                    "default": "Hertl"
+                                },
+                                "name": {
+                                    "default": "T. Hertl"
+                                },
                                 "assistsToDate": 7
                             }
                         ]
@@ -443,7 +671,6 @@
                 ]
             },
             {
-                "period": 4,
                 "periodDescriptor": {
                     "number": 4,
                     "periodType": "OT"
@@ -451,7 +678,6 @@
                 "goals": []
             },
             {
-                "period": 5,
                 "periodDescriptor": {
                     "number": 5,
                     "periodType": "SO"
@@ -461,15 +687,25 @@
                         "situationCode": "0101",
                         "strength": "ev",
                         "playerId": 8478873,
-                        "firstName": "Troy",
-                        "lastName": "Terry",
-                        "name": "T. Terry",
-                        "teamAbbrev": "ANA",
+                        "firstName": {
+                            "default": "Troy"
+                        },
+                        "lastName": {
+                            "default": "Terry"
+                        },
+                        "name": {
+                            "default": "T. Terry"
+                        },
+                        "teamAbbrev": {
+                            "default": "ANA"
+                        },
                         "headshot": "https://assets.nhle.com/mugs/nhl/20222023/ANA/8478873.png",
                         "goalsToDate": 4,
                         "awayScore": 6,
                         "homeScore": 5,
-                        "leadingTeamAbbrev": "ANA",
+                        "leadingTeamAbbrev": {
+                            "default": "ANA"
+                        },
                         "timeInPeriod": "00:00",
                         "shotType": "backhand",
                         "goalModifier": "none",
@@ -541,8 +777,6 @@
                 "teamAbbrev": "SJS",
                 "headshot": "https://assets.nhle.com/mugs/nhl/20222023/SJS/8474578.png",
                 "name": "E. Karlsson",
-                "firstName": "Erik",
-                "lastName": "Karlsson",
                 "sweaterNo": 65,
                 "position": "D",
                 "goals": 3,
@@ -555,8 +789,6 @@
                 "teamAbbrev": "SJS",
                 "headshot": "https://assets.nhle.com/mugs/nhl/20222023/SJS/8478414.png",
                 "name": "T. Meier",
-                "firstName": "Timo",
-                "lastName": "Meier",
                 "sweaterNo": 28,
                 "position": "R",
                 "goals": 2,
@@ -569,8 +801,6 @@
                 "teamAbbrev": "SJS",
                 "headshot": "https://assets.nhle.com/mugs/nhl/20222023/SJS/8476881.png",
                 "name": "T. Hertl",
-                "firstName": "Tomas",
-                "lastName": "Hertl",
                 "sweaterNo": 48,
                 "position": "C",
                 "goals": 0,
@@ -581,13 +811,13 @@
         "teamGameStats": [
             {
                 "category": "sog",
-                "awayValue": "44",
-                "homeValue": "44"
+                "awayValue": 44,
+                "homeValue": 44
             },
             {
-                "category": "faceoffPctg",
-                "awayValue": "55.4",
-                "homeValue": "44.6"
+                "category": "faceoffWinningPctg",
+                "awayValue": 0.553846,
+                "homeValue": 0.446154
             },
             {
                 "category": "powerPlay",
@@ -595,34 +825,38 @@
                 "homeValue": "1/3"
             },
             {
+                "category": "powerPlayPctg",
+                "awayValue": 0.000000,
+                "homeValue": 0.333333
+            },
+            {
                 "category": "pim",
-                "awayValue": "23",
-                "homeValue": "15"
+                "awayValue": 23,
+                "homeValue": 15
             },
             {
                 "category": "hits",
-                "awayValue": "19",
-                "homeValue": "16"
+                "awayValue": 19,
+                "homeValue": 16
             },
             {
                 "category": "blockedShots",
-                "awayValue": "9",
-                "homeValue": "17"
+                "awayValue": 9,
+                "homeValue": 17
             },
             {
                 "category": "giveaways",
-                "awayValue": "10",
-                "homeValue": "10"
+                "awayValue": 10,
+                "homeValue": 10
             },
             {
                 "category": "takeaways",
-                "awayValue": "10",
-                "homeValue": "10"
+                "awayValue": 10,
+                "homeValue": 10
             }
         ],
         "shotsByPeriod": [
             {
-                "period": 1,
                 "periodDescriptor": {
                     "number": 1,
                     "periodType": "REG"
@@ -631,7 +865,6 @@
                 "home": 10
             },
             {
-                "period": 2,
                 "periodDescriptor": {
                     "number": 2,
                     "periodType": "REG"
@@ -640,7 +873,6 @@
                 "home": 18
             },
             {
-                "period": 3,
                 "periodDescriptor": {
                     "number": 3,
                     "periodType": "REG"
@@ -649,7 +881,6 @@
                 "home": 14
             },
             {
-                "period": 4,
                 "periodDescriptor": {
                     "number": 4,
                     "periodType": "OT"
@@ -658,7 +889,6 @@
                 "home": 2
             },
             {
-                "period": 5,
                 "periodDescriptor": {
                     "number": 5,
                     "periodType": "SO"
@@ -669,7 +899,6 @@
         ],
         "penalties": [
             {
-                "period": 1,
                 "periodDescriptor": {
                     "number": 1,
                     "periodType": "REG"
@@ -696,7 +925,6 @@
                 ]
             },
             {
-                "period": 2,
                 "periodDescriptor": {
                     "number": 2,
                     "periodType": "REG"
@@ -777,7 +1005,6 @@
                 ]
             },
             {
-                "period": 3,
                 "periodDescriptor": {
                     "number": 3,
                     "periodType": "REG"
@@ -794,7 +1021,6 @@
                 ]
             },
             {
-                "period": 4,
                 "periodDescriptor": {
                     "number": 4,
                     "periodType": "OT"
@@ -841,7 +1067,7 @@
                     "running": false,
                     "inIntermission": false
                 },
-                "period": 5,
+                "gameCenterLink": "/gamecenter/ana-vs-sjs/2022/11/01/2022020158",
                 "periodDescriptor": {
                     "number": 5,
                     "periodType": "SO"
@@ -878,7 +1104,7 @@
                     "running": false,
                     "inIntermission": false
                 },
-                "period": 5,
+                "gameCenterLink": "/gamecenter/ana-vs-sjs/2022/11/05/2022020188",
                 "periodDescriptor": {
                     "number": 5,
                     "periodType": "SO"
@@ -915,7 +1141,7 @@
                     "running": false,
                     "inIntermission": false
                 },
-                "period": 3,
+                "gameCenterLink": "/gamecenter/sjs-vs-ana/2022/12/09/2022020433",
                 "periodDescriptor": {
                     "number": 3,
                     "periodType": "REG"
@@ -952,7 +1178,7 @@
                     "running": false,
                     "inIntermission": false
                 },
-                "period": 4,
+                "gameCenterLink": "/gamecenter/sjs-vs-ana/2023/01/06/2022020627",
                 "periodDescriptor": {
                     "number": 4,
                     "periodType": "OT"
@@ -1040,9 +1266,32 @@
                 ]
             }
         },
-        "gameVideo": {
-            "threeMinRecap": 6336344502112,
-            "condensedGame": 6336343530112
+        "gameReports": {
+            "gameSummary": "https://www.nhl.com/scores/htmlreports/20222023/GS020158.HTM",
+            "eventSummary": "https://www.nhl.com/scores/htmlreports/20222023/ES020158.HTM",
+            "playByPlay": "https://www.nhl.com/scores/htmlreports/20222023/PL020158.HTM",
+            "faceoffSummary": "https://www.nhl.com/scores/htmlreports/20222023/FS020158.HTM",
+            "faceoffComparison": "https://www.nhl.com/scores/htmlreports/20222023/FC020158.HTM",
+            "rosters": "https://www.nhl.com/scores/htmlreports/20222023/RO020158.HTM",
+            "shotSummary": "https://www.nhl.com/scores/htmlreports/20222023/SS020158.HTM",
+            "shootoutSummary": "https://www.nhl.com/scores/htmlreports/20222023/SO020158.HTM",
+            "shiftChart": "https://www.nhl.com/stats/shiftcharts?id=2022020158",
+            "toiAway": "https://www.nhl.com/scores/htmlreports/20222023/TV020158.HTM",
+            "toiHome": "https://www.nhl.com/scores/htmlreports/20222023/TH020158.HTM"
+        },
+        "seasonSeriesWins": {
+            "awayTeamWins": 3,
+            "homeTeamWins": 1
         }
+    },
+    "clock": {
+        "timeRemaining": "00:00",
+        "secondsRemaining": 0,
+        "running": false,
+        "inIntermission": false
+    },
+    "gameVideo": {
+        "threeMinRecap": 6336344502112,
+        "condensedGame": 6336343530112
     }
 }

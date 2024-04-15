@@ -122,6 +122,16 @@ class LemmyClient:
         """
         self.lemmy.post.edit(post_id=post_id, name=title, body=body)
 
+    def delete_post(self, post_id: int) -> Optional[dict]:
+        """
+        Deletes a post.
+
+        Args:
+            post_id (int): The ID of the post to delete.
+
+        """
+        return self.lemmy.post.delete(post_id=post_id, deleted=True)
+
     def create_comment(self, post_id: int, game_id: int, content: str) -> int:
         """
         Creates a comment.
@@ -153,6 +163,18 @@ class LemmyClient:
             None
         """
         self.lemmy.comment.edit(comment_id=comment_id, content=content)
+
+    def delete_comment(self, comment_id: int) -> Optional[dict]:
+        """
+        Deletes a comment.
+
+        Args:
+            comment_id (int): The ID of the comment to delete.
+
+        Returns:
+            None
+        """
+        return self.lemmy.comment.delete(comment_id=comment_id, deleted=True)
 
     def feature_daily_thread(self, post_id: int):
         """

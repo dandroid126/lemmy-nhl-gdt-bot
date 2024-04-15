@@ -1,8 +1,8 @@
 import os
 import unittest
 
+import tests.test_constants as test_constants
 from src.db.db_manager import DbManager
-from tests import test_constants
 
 
 class TestDbClient(unittest.TestCase):

@@ -1,9 +1,9 @@
 import os
 import unittest
 
+import tests.test_constants as test_constants
 from src.db.db_manager import DbManager
 from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao
-from tests import test_constants
 
 
 class TestGameDayThreadsClient(unittest.TestCase):

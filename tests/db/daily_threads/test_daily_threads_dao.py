@@ -4,7 +4,7 @@ import sys
 import unittest
 import uuid
 
-import test_constants
+import tests.test_constants as test_constants
 from src.db.daily_threads.daily_threads_dao import DailyThreadsDao
 from src.db.db_manager import DbManager
 from src.utils import datetime_util
