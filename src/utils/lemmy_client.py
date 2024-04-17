@@ -8,7 +8,7 @@ from src.db.comments.comments_dao import CommentsDao, comments_dao
 from src.db.daily_threads.daily_threads_dao import DailyThreadsDao, daily_threads_dao
 from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
 from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao, game_day_threads_dao
-from src.utils import logger
+from src.utils.log_util import LOGGER
 from src.utils.environment_util import environment_util
 
 TAG = 'LemmyClient'
@@ -52,7 +52,7 @@ class LemmyClient:
         self.lemmy.log_in(self.bot_name, self.password)
         self.community_id = self.lemmy.discover_community(self.community_name)
         if self.community_id is None:
-            logger.e(TAG, f"__init__(): Community {community_name} not found")
+            LOGGER.e(TAG, f"__init__(): Community {community_name} not found")
             raise ValueError(f"Community {community_name} not found")
 
     def create_game_day_thread(self, title: str, body: str, game_id: int) -> int:
@@ -71,7 +71,7 @@ class LemmyClient:
         post_id = pydash.get(self.lemmy.post.create(self.community_id, name=title, body=body),
                              f"{DICT_KEY_POST_VIEW}.{DICT_KEY_POST}.{DICT_KEY_ID}", -1)
         if post_id == -1:
-            logger.e(TAG, f"create_game_day_thread(): Failed to create post for game {game_id}")
+            LOGGER.e(TAG, f"create_game_day_thread(): Failed to create post for game {game_id}")
             return -1
         return self.client_game_day_threads_dao.insert_game_day_thread(post_id, game_id)
 
@@ -104,7 +104,7 @@ class LemmyClient:
         post_id = pydash.get(self.lemmy.post.create(self.community_id, name=title, body=body),
                              f"{DICT_KEY_POST_VIEW}.{DICT_KEY_POST}.{DICT_KEY_ID}", -1)
         if post_id == -1:
-            logger.e(TAG, f"create_daily_thread(): Failed to create daily thread for date: {date}")
+            LOGGER.e(TAG, f"create_daily_thread(): Failed to create daily thread for date: {date}")
             return None
         return self.client_daily_threads_dao.insert_daily_thread(post_id, date, False)
 
@@ -147,7 +147,7 @@ class LemmyClient:
         # TODO: update to return comment record instead of comment id
         comment_id = pydash.get(self.lemmy.comment.create(post_id=post_id, content=content), f"comment_view.comment.id", -1)
         if comment_id == -1:
-            logger.e(TAG, f"create_comment(): Failed to create comment. post_id: {post_id}; game_id: {game_id}")
+            LOGGER.e(TAG, f"create_comment(): Failed to create comment. post_id: {post_id}; game_id: {game_id}")
             return -1
         return self.client_comments_dao.insert_comment(comment_id, game_id)
 

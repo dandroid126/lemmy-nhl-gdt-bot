@@ -5,7 +5,7 @@ import os
 
 from src.datatypes.teams import Teams, Team
 from src.datatypes.game import GameType
-from src.utils import logger
+import logging
 
 TAG = "EnvironmentUtil"
 
@@ -18,7 +18,12 @@ class EnvironmentUtil:
     _COMMENT_POST_TYPES = 'COMMENT_POST_TYPES'
     _GDT_POST_TYPES = 'GDT_POST_TYPES'
     _TEAMS = 'TEAMS'
-    _ENVIRONMENT_VARIABLE_NAMES = [_BOT_NAME, _PASSWORD, _LEMMY_INSTANCE, _COMMUNITY_NAME, _COMMENT_POST_TYPES, _GDT_POST_TYPES, _TEAMS]
+    _LOG_LEVEL = 'LOG_LEVEL'
+    _LOG_FILE_MAX_MB = 'LOG_FILE_MAX_MB'
+    _LOG_FILE_BACKUP_COUNT = 'LOG_FILE_BACKUP_COUNT'
+    _ERROR_BACKUP_COUNT = 'ERROR_BACKUP_COUNT'
+
+    _ENVIRONMENT_VARIABLE_NAMES = [_BOT_NAME, _PASSWORD, _LEMMY_INSTANCE, _COMMUNITY_NAME, _COMMENT_POST_TYPES, _GDT_POST_TYPES, _TEAMS, _LOG_LEVEL, _LOG_FILE_MAX_MB, _LOG_FILE_BACKUP_COUNT, _ERROR_BACKUP_COUNT]
 
     def __init__(self, dotenv_path: Optional[str] = None):
         """
@@ -41,9 +46,14 @@ class EnvironmentUtil:
         self.comment_post_types = self.parse_game_types(os.getenv(self._COMMENT_POST_TYPES))
         self.gdt_post_types = self.parse_game_types(os.getenv(self._GDT_POST_TYPES))
         self.teams = self.parse_teams(os.getenv(self._TEAMS))
+        log_level = os.getenv(self._LOG_LEVEL)
+        self.log_level = logging.getLevelName(log_level) if log_level else logging.DEBUG
+        self.log_file_max_mb = self.cast_int_with_default(os.getenv(self._LOG_FILE_MAX_MB), 1)
+        self.log_file_backup_count = self.cast_int_with_default(os.getenv(self._LOG_FILE_BACKUP_COUNT), 10)
+        self.error_backup_count = self.cast_int_with_default(os.getenv(self._ERROR_BACKUP_COUNT), 2)
         if not self.lemmy_instance.startswith('https://'):
             self.lemmy_instance = f"https://{self.lemmy_instance}"
-        logger.i(TAG, "Environment loaded")
+        # constants.LOGGER.i(TAG, "Environment loaded")
 
     @staticmethod
     def parse_game_types(game_types: str):
@@ -75,6 +85,25 @@ class EnvironmentUtil:
             return [Teams[team].value for team in teams.split(',')]
         else:
             return Teams.get_all_teams()
+
+    @staticmethod
+    def cast_int_with_default(value: str | None, default: int) -> int:
+        """
+        Cast the value to an int with a default value.
+
+        Args:
+            value (str | None): The value to cast.
+            default (int): The default value.
+
+        Returns:
+            The casted value.
+        """
+        if value is None:
+            return default
+        try:
+            return int(value)
+        except ValueError:
+            return default
 
 
 # Set the environment_util instance to be used globally

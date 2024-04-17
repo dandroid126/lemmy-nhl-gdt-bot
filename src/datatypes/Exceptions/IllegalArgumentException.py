@@ -1,4 +1,4 @@
-from src.utils import logger
+from src.utils.log_util import LOGGER
 
 
 class IllegalArgumentException(Exception):
@@ -14,5 +14,5 @@ class IllegalArgumentException(Exception):
         None
         """
         self.message = message
-        logger.e(tag, self.message)
+        LOGGER.e(tag, self.message)
         super().__init__(message)

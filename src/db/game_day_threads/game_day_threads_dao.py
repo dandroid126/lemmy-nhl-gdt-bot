@@ -2,7 +2,7 @@ from typing import Optional
 
 from src.db.db_manager import DbManager, db_manager
 from src.db.game_day_threads.game_day_threads_record import GameDayThreadRecord
-from src.utils import logger
+from src.utils.log_util import LOGGER
 
 # Keeping these here for reference, but don't use them because formatted strings in queries are bad.
 # TABLE_POSTS = 'game_day_threads'
@@ -34,7 +34,7 @@ class GameDayThreadsDao:
         """
         query = "SELECT * FROM game_day_threads WHERE game_id=?"
         params = (game_id,)
-        logger.i(TAG, f"get_post_id(): executing {query} with params {params}")
+        LOGGER.i(TAG, f"get_post_id(): executing {query} with params {params}")
         val = self.db_manager.cursor.execute(query, params).fetchone()
         if val is not None:
             return GameDayThreadRecord(val[0], val[1])
@@ -53,7 +53,7 @@ class GameDayThreadsDao:
         """
         query = "INSERT INTO game_day_threads VALUES(?, ?)"
         params = (post_id, game_id)
-        logger.i(TAG, f"insert_post(): executing {query} with params {params}")
+        LOGGER.i(TAG, f"insert_post(): executing {query} with params {params}")
         self.db_manager.cursor.execute(query, params)
         self.db_manager.connection.commit()
         return post_id

@@ -3,6 +3,7 @@ FROM docker.io/python:3.11-alpine3.18
 WORKDIR /app
 RUN adduser -D python
 RUN install -d -m 700 -o python -g python out
+RUN apk add --no-cache git
 COPY src src
 COPY requirements.txt requirements.txt
 

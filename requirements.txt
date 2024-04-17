@@ -1,8 +1,9 @@
+dandroid126-logger @ git+https://github.com/dandroid126/logger@92cb10da2dc15ac2e4ba833e37710c80628335f9
+inflect==7.0.0
 python-dotenv==1.0.0
 pytz==2023.3.post1
 pythorhead==0.20.0
-requests==2.31.0
 pytest==7.4.4
 python-dateutil==2.8.2
 pydash==7.0.6
-inflect==7.0.0
+requests==2.31.0

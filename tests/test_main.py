@@ -10,7 +10,7 @@ from src.db.daily_threads.daily_threads_dao import daily_threads_dao
 from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
 from src.db.game_day_threads.game_day_threads_dao import game_day_threads_dao
 from src.utils import datetime_util
-from src.utils import logger
+from src.utils.log_util import LOGGER
 from src.utils import post_util
 from src.utils.environment_util import environment_util
 from src.utils.lemmy_client import lemmy_client
@@ -241,7 +241,7 @@ class TestHandleGameDayThread(unittest.TestCase):
         game_day_threads_dao.get_game_day_thread = MagicMock(return_value=post)
         lemmy_client.update_game_day_thread = MagicMock()
         datetime_util.is_time_to_make_post = MagicMock(return_value=False)
-        logger.i = MagicMock()
+        LOGGER.i = MagicMock()
 
         # Execute
         main.handle_game_day_thread(game)
@@ -249,7 +249,7 @@ class TestHandleGameDayThread(unittest.TestCase):
         # Verify
         game_day_threads_dao.get_game_day_thread.assert_called_once_with(2023020193)
         datetime_util.is_time_to_make_post.assert_called_once()
-        logger.i.assert_called_once()
+        LOGGER.i.assert_called_once()
 
         # Restore
         post_util.get_title = old_post_util_get_title
@@ -296,24 +296,24 @@ class TestHandleGameDayThread(unittest.TestCase):
 class TestHandleComment(unittest.TestCase):
     def test_handle_comment_game_and_daily_thread_none(self):
         # Save old values
-        old_logger_d = logger.d
+        old_logger_d = LOGGER.d
         old_lemmy_client_create_comment = lemmy_client.create_comment
 
         # Set up
         daily_thread = None
         game = None
-        logger.d = MagicMock()
+        LOGGER.d = MagicMock()
         lemmy_client.create_comment = MagicMock()
 
         # Execute
         main.handle_comment(daily_thread, game)
 
         # Verify
-        logger.d.assert_called_once_with("main", "Game or daily thread is None. Don't make a post. daily_thread is None: True, game is None: True")
+        LOGGER.d.assert_called_once_with("main", "Game or daily thread is None. Don't make a post. daily_thread is None: True, game is None: True")
         lemmy_client.create_comment.assert_not_called()
 
         # Restore
-        logger.d = old_logger_d
+        LOGGER.d = old_logger_d
         lemmy_client.create_comment = old_lemmy_client_create_comment
 
     def test_handle_comment_existing_comment_time_to_make_post(self):
@@ -377,7 +377,7 @@ class TestHandleComment(unittest.TestCase):
         old_datetime_util_is_time_to_make_post = datetime_util.is_time_to_make_post
         old_lemmy_client_update_comment = lemmy_client.update_comment
         old_lemmy_client_create_comment = lemmy_client.create_comment
-        old_logger_i = logger.i
+        old_logger_i = LOGGER.i
 
         # Set up
         game = Game(2023020193, None, None, datetime.now(), None, None, None, None, None, None)
@@ -386,7 +386,7 @@ class TestHandleComment(unittest.TestCase):
         datetime_util.is_time_to_make_post = MagicMock(return_value=False)
         lemmy_client.create_comment = MagicMock()
         lemmy_client.update_comment = MagicMock()
-        logger.i = MagicMock()
+        LOGGER.i = MagicMock()
 
 
         # Execute
@@ -395,14 +395,14 @@ class TestHandleComment(unittest.TestCase):
         # Verify
         lemmy_client.update_comment.assert_not_called()
         lemmy_client.create_comment.assert_not_called()
-        logger.i.assert_called_once()
+        LOGGER.i.assert_called_once()
 
         # Restore
         comments_dao.get_comment = old_comments_dao_get_comment
         datetime_util.is_time_to_make_post = old_datetime_util_is_time_to_make_post
         lemmy_client.update_comment = old_lemmy_client_update_comment
         lemmy_client.create_comment = old_lemmy_client_create_comment
-        logger.i = old_logger_i
+        LOGGER.i = old_logger_i
 
 
 if __name__ == '__main__':

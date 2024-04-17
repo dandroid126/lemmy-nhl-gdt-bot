@@ -2,7 +2,7 @@ import sqlite3
 from sqlite3 import Error
 
 from src.utils import constants
-from src.utils import logger
+from src.utils.log_util import LOGGER
 
 global connection
 global cursor
@@ -32,9 +32,9 @@ class DbManager:
         try:
             self.connection = sqlite3.connect(path_to_db)
             self.cursor = self.connection.cursor()
-            logger.i(TAG, "__init__(): Connection to SQLite DB successful")
+            LOGGER.i(TAG, "__init__(): Connection to SQLite DB successful")
         except Error as e:
-            logger.e(TAG, "__init__(): Error occurred", e)
+            LOGGER.e(TAG, "__init__(): Error occurred", e)
 
         self.upgrade_db_schema()
 
@@ -44,7 +44,7 @@ class DbManager:
 
         Note: This function assumes that a database connection has already been established.
         """
-        logger.w(TAG, "create_tables(): create_tables: creating tables")
+        LOGGER.w(TAG, "create_tables(): create_tables: creating tables")
 
         # Create posts table
         self.cursor.execute(
@@ -73,7 +73,7 @@ class DbManager:
 
         Note: This function assumes that a database connection has already been established.
         """
-        logger.w(TAG, "upgrade_db_to_version_2(): upgrading db to version 2")
+        LOGGER.w(TAG, "upgrade_db_to_version_2(): upgrading db to version 2")
 
         self.cursor.execute(
             """
@@ -101,7 +101,7 @@ class DbManager:
             "ALTER TABLE game_day_threads DROP COLUMN post_type"
         )
 
-        logger.d(TAG, "upgrade_db_to_version_2(): completed")
+        LOGGER.d(TAG, "upgrade_db_to_version_2(): completed")
 
     def upgrade_db_to_version_3(self):
         """
@@ -112,9 +112,9 @@ class DbManager:
 
         Note: This function assumes that a database connection has already been established.
         """
-        logger.w(TAG, "upgrade_db_to_version_3(): upgrading db to version 3")
+        LOGGER.w(TAG, "upgrade_db_to_version_3(): upgrading db to version 3")
         self.cursor.execute("ALTER TABLE daily_threads ADD COLUMN is_featured BOOLEAN NOT NULL DEFAULT false")
-        logger.d(TAG, "upgrade_db_to_version_3: ")
+        LOGGER.d(TAG, "upgrade_db_to_version_3: ")
 
     def set_db_schema_version(self, version: int) -> bool:
         """
@@ -144,13 +144,13 @@ class DbManager:
             int: The version of the database schema.
         """
         query = "SELECT version FROM db_schema WHERE rowid = '0'"
-        logger.i(TAG, f"get_db_schema_version(): executing: {query}")
+        LOGGER.i(TAG, f"get_db_schema_version(): executing: {query}")
         try:
             val = self.cursor.execute(query).fetchone()
             if val is not None:
                 return val[0]
         except sqlite3.OperationalError:
-            logger.i(TAG, "get_db_schema_version(): db_schema table not found. Assuming db_schema version is 0")
+            LOGGER.i(TAG, "get_db_schema_version(): db_schema table not found. Assuming db_schema version is 0")
             return 0
         return 0
 

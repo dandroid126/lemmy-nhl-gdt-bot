@@ -2,7 +2,7 @@ from typing import Optional
 
 from src.db.comments.comments_record import CommentsRecord
 from src.db.db_manager import db_manager, DbManager
-from src.utils import logger
+from src.utils.log_util import LOGGER
 
 # Keeping these here for reference, but don't use them because formatted strings in queries are bad.
 # TABLE_COMMENTS = 'comments'
@@ -34,7 +34,7 @@ class CommentsDao:
         """
         query = "SELECT * FROM comments WHERE game_id=?"
         params = (game_id,)
-        logger.i(TAG, f"get_comment_id(): executing {query} with params {params}")
+        LOGGER.i(TAG, f"get_comment_id(): executing {query} with params {params}")
         val = self.db_manager.cursor.execute(query, params).fetchone()
         if val is not None:
             return CommentsRecord(val[0], val[1])
@@ -53,7 +53,7 @@ class CommentsDao:
         """
         query = "INSERT INTO comments VALUES(?, ?)"
         params = (comment_id, game_id)
-        logger.i(TAG, f"insert_comment(): executing {query} with params {params}")
+        LOGGER.i(TAG, f"insert_comment(): executing {query} with params {params}")
         self.db_manager.cursor.execute(query, params)
         self.db_manager.connection.commit()
         return comment_id

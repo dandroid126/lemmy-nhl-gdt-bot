@@ -2,9 +2,9 @@ import json
 from enum import Enum
 from typing import Optional
 
+import inflect
 import pydash
 import requests
-import inflect
 
 from src.datatypes.Exceptions.IllegalArgumentException import IllegalArgumentException
 from src.datatypes.game import Game
@@ -15,7 +15,8 @@ from src.datatypes.period import Period
 from src.datatypes.shootout import Shootout
 from src.datatypes.team_stats import TeamStats
 from src.datatypes.teams import Teams, get_team_from_id
-from src.utils import logger, datetime_util
+from src.utils import datetime_util
+from src.utils.log_util import LOGGER
 
 TAG = "nhl_api_client.py"
 
@@ -157,7 +158,7 @@ def get_video_url(video_id: int) -> str:
         str: the video URL
     """
     if video_id is None or video_id == 0:
-        logger.w(TAG, "video_id is None or 0. Returning empty string.")
+        LOGGER.w(TAG, "video_id is None or 0. Returning empty string.")
         return ""
     return VIDEO_URL.replace(URL_REPL_ID, str(video_id))
 
@@ -189,7 +190,7 @@ def get_schedule(schedule_date: str = None) -> list[Game]:
     if schedule_date is None:
         schedule_date = datetime_util.get_current_day_as_idlw()
     url = get_schedule_url(schedule_date)
-    logger.i(TAG, f"get_schedule(): url: {url}")
+    LOGGER.i(TAG, f"get_schedule(): url: {url}")
     try:
         game_week = pydash.get(json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text), DICT_KEY_GAME_WEEK, [])
         games = []
@@ -202,10 +203,10 @@ def get_schedule(schedule_date: str = None) -> list[Game]:
             schedule.append(parse_scheduled_game(game))
         schedule = filter_games_by_date(schedule, schedule_date)
     except requests.exceptions.Timeout as e:
-        logger.e(TAG, "get_schedule(): a timeout occurred", e)
+        LOGGER.e(TAG, "get_schedule(): a timeout occurred", e)
         schedule = []
     except requests.exceptions.ConnectionError as e:
-        logger.e(TAG, "get_schedule(): A connection error occurred", e)
+        LOGGER.e(TAG, "get_schedule(): A connection error occurred", e)
         schedule = []
     return schedule
 
@@ -242,14 +243,14 @@ def get_landing(game_id: int) -> dict:
     if game_id is None:
         raise IllegalArgumentException(TAG, "game_id must not be None")
     url = get_landing_url(game_id)
-    logger.i(TAG, f"get_landing(): url: {url}")
+    LOGGER.i(TAG, f"get_landing(): url: {url}")
     try:
         landing = json.loads(requests.get(url, timeout=REQUEST_TIMEOUT).text)
     except requests.exceptions.Timeout as e:
-        logger.e(TAG, "get_landing(): a timeout occurred", e)
+        LOGGER.e(TAG, "get_landing(): a timeout occurred", e)
         landing = {}
     except requests.exceptions.ConnectionError as e:
-        logger.e(TAG, "get_landing(): A connection error occurred", e)
+        LOGGER.e(TAG, "get_landing(): A connection error occurred", e)
         landing = {}
     return landing
 
@@ -271,7 +272,7 @@ def parse_periods(landing: dict) -> dict:
     shots_by_period = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_SHOTS_BY_PERIOD}", [])
     linescore_by_period = pydash.get(landing, f"{DICT_KEY_SUMMARY}.{DICT_KEY_LINESCORE}.{DICT_KEY_BY_PERIOD}", [])
     if not len(shots_by_period) == len(linescore_by_period):
-        logger.e(TAG, "parse_periods(): shots_by_period and linescore_by_period must have the same length")
+        LOGGER.e(TAG, "parse_periods(): shots_by_period and linescore_by_period must have the same length")
         return out
     for i in range(0, len(shots_by_period)):
         home_goals = pydash.get(linescore_by_period[i], f"{DICT_KEY_HOME}", 0)
@@ -280,7 +281,7 @@ def parse_periods(landing: dict) -> dict:
         away_shots = pydash.get(shots_by_period[i], f"{DICT_KEY_AWAY}", 0)
         period_number = pydash.get(shots_by_period[i], f"{DICT_KEY_PERIOD_DESCRIPTOR}.{DICT_KEY_NUMBER}", 0)
         if period_number == 5:
-            logger.d(TAG, "Skipping SO period, as that is handled separately.")
+            LOGGER.d(TAG, "Skipping SO period, as that is handled separately.")
             break
         ordinal_number = get_period_ordinal(period_number)
         out[DICT_KEY_HOME].append(
@@ -298,7 +299,7 @@ def get_period_ordinal(period_number: int) -> str:
     elif period_number == 5:
         return "SO"
     else:
-        logger.e(TAG, f"get_period_ordinal(): Invalid period number: {period_number}")
+        LOGGER.e(TAG, f"get_period_ordinal(): Invalid period number: {period_number}")
         return ""
 
 
@@ -561,7 +562,7 @@ def parse_team_stats(landing: dict) -> dict:
                 home_takeaways = int(pydash.get(stat, f"{DICT_KEY_HOME_VALUE}", 0))
                 away_takeaways = int(pydash.get(stat, f"{DICT_KEY_AWAY_VALUE}", 0))
             case _:
-                logger.e(TAG, f"parse_team_stats: Unknown stat category: {category}")
+                LOGGER.e(TAG, f"parse_team_stats: Unknown stat category: {category}")
 
     out[DICT_KEY_HOME] = TeamStats(
         goals=home_goals,
