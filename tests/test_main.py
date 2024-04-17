@@ -29,6 +29,9 @@ class TestHandleDailyThread(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_less_than_2_games_and_no_games_requre_a_daily_thread(self):
+        # Save old values
+        old_comment_post_types = environment_util.comment_post_types
+
         # Set up
         games = [Game(2023020193, None, None, datetime.now(), None, None, None, None, None, None)]
         environment_util.comment_post_types = []
@@ -36,16 +39,25 @@ class TestHandleDailyThread(unittest.TestCase):
         # Execute
         result = main.handle_daily_thread(games)
 
+        # Restore old values
+        environment_util.comment_post_types = old_comment_post_types
+
         # Verify
         self.assertIsNone(result)
 
     def test_less_than_2_games_and_games_require_a_daily_thread(self):
+        # Save old values
+        old_comment_post_types = environment_util.comment_post_types
+
         # Set up
         games = [Game(2023020193, None, None, datetime.now(), None, None, None, None, None, None)]
         environment_util.comment_post_types = ["PRESEASON", "REGULAR"]
 
         # Execute
         result = main.handle_daily_thread(games)
+
+        # Restore old values
+        environment_util.comment_post_types = old_comment_post_types
 
         # Verify
         self.assertIsNone(result)

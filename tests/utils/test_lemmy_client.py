@@ -39,13 +39,13 @@ class TestLemmyClient(unittest.TestCase):
         random.seed(str(uuid.uuid4()))
         game_id = random.randint(0, sys.maxsize)
         print(f"generated game_id: {game_id}")
-        result_comment_id = TestLemmyClient.lemmy_client.create_comment(TEST_POST_ID, game_id, f"commenting from a unit test! generated game_id: {game_id}")
-        self.assertNotEqual(result_comment_id, -1, "Failed to create comment")
-        print(f"result_comment_id: {result_comment_id}")
+        result_comment = TestLemmyClient.lemmy_client.create_comment(TEST_POST_ID, game_id, f"commenting from a unit test! generated game_id: {game_id}")
+        self.assertIsNotNone(result_comment, "result_comment was None")
+        print(f"result_comment_id: {result_comment.comment_id}")
         TestLemmyClient.comment_id = self.comments_dao.get_comment(game_id).comment_id
         print(f"comment_id: {TestLemmyClient.comment_id}")
         self.assertNotEqual(TestLemmyClient.comment_id, -1, "Failed to retrieve comment from the db")
-        self.assertEqual(TestLemmyClient.comment_id, result_comment_id, "Comment IDs don't match.")
+        self.assertEqual(TestLemmyClient.comment_id, result_comment.comment_id, "Comment IDs don't match.")
 
     def test_create_game_day_thread(self):
         # This test actually creates a post on a lemmy instance.
