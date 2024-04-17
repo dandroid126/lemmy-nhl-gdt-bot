@@ -4,7 +4,7 @@ from typing import Optional
 import pytz
 from dateutil import parser
 
-from src.utils import logger
+from src.utils.log_util import LOGGER
 
 TAG = "datetime_util"
 
@@ -39,20 +39,20 @@ def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game
         if game_end_time is None:
             # if current_time > game_start_time + timedelta(hours=6):
                 # Game ended over 6 hours ago. Likely the API gave us bad data and the game is actually over.
-                # logger.w(TAG, "Game ended over 6 hours ago. Likely the API gave us bad data and the game is actually over.")
+                # LOGGER.w(TAG, "Game ended over 6 hours ago. Likely the API gave us bad data and the game is actually over.")
                 # return False
             # Game hasn't ended. Either the game is about to start or is currently running.
-            logger.i(TAG, "Game hasn't ended. Either the game is about to start or is currently running.")
+            LOGGER.i(TAG, "Game hasn't ended. Either the game is about to start or is currently running.")
             return True
         if current_time - timedelta(minutes=MINUTES_AFTER_GAME_END_TO_UPDATE_POST) > game_end_time:
             # Game ended a long time ago. Don't update the post.
-            logger.i(TAG, "Game ended a long time ago. Don't update the post.")
+            LOGGER.i(TAG, "Game ended a long time ago. Don't update the post.")
             return False
         # Game ended not too long ago. Keep updating the post for a while to get updated stats
-        logger.i(TAG, "Game ended not too long ago. Keep updating the post for a while to get updated stats")
+        LOGGER.i(TAG, "Game ended not too long ago. Keep updating the post for a while to get updated stats")
         return True
     # Game isn't going to start for a long time. Don't create the post yet
-    logger.i(TAG, "Game isn't going to start for a long time. Don't create the post yet")
+    LOGGER.i(TAG, "Game isn't going to start for a long time. Don't create the post yet")
     return False
 
 

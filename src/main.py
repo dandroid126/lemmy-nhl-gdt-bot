@@ -5,9 +5,10 @@ from src.db.comments.comments_dao import comments_dao
 from src.db.daily_threads.daily_threads_dao import daily_threads_dao
 from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
 from src.db.game_day_threads.game_day_threads_dao import game_day_threads_dao
-from src.utils import nhl_api_client, post_util, datetime_util, logger
+from src.utils import nhl_api_client, post_util, datetime_util
 from src.utils.environment_util import environment_util
 from src.utils.lemmy_client import lemmy_client
+from src.utils.log_util import LOGGER
 from src.utils.signal_util import signal_util
 
 TAG = "main"
@@ -27,12 +28,12 @@ def handle_daily_thread(games: list[Game]) -> Optional[DailyThreadsRecord]:
     """
     # Check if the list of games is empty
     if not games:
-        logger.d(TAG, "List of games is empty. Exiting.")
+        LOGGER.d(TAG, "List of games is empty. Exiting.")
         return None
 
     # Check if there are at least 2 games or a game type that requires a daily thread
     if not any(game.get_game_type() in environment_util.comment_post_types for game in games) and len(games) < 2:
-        logger.d(TAG, "List of games is less than 2. Don't make a daily thread.")
+        LOGGER.d(TAG, "List of games is less than 2. Don't make a daily thread.")
         return None
 
     # Filter the games to only include those that are scheduled for the current day
@@ -41,7 +42,7 @@ def handle_daily_thread(games: list[Game]) -> Optional[DailyThreadsRecord]:
 
     # Check if there are no games scheduled for the current day
     if not filtered_games:
-        logger.d(TAG, "No games today. Don't create a daily post.")
+        LOGGER.d(TAG, "No games today. Don't create a daily post.")
         return None
 
     # Get the existing daily thread for the current day, if it exists
@@ -93,7 +94,7 @@ def handle_game_day_thread(game: Game):
             lemmy_client.create_game_day_thread(post_util.get_title(game), post_util.get_gdt_body(game), game.id)
     else:
         # Log that the post was not created/updated due to the time
-        logger.i(TAG, f"main: The post was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
+        LOGGER.i(TAG, f"main: The post was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
 
 
 def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
@@ -109,7 +110,7 @@ def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
     """
     # Check if game or daily_thread is None
     if not game or not daily_thread:
-        logger.d(TAG, f"Game or daily thread is None. Don't make a post. daily_thread is None: {daily_thread is None}, game is None: {game is None}")
+        LOGGER.d(TAG, f"Game or daily thread is None. Don't make a post. daily_thread is None: {daily_thread is None}, game is None: {game is None}")
         return
 
     # Get the existing comment for the game
@@ -128,7 +129,7 @@ def handle_comment(daily_thread: DailyThreadsRecord, game: Game):
             # Create a new comment
             lemmy_client.create_comment(daily_thread.post_id, game.id, post_util.get_game_details(game))
     else:
-        logger.i(TAG, f"main: The comment was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
+        LOGGER.i(TAG, f"main: The comment was not created/updated for game '{game.id}' due to the time. current_time: {current_time}; start_time: {game.start_time}; end_time: {game.end_time}")
 
 
 def filter_games_by_selected_teams(games: list[Game]) -> list[Game]:
@@ -179,7 +180,7 @@ def merge_games_with_schedule(schedule: list[Game], games: list[Game]) -> list[G
             index = next((i for i, item in enumerate(out) if item.id == game.id), None)
             out[index] = game
         except ValueError:
-            logger.e(TAG, f"Index of game with id '{game.id}' not found in schedule")
+            LOGGER.e(TAG, f"Index of game with id '{game.id}' not found in schedule")
     return out
 
 
@@ -194,12 +195,12 @@ def main():
         try:
             signal_util.wait(DELAY_BETWEEN_UPDATING_POSTS)
             if signal_util.is_interrupted:
-                logger.d(TAG, "main: Interrupted. Exiting.")
+                LOGGER.d(TAG, "main: Interrupted. Exiting.")
                 continue
             schedule = nhl_api_client.get_schedule()
             schedule_filtered_by_selected_teams = filter_games_by_selected_teams(schedule)
             if not schedule_filtered_by_selected_teams:
-                logger.d(TAG, "schedule_filtered_by_selected_teams is empty. Skip making a post for this day.")
+                LOGGER.d(TAG, "schedule_filtered_by_selected_teams is empty. Skip making a post for this day.")
                 continue
             schedule_filtered_by_start_times = filter_games_by_start_time(schedule_filtered_by_selected_teams)
             games = nhl_api_client.get_games(schedule_filtered_by_start_times)
@@ -208,7 +209,7 @@ def main():
             for game in games:
                 try:
                     if game is None:
-                        logger.d(TAG, "Game is None. Skip making a post for this game.")
+                        LOGGER.d(TAG, "Game is None. Skip making a post for this game.")
                         continue
                     game_type = game.get_game_type()
                     if game_type in environment_util.gdt_post_types:
@@ -218,13 +219,13 @@ def main():
                 except InterruptedError as e:
                     # If an InterruptedError is raised while processing games,
                     #  we need to break out before the catch-all below catches it and does nothing.
-                    logger.e(TAG, "main: An InterruptedError was raised while processing games.", e)
+                    LOGGER.e(TAG, "main: An InterruptedError was raised while processing games.", e)
                     break
                 except Exception as e:
-                    logger.e(TAG, "main: Some exception occurred while processing a game.", e)
+                    LOGGER.e(TAG, "main: Some exception occurred while processing a game.", e)
         except InterruptedError as e:
-            logger.e(TAG, "main: An InterruptedError was raised while sleeping.", e)
-    logger.i(TAG, f"main: Reached the end. Shutting down. is_interrupted: {signal_util.is_interrupted}")
+            LOGGER.e(TAG, "main: An InterruptedError was raised while sleeping.", e)
+    LOGGER.i(TAG, f"main: Reached the end. Shutting down. is_interrupted: {signal_util.is_interrupted}")
 
 
 if __name__ == "__main__":
