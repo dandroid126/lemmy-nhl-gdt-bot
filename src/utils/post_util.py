@@ -364,7 +364,7 @@ def get_day_score_overview_table(games: list[Game]) -> Table:
         link = ""
         if game_type in environment_util.comment_post_types:
             comment = comments_dao.get_comment(game.id)
-            link = comment.get_comment_url() if comment else ""
+            link = f"[LINK]({comment.get_comment_url()})" if comment else ""
         elif game_type in environment_util.gdt_post_types:
             game_day_thread = game_day_threads_dao.get_game_day_thread(game.id)
             link = game_day_thread.get_game_day_thread_url() if game_day_thread else ""

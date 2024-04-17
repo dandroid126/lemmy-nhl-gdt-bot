@@ -40,7 +40,7 @@ class CommentsDao:
             return CommentsRecord(val[0], val[1])
         return None
 
-    def insert_comment(self, comment_id: int, game_id: int) -> int:
+    def insert_comment(self, comment_id: int, game_id: int) -> Optional[CommentsRecord]:
         """
         Insert a comment into the database.
 
@@ -51,12 +51,35 @@ class CommentsDao:
         Returns:
             int: The inserted comment ID.
         """
-        query = "INSERT INTO comments VALUES(?, ?)"
+        query = "INSERT INTO comments VALUES(?, ?) RETURNING *"
         params = (comment_id, game_id)
         LOGGER.i(TAG, f"insert_comment(): executing {query} with params {params}")
-        self.db_manager.cursor.execute(query, params)
+        val = self.db_manager.cursor.execute(query, params).fetchone()
         self.db_manager.connection.commit()
-        return comment_id
+        if val is not None:
+            return CommentsRecord(val[0], val[1])
+        else:
+            return None
+
+    def delete_comment(self, comment_id: int) -> Optional[CommentsRecord]:
+        """
+        Deletes a comment.
+
+        Args:
+            comment_id (int): The ID of the comment to delete.
+
+        Returns:
+            None
+        """
+        query = "DELETE FROM comments WHERE comment_id=? RETURNING *"
+        params = (comment_id,)
+        LOGGER.i(TAG, f"delete_comment(): executing {query} with params {params}")
+        val = self.db_manager.cursor.execute(query, params).fetchone()
+        self.db_manager.connection.commit()
+        if val is not None:
+            return CommentsRecord(val[0], val[1])
+        else:
+            return None
 
 
 comments_dao = CommentsDao(db_manager)

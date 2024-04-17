@@ -5,11 +5,12 @@ from pythorhead import Lemmy
 from pythorhead.types import FeatureType
 
 from src.db.comments.comments_dao import CommentsDao, comments_dao
+from src.db.comments.comments_record import CommentsRecord
 from src.db.daily_threads.daily_threads_dao import DailyThreadsDao, daily_threads_dao
 from src.db.daily_threads.daily_threads_record import DailyThreadsRecord
 from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao, game_day_threads_dao
-from src.utils.log_util import LOGGER
 from src.utils.environment_util import environment_util
+from src.utils.log_util import LOGGER
 
 TAG = 'LemmyClient'
 
@@ -132,7 +133,7 @@ class LemmyClient:
         """
         return self.lemmy.post.delete(post_id=post_id, deleted=True)
 
-    def create_comment(self, post_id: int, game_id: int, content: str) -> int:
+    def create_comment(self, post_id: int, game_id: int, content: str) -> Optional[CommentsRecord]:
         """
         Creates a comment.
 
@@ -142,13 +143,12 @@ class LemmyClient:
             content (str): The content of the comment.
 
         Returns:
-            int: The ID of the created comment.
+            CommentsRecord: The created comment.
         """
-        # TODO: update to return comment record instead of comment id
         comment_id = pydash.get(self.lemmy.comment.create(post_id=post_id, content=content), f"comment_view.comment.id", -1)
-        if comment_id == -1:
+        if not comment_id:
             LOGGER.e(TAG, f"create_comment(): Failed to create comment. post_id: {post_id}; game_id: {game_id}")
-            return -1
+            return None
         return self.client_comments_dao.insert_comment(comment_id, game_id)
 
     def update_comment(self, comment_id: int, content: str):
