@@ -49,6 +49,8 @@ class TestEnvironmentUtil(unittest.TestCase):
         expected_log_file_backup_count = 10
         expected_error_backup_count = 2
         expected_teams = [Teams.SJS.value, Teams.NYR.value, Teams.DAL.value]
+        expected_mins_before_game_start_to_create_post = 60
+        expected_mins_after_game_end_to_update_post = 60
         environment_util = EnvironmentUtil(EXAMPLE_ENV_FILE)
         self.assertEqual(expected_bot_name, environment_util.bot_name, "bot_name didn't match")
         self.assertEqual(expected_password, environment_util.password, "password didn't match")
@@ -61,6 +63,8 @@ class TestEnvironmentUtil(unittest.TestCase):
         self.assertEqual(expected_log_file_backup_count, environment_util.log_file_backup_count, "log_file_backup_count didn't match")
         self.assertEqual(expected_error_backup_count, environment_util.error_backup_count, "error_backup_count didn't match")
         self.assertEqual(expected_teams, environment_util.teams, "teams didn't match")
+        self.assertEqual(expected_mins_before_game_start_to_create_post, environment_util.minutes_before_game_start_to_create_post, "mins before game start didn't match")
+        self.assertEqual(expected_mins_after_game_end_to_update_post, environment_util.minutes_after_game_end_to_update_post, "mins after game end didn't match")
 
     def test_load_example_dotenv_no_teams(self):
         expected_bot_name = "bot_name"
@@ -74,6 +78,8 @@ class TestEnvironmentUtil(unittest.TestCase):
         expected_log_file_backup_count = 4
         expected_error_backup_count = 3
         expected_teams = Teams.get_all_teams()
+        expected_mins_before_game_start_to_create_post = 60
+        expected_mins_after_game_end_to_update_post = 60
         environment_util = EnvironmentUtil(EXAMPLE_ENV_FILE_NO_TEAMS)
         self.assertEqual(expected_bot_name, environment_util.bot_name, "bot_name didn't match")
         self.assertEqual(expected_password, environment_util.password, "password didn't match")
@@ -86,6 +92,8 @@ class TestEnvironmentUtil(unittest.TestCase):
         self.assertEqual(expected_log_file_backup_count, environment_util.log_file_backup_count, "log_file_backup_count didn't match")
         self.assertEqual(expected_error_backup_count, environment_util.error_backup_count, "error_backup_count didn't match")
         self.assertEqual(expected_teams, environment_util.teams, "teams didn't match")
+        self.assertEqual(expected_mins_before_game_start_to_create_post, environment_util.minutes_before_game_start_to_create_post, "mins before game start didn't match")
+        self.assertEqual(expected_mins_after_game_end_to_update_post, environment_util.minutes_after_game_end_to_update_post, "mins after game end didn't match")
 
     def test_load_example_dotenv_no_log_config(self):
         expected_bot_name = "bot_name"
@@ -99,6 +107,8 @@ class TestEnvironmentUtil(unittest.TestCase):
         expected_log_file_backup_count = 10
         expected_error_backup_count = 2
         expected_teams = [Teams.SJS.value, Teams.NYR.value, Teams.DAL.value]
+        expected_mins_before_game_start_to_create_post = 60
+        expected_mins_after_game_end_to_update_post = 60
         environment_util = EnvironmentUtil(EXAMPLE_ENV_FILE_NO_LOG_CONFIG)
         self.assertEqual(expected_bot_name, environment_util.bot_name, "bot_name didn't match")
         self.assertEqual(expected_password, environment_util.password, "password didn't match")
@@ -111,6 +121,8 @@ class TestEnvironmentUtil(unittest.TestCase):
         self.assertEqual(expected_log_file_backup_count, environment_util.log_file_backup_count, "log_file_backup_count didn't match")
         self.assertEqual(expected_error_backup_count, environment_util.error_backup_count, "error_backup_count didn't match")
         self.assertEqual(expected_teams, environment_util.teams, "teams didn't match")
+        self.assertEqual(expected_mins_before_game_start_to_create_post, environment_util.minutes_before_game_start_to_create_post, "mins before game start didn't match")
+        self.assertEqual(expected_mins_after_game_end_to_update_post, environment_util.minutes_after_game_end_to_update_post, "mins after game end didn't match")
 
     def test_cast_int_with_default(self):
         provided = '1'
