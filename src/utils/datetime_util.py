@@ -19,8 +19,6 @@ START_TIME_FORMAT = "%I:%M%p %Z"
 START_TIME_FORMAT_NO_TZ = "%I:%M%p"
 DATE_FORMAT = '%Y-%m-%d'
 DATE_TITLE_FORMAT = '%d %b %Y'
-#MINUTES_BEFORE_GAME_START_TO_CREATE_POST = 60  # Now configurable in the environment file
-#MINUTES_AFTER_GAME_END_TO_UPDATE_POST = 60  # Now configurable in the environment file
 
 
 def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game_end_time: Optional[datetime] = None) -> bool:
