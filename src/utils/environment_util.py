@@ -18,12 +18,14 @@ class EnvironmentUtil:
     _COMMENT_POST_TYPES = 'COMMENT_POST_TYPES'
     _GDT_POST_TYPES = 'GDT_POST_TYPES'
     _TEAMS = 'TEAMS'
+    _MINUTES_BEFORE_GAME_START_TO_CREATE_POST='MINUTES_BEFORE_GAME_START_TO_CREATE_POST'
+    _MINUTES_AFTER_GAME_END_TO_UPDATE_POST='MINUTES_AFTER_GAME_END_TO_UPDATE_POST'
     _LOG_LEVEL = 'LOG_LEVEL'
     _LOG_FILE_MAX_MB = 'LOG_FILE_MAX_MB'
     _LOG_FILE_BACKUP_COUNT = 'LOG_FILE_BACKUP_COUNT'
     _ERROR_BACKUP_COUNT = 'ERROR_BACKUP_COUNT'
 
-    _ENVIRONMENT_VARIABLE_NAMES = [_BOT_NAME, _PASSWORD, _LEMMY_INSTANCE, _COMMUNITY_NAME, _COMMENT_POST_TYPES, _GDT_POST_TYPES, _TEAMS, _LOG_LEVEL, _LOG_FILE_MAX_MB, _LOG_FILE_BACKUP_COUNT, _ERROR_BACKUP_COUNT]
+    _ENVIRONMENT_VARIABLE_NAMES = [_BOT_NAME, _PASSWORD, _LEMMY_INSTANCE, _COMMUNITY_NAME, _COMMENT_POST_TYPES, _GDT_POST_TYPES, _TEAMS, _MINUTES_BEFORE_GAME_START_TO_CREATE_POST, _MINUTES_AFTER_GAME_END_TO_UPDATE_POST, _LOG_LEVEL, _LOG_FILE_MAX_MB, _LOG_FILE_BACKUP_COUNT, _ERROR_BACKUP_COUNT]
 
     def __init__(self, dotenv_path: Optional[str] = None):
         """
@@ -46,6 +48,8 @@ class EnvironmentUtil:
         self.comment_post_types = self.parse_game_types(os.getenv(self._COMMENT_POST_TYPES))
         self.gdt_post_types = self.parse_game_types(os.getenv(self._GDT_POST_TYPES))
         self.teams = self.parse_teams(os.getenv(self._TEAMS))
+        self.minutes_before_game_start_to_create_post = self.cast_int_with_default(os.getenv(self._MINUTES_BEFORE_GAME_START_TO_CREATE_POST), 60)
+        self.minutes_after_game_end_to_update_post = self.cast_int_with_default(os.getenv(self._MINUTES_AFTER_GAME_END_TO_UPDATE_POST), 60)
         log_level = os.getenv(self._LOG_LEVEL)
         self.log_level = logging.getLevelName(log_level) if log_level else logging.DEBUG
         self.log_file_max_mb = self.cast_int_with_default(os.getenv(self._LOG_FILE_MAX_MB), 1)

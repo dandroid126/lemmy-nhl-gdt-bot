@@ -5,6 +5,7 @@ import pytz
 from dateutil import parser
 
 from src.utils.log_util import LOGGER
+from src.utils.environment_util import environment_util
 
 TAG = "datetime_util"
 
@@ -18,8 +19,8 @@ START_TIME_FORMAT = "%I:%M%p %Z"
 START_TIME_FORMAT_NO_TZ = "%I:%M%p"
 DATE_FORMAT = '%Y-%m-%d'
 DATE_TITLE_FORMAT = '%d %b %Y'
-MINUTES_BEFORE_GAME_START_TO_CREATE_POST = 60
-MINUTES_AFTER_GAME_END_TO_UPDATE_POST = 60
+#MINUTES_BEFORE_GAME_START_TO_CREATE_POST = 60  # Now configurable in the environment file
+#MINUTES_AFTER_GAME_END_TO_UPDATE_POST = 60  # Now configurable in the environment file
 
 
 def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game_end_time: Optional[datetime] = None) -> bool:
@@ -34,7 +35,7 @@ def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game
     Returns:
         bool: True if it is time to make a post, False otherwise.
     """
-    if current_time + timedelta(minutes=MINUTES_BEFORE_GAME_START_TO_CREATE_POST) > game_start_time:
+    if current_time + timedelta(minutes=environment_util.minutes_before_game_start_to_create_post) > game_start_time:
         # Game start time is within bounds to post. Check if the game is over
         if game_end_time is None:
             # if current_time > game_start_time + timedelta(hours=6):
@@ -44,7 +45,7 @@ def is_time_to_make_post(current_time: datetime, game_start_time: datetime, game
             # Game hasn't ended. Either the game is about to start or is currently running.
             LOGGER.i(TAG, "Game hasn't ended. Either the game is about to start or is currently running.")
             return True
-        if current_time - timedelta(minutes=MINUTES_AFTER_GAME_END_TO_UPDATE_POST) > game_end_time:
+        if current_time - timedelta(minutes=environment_util.minutes_after_game_end_to_update_post) > game_end_time:
             # Game ended a long time ago. Don't update the post.
             LOGGER.i(TAG, "Game ended a long time ago. Don't update the post.")
             return False
