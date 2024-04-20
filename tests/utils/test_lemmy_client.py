@@ -12,9 +12,12 @@ from src.db.game_day_threads.game_day_threads_dao import GameDayThreadsDao
 from src.utils import datetime_util
 from src.utils.environment_util import EnvironmentUtil
 from src.utils.lemmy_client import LemmyClient
+import pydash
 
-# This is a post ID for a dummy post on lemmy.world that is safe to spam comments to
-TEST_POST_ID = 14305925
+# This is a dummy post on lemmy.world that is safe to spam comments to
+TEST_POST_URL = "https://lemmy.world/post/14305925"
+DICT_KEY_POST = 'post'
+DICT_KEY_ID = 'id'
 
 
 class TestLemmyClient(unittest.TestCase):
@@ -35,11 +38,14 @@ class TestLemmyClient(unittest.TestCase):
 
     def test_create_comment(self):
         # This test actually creates a comment on a lemmy instance.
-        # Make sure the combination of 'LEMMY_INSTANCE' (set in the environment file) and post_id are safe to spam to.
         random.seed(str(uuid.uuid4()))
         game_id = random.randint(0, sys.maxsize)
         print(f"generated game_id: {game_id}")
-        result_comment = TestLemmyClient.lemmy_client.create_comment(TEST_POST_ID, game_id, f"commenting from a unit test! generated game_id: {game_id}")
+        resolved_items = TestLemmyClient.lemmy_client.lemmy.resolve_object(TEST_POST_URL)
+        post_id = pydash.get(resolved_items, f"{DICT_KEY_POST}.{DICT_KEY_POST}.{DICT_KEY_ID}", -1) if resolved_items else -1
+        print(f"post_id: {post_id}")
+        self.assertNotEqual(post_id, -1, "Failed to resolve post ID in local Lemmy instance. Is this instance federated with lemmy.world?")
+        result_comment = TestLemmyClient.lemmy_client.create_comment(post_id, game_id, f"commenting from a unit test! generated game_id: {game_id}")
         self.assertIsNotNone(result_comment, "result_comment was None")
         print(f"result_comment_id: {result_comment.comment_id}")
         TestLemmyClient.comment_id = self.comments_dao.get_comment(game_id).comment_id
