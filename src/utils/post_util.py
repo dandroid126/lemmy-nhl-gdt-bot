@@ -25,7 +25,6 @@ POWER_PLAYS = 'Power Plays'
 PERIOD = 'Period'
 TIME = 'Time'
 STRENGTH = 'Strength'
-GOALIE = 'Goalie'
 DESCRIPTION = 'Description'
 TYPE = 'Type'
 MIN = 'Min'
@@ -39,7 +38,7 @@ MATCH_UP = "Match up"
 LINK = "Link"
 
 TEAM_STATS_HEADER_ROW = [TEAM, SHOTS, HITS, BLOCKED, FO_WINS, GIVEAWAYS, TAKEAWAYS, POWER_PLAYS]
-GOALS_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, STRENGTH, GOALIE, DESCRIPTION]
+GOALS_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, STRENGTH, DESCRIPTION]
 PENALTY_DETAILS_HEADER_ROW = [PERIOD, TIME, TEAM, TYPE, MIN, DESCRIPTION]
 START_TIME_HEADER_ROW = [PT, MT, CT, ET, AT]
 DAY_OVERVIEW_HEADER_ROW = [MATCH_UP, TIME, LINK]
@@ -264,8 +263,7 @@ def get_goal_details(game: Game) -> Table:
         goal_details.set(1, i + 1, goal.time)
         goal_details.set(2, i + 1, goal.team.get_team_table_entry())
         goal_details.set(3, i + 1, goal.strength)
-        goal_details.set(4, i + 1, goal.goalie)
-        goal_details.set(5, i + 1, f"[{goal.description}]({goal.video_url})" if goal.video_url else goal.description)
+        goal_details.set(4, i + 1, f"[{goal.description}]({goal.video_url})" if goal.video_url else goal.description)
 
     return goal_details
 

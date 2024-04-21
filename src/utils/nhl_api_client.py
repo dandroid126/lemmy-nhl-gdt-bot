@@ -378,7 +378,6 @@ def parse_goals(landing: dict) -> list[Goal]:
                               time=pydash.get(play, f"{DICT_KEY_TIME_IN_PERIOD}", ""),
                               team=Teams[team].value,
                               strength=strength_map.get(strength, strength),
-                              goalie="",
                               description=get_goal_description(play),
                               video_url=get_video_url(pydash.get(play, f"{DICT_KEY_HIGHLIGHT_CLIP}", 0)),
                               ))

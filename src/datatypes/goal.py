@@ -9,6 +9,5 @@ class Goal:
     time: str
     team: Team
     strength: str
-    goalie: str
     description: str
     video_url: str = ""
