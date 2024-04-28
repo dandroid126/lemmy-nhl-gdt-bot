@@ -1,0 +1,1225 @@
+{
+    "id": 2023030144,
+    "season": 20232024,
+    "gameType": 3,
+    "limitedScoring": false,
+    "gameDate": "2024-04-27",
+    "venue": {
+        "default": "UBS Arena"
+    },
+    "venueLocation": {
+        "default": "Elmont"
+    },
+    "startTimeUTC": "2024-04-27T18:00:00Z",
+    "easternUTCOffset": "-04:00",
+    "venueUTCOffset": "-04:00",
+    "venueTimezone": "America/New_York",
+    "periodDescriptor": {
+        "number": 5,
+        "periodType": "OT",
+        "otPeriods": 2
+    },
+    "tvBroadcasts": [
+        {
+            "id": 403,
+            "market": "N",
+            "countryCode": "US",
+            "network": "TBS",
+            "sequenceNumber": 5
+        },
+        {
+            "id": 501,
+            "market": "N",
+            "countryCode": "US",
+            "network": "truTV",
+            "sequenceNumber": 6
+        },
+        {
+            "id": 519,
+            "market": "N",
+            "countryCode": "US",
+            "network": "MAX",
+            "sequenceNumber": 9
+        },
+        {
+            "id": 282,
+            "market": "N",
+            "countryCode": "CA",
+            "network": "SN",
+            "sequenceNumber": 21
+        },
+        {
+            "id": 281,
+            "market": "N",
+            "countryCode": "CA",
+            "network": "TVAS",
+            "sequenceNumber": 31
+        },
+        {
+            "id": 375,
+            "market": "A",
+            "countryCode": "US",
+            "network": "BSSO",
+            "sequenceNumber": 70
+        },
+        {
+            "id": 409,
+            "market": "H",
+            "countryCode": "US",
+            "network": "MSGSN",
+            "sequenceNumber": 88
+        }
+    ],
+    "gameState": "OFF",
+    "gameScheduleState": "OK",
+    "awayTeam": {
+        "id": 12,
+        "name": {
+            "default": "Hurricanes"
+        },
+        "abbrev": "CAR",
+        "placeName": {
+            "default": "Carolina",
+            "fr": "Caroline"
+        },
+        "score": 2,
+        "sog": 44,
+        "logo": "https://assets.nhle.com/logos/nhl/svg/CAR_light.svg"
+    },
+    "homeTeam": {
+        "id": 2,
+        "name": {
+            "default": "Islanders"
+        },
+        "abbrev": "NYI",
+        "placeName": {
+            "default": "NY Islanders"
+        },
+        "score": 3,
+        "sog": 35,
+        "logo": "https://assets.nhle.com/logos/nhl/svg/NYI_light.svg"
+    },
+    "shootoutInUse": false,
+    "regPeriods": 3,
+    "otInUse": true,
+    "tiesInUse": false,
+    "summary": {
+        "linescore": {
+            "byPeriod": [
+                {
+                    "periodDescriptor": {
+                        "number": 1,
+                        "periodType": "REG"
+                    },
+                    "away": 1,
+                    "home": 0
+                },
+                {
+                    "periodDescriptor": {
+                        "number": 2,
+                        "periodType": "REG"
+                    },
+                    "away": 0,
+                    "home": 1
+                },
+                {
+                    "periodDescriptor": {
+                        "number": 3,
+                        "periodType": "REG"
+                    },
+                    "away": 1,
+                    "home": 1
+                },
+                {
+                    "periodDescriptor": {
+                        "number": 4,
+                        "periodType": "OT"
+                    },
+                    "away": 0,
+                    "home": 0
+                },
+                {
+                    "periodDescriptor": {
+                        "number": 5,
+                        "periodType": "OT",
+                        "otPeriods": 2
+                    },
+                    "away": 0,
+                    "home": 1
+                }
+            ],
+            "totals": {
+                "away": 2,
+                "home": 3
+            }
+        },
+        "scoring": [
+            {
+                "periodDescriptor": {
+                    "number": 1,
+                    "periodType": "REG"
+                },
+                "goals": [
+                    {
+                        "situationCode": "1541",
+                        "strength": "pp",
+                        "playerId": 8482093,
+                        "firstName": {
+                            "default": "Seth"
+                        },
+                        "lastName": {
+                            "default": "Jarvis"
+                        },
+                        "name": {
+                            "default": "S. Jarvis"
+                        },
+                        "teamAbbrev": {
+                            "default": "CAR"
+                        },
+                        "headshot": "https://assets.nhle.com/mugs/nhl/20232024/CAR/8482093.png",
+                        "highlightClip": 6351891580112,
+                        "highlightClipFr": 6351893259112,
+                        "goalsToDate": 2,
+                        "awayScore": 1,
+                        "homeScore": 0,
+                        "leadingTeamAbbrev": {
+                            "default": "CAR"
+                        },
+                        "timeInPeriod": "08:00",
+                        "shotType": "wrist",
+                        "goalModifier": "none",
+                        "assists": [
+                            {
+                                "playerId": 8477404,
+                                "firstName": {
+                                    "default": "Jake"
+                                },
+                                "lastName": {
+                                    "default": "Guentzel"
+                                },
+                                "name": {
+                                    "default": "J. Guentzel"
+                                },
+                                "assistsToDate": 3
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "periodDescriptor": {
+                    "number": 2,
+                    "periodType": "REG"
+                },
+                "goals": [
+                    {
+                        "situationCode": "1551",
+                        "strength": "ev",
+                        "playerId": 8478445,
+                        "firstName": {
+                            "default": "Mathew"
+                        },
+                        "lastName": {
+                            "default": "Barzal"
+                        },
+                        "name": {
+                            "default": "M. Barzal"
+                        },
+                        "teamAbbrev": {
+                            "default": "NYI"
+                        },
+                        "headshot": "https://assets.nhle.com/mugs/nhl/20232024/NYI/8478445.png",
+                        "highlightClip": 6351895472112,
+                        "highlightClipFr": 6351894702112,
+                        "goalsToDate": 1,
+                        "awayScore": 1,
+                        "homeScore": 1,
+                        "timeInPeriod": "10:10",
+                        "shotType": "wrist",
+                        "goalModifier": "none",
+                        "assists": [
+                            {
+                                "playerId": 8476917,
+                                "firstName": {
+                                    "default": "Adam"
+                                },
+                                "lastName": {
+                                    "default": "Pelech"
+                                },
+                                "name": {
+                                    "default": "A. Pelech"
+                                },
+                                "assistsToDate": 2
+                            },
+                            {
+                                "playerId": 8477500,
+                                "firstName": {
+                                    "default": "Bo"
+                                },
+                                "lastName": {
+                                    "default": "Horvat"
+                                },
+                                "name": {
+                                    "default": "B. Horvat"
+                                },
+                                "assistsToDate": 1
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "periodDescriptor": {
+                    "number": 3,
+                    "periodType": "REG"
+                },
+                "goals": [
+                    {
+                        "situationCode": "1451",
+                        "strength": "pp",
+                        "playerId": 8476419,
+                        "firstName": {
+                            "default": "Jean-Gabriel"
+                        },
+                        "lastName": {
+                            "default": "Pageau"
+                        },
+                        "name": {
+                            "default": "J. Pageau"
+                        },
+                        "teamAbbrev": {
+                            "default": "NYI"
+                        },
+                        "headshot": "https://assets.nhle.com/mugs/nhl/20232024/NYI/8476419.png",
+                        "highlightClip": 6351895417112,
+                        "highlightClipFr": 6351896613112,
+                        "goalsToDate": 1,
+                        "awayScore": 1,
+                        "homeScore": 2,
+                        "leadingTeamAbbrev": {
+                            "default": "NYI"
+                        },
+                        "timeInPeriod": "01:38",
+                        "shotType": "snap",
+                        "goalModifier": "none",
+                        "assists": [
+                            {
+                                "playerId": 8480865,
+                                "firstName": {
+                                    "default": "Noah"
+                                },
+                                "lastName": {
+                                    "default": "Dobson"
+                                },
+                                "name": {
+                                    "default": "N. Dobson"
+                                },
+                                "assistsToDate": 1
+                            },
+                            {
+                                "playerId": 8475314,
+                                "firstName": {
+                                    "default": "Anders"
+                                },
+                                "lastName": {
+                                    "default": "Lee"
+                                },
+                                "name": {
+                                    "default": "A. Lee"
+                                },
+                                "assistsToDate": 3
+                            }
+                        ]
+                    },
+                    {
+                        "situationCode": "1541",
+                        "strength": "pp",
+                        "playerId": 8476474,
+                        "firstName": {
+                            "default": "Stefan"
+                        },
+                        "lastName": {
+                            "default": "Noesen"
+                        },
+                        "name": {
+                            "default": "S. Noesen"
+                        },
+                        "teamAbbrev": {
+                            "default": "CAR"
+                        },
+                        "headshot": "https://assets.nhle.com/mugs/nhl/20232024/CAR/8476474.png",
+                        "highlightClip": 6351895944112,
+                        "highlightClipFr": 6351897409112,
+                        "goalsToDate": 2,
+                        "awayScore": 2,
+                        "homeScore": 2,
+                        "timeInPeriod": "14:08",
+                        "shotType": "tip-in",
+                        "goalModifier": "none",
+                        "assists": [
+                            {
+                                "playerId": 8476882,
+                                "firstName": {
+                                    "default": "Teuvo"
+                                },
+                                "lastName": {
+                                    "default": "Teravainen",
+                                    "cs": "Teräväinen",
+                                    "fi": "Teräväinen",
+                                    "sk": "Teräväinen"
+                                },
+                                "name": {
+                                    "default": "T. Teravainen",
+                                    "cs": "T. Teräväinen",
+                                    "fi": "T. Teräväinen",
+                                    "sk": "T. Teräväinen"
+                                },
+                                "assistsToDate": 2
+                            },
+                            {
+                                "playerId": 8480039,
+                                "firstName": {
+                                    "default": "Martin"
+                                },
+                                "lastName": {
+                                    "default": "Necas",
+                                    "cs": "Nečas",
+                                    "sk": "Nečas"
+                                },
+                                "name": {
+                                    "default": "M. Necas",
+                                    "cs": "M. Nečas",
+                                    "sk": "M. Nečas"
+                                },
+                                "assistsToDate": 3
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "periodDescriptor": {
+                    "number": 4,
+                    "periodType": "OT"
+                },
+                "goals": []
+            },
+            {
+                "periodDescriptor": {
+                    "number": 5,
+                    "periodType": "OT",
+                    "otPeriods": 2
+                },
+                "goals": [
+                    {
+                        "situationCode": "1551",
+                        "strength": "ev",
+                        "playerId": 8478445,
+                        "firstName": {
+                            "default": "Mathew"
+                        },
+                        "lastName": {
+                            "default": "Barzal"
+                        },
+                        "name": {
+                            "default": "M. Barzal"
+                        },
+                        "teamAbbrev": {
+                            "default": "NYI"
+                        },
+                        "headshot": "https://assets.nhle.com/mugs/nhl/20232024/NYI/8478445.png",
+                        "highlightClip": 6351900231112,
+                        "highlightClipFr": 6351899565112,
+                        "goalsToDate": 2,
+                        "awayScore": 2,
+                        "homeScore": 3,
+                        "leadingTeamAbbrev": {
+                            "default": "NYI"
+                        },
+                        "timeInPeriod": "01:24",
+                        "shotType": "tip-in",
+                        "goalModifier": "none",
+                        "assists": [
+                            {
+                                "playerId": 8474145,
+                                "firstName": {
+                                    "default": "Robert"
+                                },
+                                "lastName": {
+                                    "default": "Bortuzzo"
+                                },
+                                "name": {
+                                    "default": "R. Bortuzzo"
+                                },
+                                "assistsToDate": 1
+                            },
+                            {
+                                "playerId": 8477500,
+                                "firstName": {
+                                    "default": "Bo"
+                                },
+                                "lastName": {
+                                    "default": "Horvat"
+                                },
+                                "name": {
+                                    "default": "B. Horvat"
+                                },
+                                "assistsToDate": 2
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shootout": [],
+        "threeStars": [
+            {
+                "star": 1,
+                "playerId": 8478445,
+                "teamAbbrev": "NYI",
+                "headshot": "https://assets.nhle.com/mugs/nhl/20232024/NYI/8478445.png",
+                "name": "M. Barzal",
+                "sweaterNo": 13,
+                "position": "C",
+                "goals": 2,
+                "assists": 0,
+                "points": 2
+            },
+            {
+                "star": 2,
+                "playerId": 8473575,
+                "teamAbbrev": "NYI",
+                "headshot": "https://assets.nhle.com/mugs/nhl/20232024/NYI/8473575.png",
+                "name": "S. Varlamov",
+                "sweaterNo": 40,
+                "position": "G",
+                "goalsAgainstAverage": 1.47,
+                "savePctg": 0.955
+            },
+            {
+                "star": 3,
+                "playerId": 8476419,
+                "teamAbbrev": "NYI",
+                "headshot": "https://assets.nhle.com/mugs/nhl/20232024/NYI/8476419.png",
+                "name": "J. Pageau",
+                "sweaterNo": 44,
+                "position": "C",
+                "goals": 1,
+                "assists": 0,
+                "points": 1
+            }
+        ],
+        "teamGameStats": [
+            {
+                "category": "sog",
+                "awayValue": 44,
+                "homeValue": 35
+            },
+            {
+                "category": "faceoffWinningPctg",
+                "awayValue": 0.323944,
+                "homeValue": 0.676056
+            },
+            {
+                "category": "powerPlay",
+                "awayValue": "2/4",
+                "homeValue": "1/2"
+            },
+            {
+                "category": "powerPlayPctg",
+                "awayValue": 0.500000,
+                "homeValue": 0.500000
+            },
+            {
+                "category": "pim",
+                "awayValue": 8,
+                "homeValue": 12
+            },
+            {
+                "category": "hits",
+                "awayValue": 24,
+                "homeValue": 40
+            },
+            {
+                "category": "blockedShots",
+                "awayValue": 18,
+                "homeValue": 22
+            },
+            {
+                "category": "giveaways",
+                "awayValue": 16,
+                "homeValue": 22
+            },
+            {
+                "category": "takeaways",
+                "awayValue": 6,
+                "homeValue": 1
+            }
+        ],
+        "shotsByPeriod": [
+            {
+                "periodDescriptor": {
+                    "number": 1,
+                    "periodType": "REG"
+                },
+                "away": 8,
+                "home": 6
+            },
+            {
+                "periodDescriptor": {
+                    "number": 2,
+                    "periodType": "REG"
+                },
+                "away": 13,
+                "home": 8
+            },
+            {
+                "periodDescriptor": {
+                    "number": 3,
+                    "periodType": "REG"
+                },
+                "away": 5,
+                "home": 11
+            },
+            {
+                "periodDescriptor": {
+                    "number": 4,
+                    "periodType": "OT"
+                },
+                "away": 17,
+                "home": 9
+            },
+            {
+                "periodDescriptor": {
+                    "number": 5,
+                    "periodType": "OT",
+                    "otPeriods": 2
+                },
+                "away": 1,
+                "home": 1
+            }
+        ],
+        "penalties": [
+            {
+                "periodDescriptor": {
+                    "number": 1,
+                    "periodType": "REG"
+                },
+                "penalties": [
+                    {
+                        "timeInPeriod": "07:14",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Anders Lee",
+                        "teamAbbrev": "NYI",
+                        "drawnBy": "Jalen Chatfield",
+                        "descKey": "tripping"
+                    }
+                ]
+            },
+            {
+                "periodDescriptor": {
+                    "number": 2,
+                    "periodType": "REG"
+                },
+                "penalties": [
+                    {
+                        "timeInPeriod": "11:48",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Noah Dobson",
+                        "teamAbbrev": "NYI",
+                        "drawnBy": "Sebastian Aho",
+                        "descKey": "slashing"
+                    },
+                    {
+                        "timeInPeriod": "20:00",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Sebastian Aho",
+                        "teamAbbrev": "CAR",
+                        "drawnBy": "Alexander Romanov",
+                        "descKey": "tripping"
+                    }
+                ]
+            },
+            {
+                "periodDescriptor": {
+                    "number": 3,
+                    "periodType": "REG"
+                },
+                "penalties": [
+                    {
+                        "timeInPeriod": "03:24",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Noah Dobson",
+                        "teamAbbrev": "NYI",
+                        "drawnBy": "Teuvo Teravainen",
+                        "descKey": "cross-checking"
+                    },
+                    {
+                        "timeInPeriod": "10:32",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Jaccob Slavin",
+                        "teamAbbrev": "CAR",
+                        "descKey": "delaying-game-puck-over-glass"
+                    },
+                    {
+                        "timeInPeriod": "13:34",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Robert Bortuzzo",
+                        "teamAbbrev": "NYI",
+                        "drawnBy": "Jaccob Slavin",
+                        "descKey": "hooking"
+                    }
+                ]
+            },
+            {
+                "periodDescriptor": {
+                    "number": 4,
+                    "periodType": "OT"
+                },
+                "penalties": [
+                    {
+                        "timeInPeriod": "20:00",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Jake Guentzel",
+                        "teamAbbrev": "CAR",
+                        "drawnBy": "Adam Pelech",
+                        "descKey": "roughing"
+                    },
+                    {
+                        "timeInPeriod": "20:00",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Dmitry Orlov",
+                        "teamAbbrev": "CAR",
+                        "drawnBy": "Anders Lee",
+                        "descKey": "elbowing"
+                    },
+                    {
+                        "timeInPeriod": "20:00",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Anders Lee",
+                        "teamAbbrev": "NYI",
+                        "drawnBy": "Dmitry Orlov",
+                        "descKey": "roughing"
+                    },
+                    {
+                        "timeInPeriod": "20:00",
+                        "type": "MIN",
+                        "duration": 2,
+                        "committedByPlayer": "Adam Pelech",
+                        "teamAbbrev": "NYI",
+                        "drawnBy": "Jake Guentzel",
+                        "descKey": "roughing"
+                    }
+                ]
+            }
+        ],
+        "seasonSeries": [
+            {
+                "id": 2023030141,
+                "season": 20232024,
+                "gameType": 3,
+                "gameDate": "2024-04-20",
+                "startTimeUTC": "2024-04-20T21:00:00Z",
+                "easternUTCOffset": "-04:00",
+                "venueUTCOffset": "-04:00",
+                "gameState": "OFF",
+                "gameScheduleState": "OK",
+                "awayTeam": {
+                    "id": 2,
+                    "abbrev": "NYI",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/NYI_light.svg",
+                    "score": 1
+                },
+                "homeTeam": {
+                    "id": 12,
+                    "abbrev": "CAR",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/CAR_light.svg",
+                    "score": 3
+                },
+                "clock": {
+                    "timeRemaining": "00:00",
+                    "secondsRemaining": 0,
+                    "running": false,
+                    "inIntermission": false
+                },
+                "gameCenterLink": "/gamecenter/nyi-vs-car/2024/04/20/2023030141",
+                "periodDescriptor": {
+                    "number": 3,
+                    "periodType": "REG"
+                },
+                "gameOutcome": {
+                    "lastPeriodType": "REG"
+                }
+            },
+            {
+                "id": 2023030142,
+                "season": 20232024,
+                "gameType": 3,
+                "gameDate": "2024-04-22",
+                "startTimeUTC": "2024-04-22T23:30:00Z",
+                "easternUTCOffset": "-04:00",
+                "venueUTCOffset": "-04:00",
+                "gameState": "OFF",
+                "gameScheduleState": "OK",
+                "awayTeam": {
+                    "id": 2,
+                    "abbrev": "NYI",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/NYI_light.svg",
+                    "score": 3
+                },
+                "homeTeam": {
+                    "id": 12,
+                    "abbrev": "CAR",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/CAR_light.svg",
+                    "score": 5
+                },
+                "clock": {
+                    "timeRemaining": "00:00",
+                    "secondsRemaining": 0,
+                    "running": false,
+                    "inIntermission": false
+                },
+                "gameCenterLink": "/gamecenter/nyi-vs-car/2024/04/22/2023030142",
+                "periodDescriptor": {
+                    "number": 3,
+                    "periodType": "REG"
+                },
+                "gameOutcome": {
+                    "lastPeriodType": "REG"
+                }
+            },
+            {
+                "id": 2023030143,
+                "season": 20232024,
+                "gameType": 3,
+                "gameDate": "2024-04-25",
+                "startTimeUTC": "2024-04-25T23:30:00Z",
+                "easternUTCOffset": "-04:00",
+                "venueUTCOffset": "-04:00",
+                "gameState": "OFF",
+                "gameScheduleState": "OK",
+                "awayTeam": {
+                    "id": 12,
+                    "abbrev": "CAR",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/CAR_light.svg",
+                    "score": 3
+                },
+                "homeTeam": {
+                    "id": 2,
+                    "abbrev": "NYI",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/NYI_light.svg",
+                    "score": 2
+                },
+                "clock": {
+                    "timeRemaining": "00:00",
+                    "secondsRemaining": 0,
+                    "running": false,
+                    "inIntermission": false
+                },
+                "gameCenterLink": "/gamecenter/car-vs-nyi/2024/04/25/2023030143",
+                "periodDescriptor": {
+                    "number": 3,
+                    "periodType": "REG"
+                },
+                "gameOutcome": {
+                    "lastPeriodType": "REG"
+                }
+            },
+            {
+                "id": 2023030144,
+                "season": 20232024,
+                "gameType": 3,
+                "gameDate": "2024-04-27",
+                "startTimeUTC": "2024-04-27T18:00:00Z",
+                "easternUTCOffset": "-04:00",
+                "venueUTCOffset": "-04:00",
+                "gameState": "OFF",
+                "gameScheduleState": "OK",
+                "awayTeam": {
+                    "id": 12,
+                    "abbrev": "CAR",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/CAR_light.svg",
+                    "score": 2
+                },
+                "homeTeam": {
+                    "id": 2,
+                    "abbrev": "NYI",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/NYI_light.svg",
+                    "score": 3
+                },
+                "clock": {
+                    "timeRemaining": "18:36",
+                    "secondsRemaining": 1116,
+                    "running": false,
+                    "inIntermission": false
+                },
+                "gameCenterLink": "/gamecenter/car-vs-nyi/2024/04/27/2023030144",
+                "periodDescriptor": {
+                    "number": 5,
+                    "periodType": "OT",
+                    "otPeriods": 2
+                },
+                "gameOutcome": {
+                    "lastPeriodType": "OT",
+                    "otPeriods": 2
+                }
+            },
+            {
+                "id": 2023030145,
+                "season": 20232024,
+                "gameType": 3,
+                "gameDate": "2024-04-30",
+                "startTimeUTC": "2024-04-30T23:30:00Z",
+                "easternUTCOffset": "-04:00",
+                "venueUTCOffset": "-04:00",
+                "gameState": "FUT",
+                "gameScheduleState": "OK",
+                "awayTeam": {
+                    "id": 2,
+                    "abbrev": "NYI",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/NYI_light.svg"
+                },
+                "homeTeam": {
+                    "id": 12,
+                    "abbrev": "CAR",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/CAR_light.svg"
+                },
+                "gameCenterLink": "/gamecenter/nyi-vs-car/2024/04/30/2023030145"
+            },
+            {
+                "id": 2023030146,
+                "season": 20232024,
+                "gameType": 3,
+                "gameDate": "2024-05-02",
+                "startTimeUTC": "2024-05-02T16:00:00Z",
+                "easternUTCOffset": "-04:00",
+                "venueUTCOffset": "-04:00",
+                "gameState": "FUT",
+                "gameScheduleState": "TBD",
+                "awayTeam": {
+                    "id": 12,
+                    "abbrev": "CAR",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/CAR_light.svg"
+                },
+                "homeTeam": {
+                    "id": 2,
+                    "abbrev": "NYI",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/NYI_light.svg"
+                },
+                "gameCenterLink": "/gamecenter/car-vs-nyi/2024/05/02/2023030146"
+            },
+            {
+                "id": 2023030147,
+                "season": 20232024,
+                "gameType": 3,
+                "gameDate": "2024-05-04",
+                "startTimeUTC": "2024-05-04T16:00:00Z",
+                "easternUTCOffset": "-04:00",
+                "venueUTCOffset": "-04:00",
+                "gameState": "FUT",
+                "gameScheduleState": "TBD",
+                "awayTeam": {
+                    "id": 2,
+                    "abbrev": "NYI",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/NYI_light.svg"
+                },
+                "homeTeam": {
+                    "id": 12,
+                    "abbrev": "CAR",
+                    "logo": "https://assets.nhle.com/logos/nhl/svg/CAR_light.svg"
+                },
+                "gameCenterLink": "/gamecenter/nyi-vs-car/2024/05/04/2023030147"
+            }
+        ],
+        "gameInfo": {
+            "referees": [
+                {
+                    "default": "Trevor Hanson"
+                },
+                {
+                    "default": "Jake Brenk"
+                },
+                {
+                    "default": "Eric Furlatt"
+                }
+            ],
+            "linesmen": [
+                {
+                    "default": "Andrew Smith"
+                },
+                {
+                    "default": "Tommy Hughes"
+                },
+                {
+                    "default": "Jonny Murray"
+                }
+            ],
+            "awayTeam": {
+                "headCoach": {
+                    "default": "Rod Brind'Amour"
+                },
+                "scratches": [
+                    {
+                        "id": 8475855,
+                        "firstName": {
+                            "default": "Jesper"
+                        },
+                        "lastName": {
+                            "default": "Fast",
+                            "cs": "Fasth",
+                            "de": "Fasth",
+                            "fi": "Fasth",
+                            "sk": "Fasth",
+                            "sv": "Fasth"
+                        }
+                    },
+                    {
+                        "id": 8477293,
+                        "firstName": {
+                            "default": "Antti"
+                        },
+                        "lastName": {
+                            "default": "Raanta"
+                        }
+                    },
+                    {
+                        "id": 8477484,
+                        "firstName": {
+                            "default": "Spencer"
+                        },
+                        "lastName": {
+                            "default": "Martin"
+                        }
+                    },
+                    {
+                        "id": 8477488,
+                        "firstName": {
+                            "default": "Brett"
+                        },
+                        "lastName": {
+                            "default": "Pesce"
+                        }
+                    },
+                    {
+                        "id": 8477962,
+                        "firstName": {
+                            "default": "Brendan"
+                        },
+                        "lastName": {
+                            "default": "Lemieux"
+                        }
+                    },
+                    {
+                        "id": 8479639,
+                        "firstName": {
+                            "default": "Dylan"
+                        },
+                        "lastName": {
+                            "default": "Coghlan"
+                        }
+                    },
+                    {
+                        "id": 8480031,
+                        "firstName": {
+                            "default": "Max"
+                        },
+                        "lastName": {
+                            "default": "Comtois"
+                        }
+                    },
+                    {
+                        "id": 8481576,
+                        "firstName": {
+                            "default": "Ryan"
+                        },
+                        "lastName": {
+                            "default": "Suzuki"
+                        }
+                    },
+                    {
+                        "id": 8482187,
+                        "firstName": {
+                            "default": "Ronan"
+                        },
+                        "lastName": {
+                            "default": "Seeley"
+                        }
+                    },
+                    {
+                        "id": 8482666,
+                        "firstName": {
+                            "default": "Scott"
+                        },
+                        "lastName": {
+                            "default": "Morrow"
+                        }
+                    },
+                    {
+                        "id": 8482809,
+                        "firstName": {
+                            "default": "Jackson"
+                        },
+                        "lastName": {
+                            "default": "Blake"
+                        }
+                    },
+                    {
+                        "id": 8484203,
+                        "firstName": {
+                            "default": "Bradly"
+                        },
+                        "lastName": {
+                            "default": "Nadeau"
+                        }
+                    }
+                ]
+            },
+            "homeTeam": {
+                "headCoach": {
+                    "default": "Patrick Roy"
+                },
+                "scratches": [
+                    {
+                        "id": 8474709,
+                        "firstName": {
+                            "default": "Matt"
+                        },
+                        "lastName": {
+                            "default": "Martin"
+                        }
+                    },
+                    {
+                        "id": 8477314,
+                        "firstName": {
+                            "default": "Brian"
+                        },
+                        "lastName": {
+                            "default": "Pinho"
+                        }
+                    },
+                    {
+                        "id": 8479328,
+                        "firstName": {
+                            "default": "Julien"
+                        },
+                        "lastName": {
+                            "default": "Gauthier"
+                        }
+                    },
+                    {
+                        "id": 8479395,
+                        "firstName": {
+                            "default": "Dennis"
+                        },
+                        "lastName": {
+                            "default": "Cholowski"
+                        }
+                    },
+                    {
+                        "id": 8480071,
+                        "firstName": {
+                            "default": "Robin"
+                        },
+                        "lastName": {
+                            "default": "Salo"
+                        }
+                    },
+                    {
+                        "id": 8480222,
+                        "firstName": {
+                            "default": "Sebastian"
+                        },
+                        "lastName": {
+                            "default": "Aho"
+                        }
+                    },
+                    {
+                        "id": 8480789,
+                        "firstName": {
+                            "default": "Oliver"
+                        },
+                        "lastName": {
+                            "default": "Wahlstrom"
+                        }
+                    },
+                    {
+                        "id": 8480819,
+                        "firstName": {
+                            "default": "Jakub"
+                        },
+                        "lastName": {
+                            "default": "Skarek",
+                            "cs": "Škarek"
+                        }
+                    },
+                    {
+                        "id": 8480901,
+                        "firstName": {
+                            "default": "Karson"
+                        },
+                        "lastName": {
+                            "default": "Kuhlman"
+                        }
+                    },
+                    {
+                        "id": 8481541,
+                        "firstName": {
+                            "default": "Samuel"
+                        },
+                        "lastName": {
+                            "default": "Bolduc"
+                        }
+                    },
+                    {
+                        "id": 8481601,
+                        "firstName": {
+                            "default": "Simon"
+                        },
+                        "lastName": {
+                            "default": "Holmstrom",
+                            "cs": "Holmström",
+                            "sk": "Holmström"
+                        }
+                    }
+                ]
+            }
+        },
+        "gameReports": {
+            "gameSummary": "https://www.nhl.com/scores/htmlreports/20232024/GS030144.HTM",
+            "eventSummary": "https://www.nhl.com/scores/htmlreports/20232024/ES030144.HTM",
+            "playByPlay": "https://www.nhl.com/scores/htmlreports/20232024/PL030144.HTM",
+            "faceoffSummary": "https://www.nhl.com/scores/htmlreports/20232024/FS030144.HTM",
+            "faceoffComparison": "https://www.nhl.com/scores/htmlreports/20232024/FC030144.HTM",
+            "rosters": "https://www.nhl.com/scores/htmlreports/20232024/RO030144.HTM",
+            "shotSummary": "https://www.nhl.com/scores/htmlreports/20232024/SS030144.HTM",
+            "shiftChart": "https://www.nhl.com/stats/shiftcharts?id=2023030144",
+            "toiAway": "https://www.nhl.com/scores/htmlreports/20232024/TV030144.HTM",
+            "toiHome": "https://www.nhl.com/scores/htmlreports/20232024/TH030144.HTM"
+        },
+        "seasonSeriesWins": {
+            "awayTeamWins": 5,
+            "homeTeamWins": 2,
+            "neededToWin": 4
+        }
+    },
+    "clock": {
+        "timeRemaining": "18:36",
+        "secondsRemaining": 1116,
+        "running": false,
+        "inIntermission": false
+    },
+    "gameVideo": {
+        "threeMinRecap": 6351900547112,
+        "threeMinRecapFr": 6351899359112,
+        "condensedGame": 6351898975112
+    }
+}
