@@ -3,6 +3,9 @@ This project is a Python application that allows you to host an NHL gameday thre
 
 Disclaimer: I use podman, not docker. So all the docker commands are untested.
 
+## This repo is currently unmaintained
+Due to a great many reasons, I will no longer be maintaining this repo in its current form. I may pick development back up at a later date, but I will most likely pivot this to post on another platform, as I am no longer on Lemmy. If that day ever comes, I will fork this repo and continue development there, and this one will remain unmaintained.
+
 ## Build it from source
 1. Git clone the repo: `git clone git@github.com:dandroid126/lemmy-nhl-gdt-bot.git`
 2. Create the out directory. ([See section](#create-the-out-directory))
